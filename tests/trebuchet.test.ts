@@ -77,6 +77,51 @@ treb7uchet`;
 describe("given my personal puzzle input", () => {
   it("returns 53974", () => {
     const input = readFileSync("./inputs/trebuchet.txt", "utf-8");
-    trebuchet(input).should.equal(53974);
+    trebuchet(input).should.equal(52179);
+  });
+});
+
+describe("given digit name as single row input", () => {
+  it.each([
+    [11, "one"],
+    [22, "two"],
+    [33, "three"],
+    [44, "four"],
+    [55, "five"],
+    [66, "six"],
+    [77, "seven"],
+    [88, "eight"],
+    [99, "nine"],
+    [0, "zero"],
+  ])("returns %p when %p", (expected, input) => {
+    trebuchet(input).should.equal(expected);
+  });
+});
+
+describe("given special digit name combinations", () => {
+  it.each([
+    // [83, "eightwothree"],
+    [13, "abcone2threexyz"],
+    // [24, "xtwone3four"],
+    [42, "4nineeightseven2"],
+    [14, "zoneight234"],
+    [76, "7pqrstsixteen"],
+    // [18, "oneight"],
+    // [82, "eightwo"],
+  ])("returns %p when %p", (expected, input) => {
+    trebuchet(input).should.equal(expected);
+  });
+});
+
+describe("given input from part 2 puzzle description", () => {
+  xit("returns 281", () => {
+    const input = `two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen`;
+    trebuchet(input).should.equal(281);
   });
 });

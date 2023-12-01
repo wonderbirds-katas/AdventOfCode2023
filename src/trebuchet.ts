@@ -38,6 +38,19 @@
 //     identify the last digit
 //     combine digits to a string
 //     convert string to number
+
+// Part 2
+// ======
+//
+// one -> 1
+// ...
+//
+// Update algorithm "recover" by introducing a converter
+//
+// recover =
+//   replace all valid digit names by equivalent digit
+//   original recover
+//
 export function trebuchet(input: string): number {
   const rows = input.split("\n");
 
@@ -50,7 +63,11 @@ export function trebuchet(input: string): number {
 }
 
 function recover(row: string) {
-  const onlyNumbers = row.split("").filter((c) => !isNaN(Number(c)));
+  const replacedDigitNames = replaceDigitNamesIn(row);
+
+  const onlyNumbers = replacedDigitNames
+    .split("")
+    .filter((c) => !isNaN(Number(c)));
 
   if (onlyNumbers.length <= 0) {
     return 0;
@@ -60,4 +77,18 @@ function recover(row: string) {
   const last = onlyNumbers[onlyNumbers.length - 1];
   const recoveredDigitPair = first + last;
   return Number(recoveredDigitPair);
+}
+
+function replaceDigitNamesIn(row: string) {
+  return row
+    .replace("one", "1")
+    .replace("two", "2")
+    .replace("three", "3")
+    .replace("four", "4")
+    .replace("five", "5")
+    .replace("six", "6")
+    .replace("seven", "7")
+    .replace("eight", "8")
+    .replace("nine", "9")
+    .replace("zero", "0");
 }
