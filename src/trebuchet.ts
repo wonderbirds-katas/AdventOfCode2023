@@ -79,7 +79,15 @@ function recover(row: string) {
   return Number(recoveredDigitPair);
 }
 
-function replaceDigitNamesIn(row: string) {
+export function replaceDigitNamesIn(row: string) {
+  // identify the first possible name to number replacement
+
+  // replace the number identified first
+
+  // identify the last possible replacement
+
+  // replace
+
   return row
     .replace("one", "1")
     .replace("two", "2")
