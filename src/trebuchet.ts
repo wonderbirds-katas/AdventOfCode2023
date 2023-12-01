@@ -40,7 +40,7 @@
 //     convert string to number
 export function trebuchet(input: string): number {
   const first = input[0];
-  const last = input[0];
+  const last = input[input.length - 1];
   const recoveredValue = first + last;
   return Number(recoveredValue);
 }

@@ -13,3 +13,14 @@ describe("given single digit", () => {
     trebuchet(input).should.equal(expected);
   });
 });
+
+describe("given two digits", () => {
+  it.each([
+    [0, "00"],
+    [10, "10"],
+    [26, "26"],
+    [99, "99"],
+  ])("returns %p when %p", (expected: number, input: string) => {
+    trebuchet(input).should.equal(expected);
+  });
+});
