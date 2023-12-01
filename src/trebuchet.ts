@@ -39,8 +39,9 @@
 //     combine digits to a string
 //     convert string to number
 export function trebuchet(input: string): number {
-  const first = input[0];
-  const last = input[input.length - 1];
+  const onlyNumbers = input.split("").filter((c) => !isNaN(Number(c)));
+  const first = onlyNumbers[0];
+  const last = onlyNumbers[onlyNumbers.length - 1];
   const recoveredValue = first + last;
   return Number(recoveredValue);
 }

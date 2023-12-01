@@ -35,3 +35,14 @@ describe("given three digits", () => {
     trebuchet(input).should.equal(expected);
   });
 });
+
+describe("given digits mixed with letters", () => {
+  it.each([
+    [0, "0a"],
+    [0, "ab0a"],
+    [93, "ewe9fdd2er1sdf3er6we0sd3a"],
+    [93, "9fdd2er1sdf3er6we0sd3"],
+  ])("returns %p when %p", (expected: number, input: string) => {
+    trebuchet(input).should.equal(expected);
+  });
+});
