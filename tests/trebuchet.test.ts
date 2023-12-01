@@ -1,8 +1,15 @@
 import "chai/register-should";
 import { config } from "chai";
 import { trebuchet } from "../src/trebuchet";
+import { readFileSync } from "fs";
 
 config.truncateThreshold = 0;
+
+describe("given empty input", () => {
+  it("returns 0", () => {
+    trebuchet("").should.equal(0);
+  });
+});
 
 describe("given single digit", () => {
   it.each([
@@ -64,5 +71,12 @@ pqr3stu8vwx
 a1b2c3d4e5f
 treb7uchet`;
     trebuchet(input).should.equal(142);
+  });
+});
+
+describe("given my personal puzzle input", () => {
+  it("returns 53974", () => {
+    const input = readFileSync("./inputs/trebuchet.txt", "utf-8");
+    trebuchet(input).should.equal(53974);
   });
 });

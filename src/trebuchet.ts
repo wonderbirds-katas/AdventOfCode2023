@@ -45,10 +45,19 @@ export function trebuchet(input: string): number {
 
   for (const row of rows) {
     const onlyNumbers = row.split("").filter((c) => !isNaN(Number(c)));
-    const first = onlyNumbers[0];
-    const last = onlyNumbers[onlyNumbers.length - 1];
-    const recoveredValue = first + last;
-    sum += Number(recoveredValue);
+
+    if (onlyNumbers.length > 0) {
+      const first = onlyNumbers[0];
+      const last = onlyNumbers[onlyNumbers.length - 1];
+      const recoveredDigitPair = first + last;
+      const recoveredCalibrationValue = Number(recoveredDigitPair);
+
+      if (isNaN(recoveredCalibrationValue)) {
+        throw `Error parsing ${row}`;
+      }
+
+      sum += recoveredCalibrationValue;
+    }
   }
 
   return sum;
