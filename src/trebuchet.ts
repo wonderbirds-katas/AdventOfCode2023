@@ -39,5 +39,8 @@
 //     combine digits to a string
 //     convert string to number
 export function trebuchet(input: string): number {
-  return 0;
+  const first = input[0];
+  const last = input[0];
+  const recoveredValue = first + last;
+  return Number(recoveredValue);
 }
