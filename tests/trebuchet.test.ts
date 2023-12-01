@@ -46,3 +46,13 @@ describe("given digits mixed with letters", () => {
     trebuchet(input).should.equal(expected);
   });
 });
+
+describe("given multiple rows", () => {
+  it.each([
+    [2, "01\n01"],
+    [0, "0\n0"],
+    [86, "gf5vguu4e\nsae0fdd\newdcx3df41dfd2"],
+  ])("returns %p when %p", (expected: number, input: string) => {
+    trebuchet(input).should.equal(expected);
+  });
+});

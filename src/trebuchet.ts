@@ -39,9 +39,17 @@
 //     combine digits to a string
 //     convert string to number
 export function trebuchet(input: string): number {
-  const onlyNumbers = input.split("").filter((c) => !isNaN(Number(c)));
-  const first = onlyNumbers[0];
-  const last = onlyNumbers[onlyNumbers.length - 1];
-  const recoveredValue = first + last;
-  return Number(recoveredValue);
+  let sum = 0;
+
+  const rows = input.split("\n");
+
+  for (const row of rows) {
+    const onlyNumbers = row.split("").filter((c) => !isNaN(Number(c)));
+    const first = onlyNumbers[0];
+    const last = onlyNumbers[onlyNumbers.length - 1];
+    const recoveredValue = first + last;
+    sum += Number(recoveredValue);
+  }
+
+  return sum;
 }
