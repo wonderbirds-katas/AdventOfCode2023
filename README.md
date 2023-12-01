@@ -19,3 +19,9 @@ To build and run tests for all puzzles, type
 ```sh
 npm test
 ```
+
+## Map of modules to day
+
+| Day | Module name |
+|-----|-------------|
+| 1   | trebuchet   |
