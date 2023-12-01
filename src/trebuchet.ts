@@ -4,7 +4,7 @@
 // assumption: every row contains 1 or more digits
 //
 // single digit is duplicated
-// 0 -> 00
+// 0 -> 00 -> 0
 // 1 -> 11
 // 2 -> 22
 //
@@ -38,3 +38,6 @@
 //     identify the last digit
 //     combine digits to a string
 //     convert string to number
+export function trebuchet(input: string): number {
+  return 0;
+}

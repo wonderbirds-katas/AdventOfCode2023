@@ -1,8 +1,14 @@
 import "chai/register-should";
 import { config } from "chai";
+import { trebuchet } from "../src/trebuchet";
+
 config.truncateThreshold = 0;
 
-it('should fail', () => {
-    const actual = false;
-    actual.should.be.true;
+describe("given single digit", () => {
+  it.each([[0, "0"]])(
+    "returns %p when %p",
+    (expected: number, input: string) => {
+      trebuchet(input).should.equal(expected);
+    },
+  );
 });
