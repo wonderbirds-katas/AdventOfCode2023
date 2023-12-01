@@ -56,3 +56,13 @@ describe("given multiple rows", () => {
     trebuchet(input).should.equal(expected);
   });
 });
+
+describe("given input from the puzzle description", () => {
+  it("returns 142", () => {
+    const input = `1abc2
+pqr3stu8vwx
+a1b2c3d4e5f
+treb7uchet`;
+    trebuchet(input).should.equal(142);
+  });
+});
