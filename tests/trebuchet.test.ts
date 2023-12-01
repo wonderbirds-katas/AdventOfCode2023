@@ -24,3 +24,14 @@ describe("given two digits", () => {
     trebuchet(input).should.equal(expected);
   });
 });
+
+describe("given three digits", () => {
+  it.each([
+    [0, "000"],
+    [17, "107"],
+    [26, "296"],
+    [99, "919"],
+  ])("returns %p when %p", (expected: number, input: string) => {
+    trebuchet(input).should.equal(expected);
+  });
+});
