@@ -36,5 +36,6 @@ The following table maps the day of the advent of code puzzles to the filename p
 |-----|-------------|
 | 0   | 00-template |
 | 1   | trebuchet   |
+| 2   | day2part1   |
 
 My personal input data is saved in the folder `inputs`. The puzzle solution is implemented in the folder `src` and the corresponding tests are kept in the folder `tests`.
