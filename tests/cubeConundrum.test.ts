@@ -26,6 +26,20 @@ describe("cubesIn", () => {
       },
     );
   });
+
+  describe("given set with cubes of multiple colors", () => {
+    it.each([
+      [1, "red", "1 red, 7 blue"],
+      [9, "red", "7 blue, 9 red"],
+      [912, "green", "7 blue, 9 red, 912 green"],
+      [0, "green", "7 blue, 9 red"],
+    ])(
+      "returns %p when %p cubes requested from set %p",
+      (expected, color, set) => {
+        cubesIn(set, color).should.equal(expected);
+      },
+    );
+  });
 });
 
 describe("cubeConundrum", () => {

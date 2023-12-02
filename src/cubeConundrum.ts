@@ -74,7 +74,14 @@ export function cubeConundrum(input: string): number {
 }
 
 export function cubesIn(set: string, color: string) {
-  const indexOfColor = set.indexOf(color);
-  const numberAsStr = set.substring(0, indexOfColor);
-  return Number(numberAsStr);
+  const cubeStringsByColor = set.split(", ");
+  for (const cubeString of cubeStringsByColor) {
+    const indexOfColor = cubeString.indexOf(color);
+    if (indexOfColor == -1) {
+      continue;
+    }
+    const numberAsStr = cubeString.substring(0, indexOfColor);
+    return Number(numberAsStr);
+  }
+  return 0;
 }
