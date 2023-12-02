@@ -62,7 +62,7 @@
 //
 // Tests from the problem description
 //
-// ... copy tests from problme description ...
+// ... copy tests from problem description ...
 //
 // Solution approach
 // -----------------
@@ -71,6 +71,13 @@
 //
 export function cubeConundrum(input: string): number {
   return 0;
+}
+
+export function isSetPossible(set: string) {
+  const numberOfRed = cubesIn(set, "red");
+  const numberOfGreen = cubesIn(set, "green");
+  const numberOfBlue = cubesIn(set, "blue");
+  return numberOfRed <= 12 && numberOfGreen <= 13 && numberOfBlue <= 14;
 }
 
 export function cubesIn(set: string, color: string) {
