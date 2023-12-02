@@ -20,8 +20,21 @@ To build and run tests for all puzzles, type
 npm test
 ```
 
-## Map of modules to day
+## Layout of this repository
+
+For every day and part of the puzzles I create a new branch. Branch names follow the schema `day-1-part-1`. The `main` branch does not contain solutions, only a template for new code.
+
+If you want to check a particular solution in this repository, then just select the corresponding branch in the **branches** dropdown list above.
+
+This way, you do not risk accidentally seeing solutions for puzzles you have not solved yet.
+
+## How to find a solution by day of advent of code?
+
+The following table maps the day of the advent of code puzzles to the filename prefixes of the corresponding solution.
 
 | Day | Module name |
 |-----|-------------|
+| 0   | 00-template |
 | 1   | trebuchet   |
+
+My personal input data is saved in the folder `inputs`. The puzzle solution is implemented in the folder `src` and the corresponding tests are kept in the folder `tests`.
