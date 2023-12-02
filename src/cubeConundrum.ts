@@ -72,3 +72,9 @@
 export function cubeConundrum(input: string): number {
   return 0;
 }
+
+export function cubesIn(set: string, color: string) {
+  const indexOfColor = set.indexOf(color);
+  const numberAsStr = set.substring(0, indexOfColor);
+  return Number(numberAsStr);
+}
