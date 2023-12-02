@@ -27,7 +27,33 @@
 // Solution approach
 // -----------------
 //
-// ... describe solution and algorithm idea roughly ...
+// for every row:
+//   sum += isGamePossible ? gameId : 0
+//
+// gameId = regex parser to find the number after "Game " and before the ":"
+//
+// isGamePossible:
+//   result = true
+//   for every set:
+//     result = result && isSetPossible
+//
+// isSetPossible:
+//   identify number of red cubes
+//   check whether number smaller than limit
+//   identify number of green cubes
+//   check whether number smaller than limit
+//   identify number of blue cubes
+//   check whether number smaller than limit
+//
+// Inside out approach:
+//
+// Start with tests for identifying the number of cubes of a color
+// Go to the next color
+// Go to the next color
+//
+// Go to isSetPossible
+//
+// Go to isGamePossible
 //
 // Part 2 - Understanding the problem
 // ==================================
