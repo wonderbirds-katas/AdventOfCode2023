@@ -75,12 +75,27 @@ function recover(row: string) {
 
   const first = onlyNumbers[0];
   const last = onlyNumbers[onlyNumbers.length - 1];
+
   const recoveredDigitPair = first + last;
   return Number(recoveredDigitPair);
 }
 
 export function replaceDigitNamesIn(row: string) {
   // identify the first possible name to number replacement
+  //let indexOfOne = row.indexOf("one");
+  //let indexOfTwo = row.indexOf("two");
+  //let indexOfEight = row.indexOf("eight");
+  //let indexOfNine = row.indexOf("nine");
+  //
+  //if (indexOfNine > -1 && indexOfNine < indexOfEight) {
+  //  row = row.replace("nine", "9");
+  //} else if (indexOfEight > -1 && indexOfEight < indexOfTwo) {
+  //  row = row.replace("eight", "8");
+  //} else if (indexOfTwo > -1 && indexOfTwo < indexOfOne) {
+  //  row = row.replace("two", "2");
+  //} else if (indexOfOne > -1) {
+  //  row = row.replace("one", "1");
+  //}
 
   // replace the number identified first
 
@@ -88,15 +103,25 @@ export function replaceDigitNamesIn(row: string) {
 
   // replace
 
-  return row
-    .replace("one", "1")
-    .replace("two", "2")
-    .replace("three", "3")
-    .replace("four", "4")
-    .replace("five", "5")
-    .replace("six", "6")
-    .replace("seven", "7")
-    .replace("eight", "8")
-    .replace("nine", "9")
-    .replace("zero", "0");
+  // First replace the special words by two digits:
+  // twone -> 21
+  // eightwo -> 82
+  // etc
+
+  const rowWithLetterDuplication = row
+    .replaceAll("o", "oo")
+    .replaceAll("t", "tt")
+    .replaceAll("e", "ee");
+
+  return rowWithLetterDuplication
+    .replaceAll("one", "1")
+    .replaceAll("two", "2")
+    .replaceAll("three", "3")
+    .replaceAll("foour", "4")
+    .replaceAll("five", "5")
+    .replaceAll("six", "6")
+    .replaceAll("seeveen", "7")
+    .replaceAll("eight", "8")
+    .replaceAll("nine", "9")
+    .replaceAll("zeero", "0");
 }

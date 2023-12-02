@@ -1,6 +1,6 @@
 import "chai/register-should";
 import { config } from "chai";
-import { trebuchet, replaceDigitNamesIn } from "../src/trebuchet";
+import { trebuchet } from "../src/trebuchet";
 import { readFileSync } from "fs";
 
 config.truncateThreshold = 0;
@@ -76,9 +76,9 @@ treb7uchet`;
   });
 
   describe("given my personal puzzle input", () => {
-    it("returns 53974", () => {
+    it.each([[52840]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/trebuchet.txt", "utf-8");
-      trebuchet(input).should.equal(52179);
+      trebuchet(input).should.equal(expected);
     });
   });
 
@@ -101,21 +101,25 @@ treb7uchet`;
 
   describe("given special digit name combinations", () => {
     it.each([
-      // [83, "eightwothree"],
+      [21, "twone"],
+      [82, "eightwo"],
+      [98, "nineight"],
+      [11, "onetwone"],
+      [83, "eightwothree"],
       [13, "abcone2threexyz"],
-      // [24, "xtwone3four"],
+      [24, "xtwone3four"],
       [42, "4nineeightseven2"],
       [14, "zoneight234"],
       [76, "7pqrstsixteen"],
-      // [18, "oneight"],
-      // [82, "eightwo"],
+      [18, "oneight"],
+      [82, "eightwo"],
     ])("returns %p when %p", (expected, input) => {
       trebuchet(input).should.equal(expected);
     });
   });
 
   describe("given input from part 2 puzzle description", () => {
-    xit("returns 281", () => {
+    it("returns 281", () => {
       const input = `two1nine
 eightwothree
 abcone2threexyz
@@ -124,25 +128,6 @@ xtwone3four
 zoneight234
 7pqrstsixteen`;
       trebuchet(input).should.equal(281);
-    });
-  });
-});
-
-describe("replaceDigitNamesIn", () => {
-  describe("given single digit name", () => {
-    it.each([
-      ["1", "one"],
-      ["2", "two"],
-      ["3", "three"],
-      ["4", "four"],
-      ["5", "five"],
-      ["6", "six"],
-      ["7", "seven"],
-      ["8", "eight"],
-      ["9", "nine"],
-      ["0", "zero"],
-    ])("returns %p when %p", (expected, input) => {
-      replaceDigitNamesIn(input).should.equal(expected);
     });
   });
 });
