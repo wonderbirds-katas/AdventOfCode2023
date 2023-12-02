@@ -70,10 +70,25 @@
 // ... describe solution and algorithm idea roughly ...
 //
 export function cubeConundrum(input: string): number {
-  return 0;
+  let sum = 0;
+
+  const games = input.split("\n");
+  for (const game of games) {
+    if (isGamePossible(game)) {
+      const gameIdRegex = /Game (\d+):/;
+      const gameId = game.match(gameIdRegex);
+      sum += Number(gameId![1]);
+    }
+  }
+
+  return sum;
 }
 
 export function isGamePossible(game: string) {
+  if (game.length == 0) {
+    return false;
+  }
+
   const startOfSets = game.indexOf(":");
   const allSets = game.substring(startOfSets + 1);
   const sets = allSets.split(";");
