@@ -73,6 +73,18 @@ export function cubeConundrum(input: string): number {
   return 0;
 }
 
+export function isGamePossible(game: string) {
+  const startOfSets = game.indexOf(":");
+  const allSets = game.substring(startOfSets + 1);
+  const sets = allSets.split(";");
+  for (const set of sets) {
+    if (!isSetPossible(set)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export function isSetPossible(set: string) {
   const numberOfRed = cubesIn(set, "red");
   const numberOfGreen = cubesIn(set, "green");

@@ -1,6 +1,11 @@
 import "chai/register-should";
 import { config } from "chai";
-import { cubeConundrum, cubesIn, isSetPossible } from "../src/cubeConundrum";
+import {
+  cubeConundrum,
+  cubesIn,
+  isGamePossible,
+  isSetPossible,
+} from "../src/cubeConundrum";
 import { readFileSync } from "fs";
 
 config.truncateThreshold = 0;
@@ -59,6 +64,29 @@ describe("isSetPossible", () => {
       [false, "1 red, 1 green, 15 blue"],
     ])("returns %p when %p", (expected, set) => {
       isSetPossible(set).should.equal(expected);
+    });
+  });
+});
+
+describe("isGamePossible", () => {
+  describe("given possible game", () => {
+    it.each([
+      [true, "Game 1: 1 red, 1 green, 1 blue"],
+      [true, "Game 1: 12 red, 13 green, 14 blue"],
+      [true, "Game 1: 12 red, 13 green, 14 blue; 12 red, 13 green, 14 blue"],
+    ])("returns %p when %p", (expected, game) => {
+      isGamePossible(game).should.equal(expected);
+    });
+  });
+
+  describe("given impossible game", () => {
+    it.each([
+      [false, "Game 1: 13 red, 1 green, 1 blue"],
+      [false, "Game 1: 1 red, 14 green, 1 blue"],
+      [false, "Game 1: 1 red, 1 green, 15 blue"],
+      [false, "Game 1: 1 red, 1 green, 1 blue; 1 red, 1 green, 15 blue"],
+    ])("returns %p when %p", (expected, game) => {
+      isGamePossible(game).should.equal(expected);
     });
   });
 });
