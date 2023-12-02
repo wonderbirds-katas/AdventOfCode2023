@@ -32,10 +32,10 @@ This way, you do not risk accidentally seeing solutions for puzzles you have not
 
 The following table maps the day of the advent of code puzzles to the filename prefixes of the corresponding solution.
 
-| Day | Module name |
-|-----|-------------|
-| 0   | 00-template |
-| 1   | trebuchet   |
-| 2   | day2part1   |
+| Day | Module name   |
+|-----|---------------|
+| 0   | 00-template   |
+| 1   | trebuchet     |
+| 2   | cubeConundrum |
 
 My personal input data is saved in the folder `inputs`. The puzzle solution is implemented in the folder `src` and the corresponding tests are kept in the folder `tests`.
