@@ -34,8 +34,18 @@ The following table maps the day of the advent of code puzzles to the filename p
 
 | Day | Module name   |
 |-----|---------------|
-| 0   | 00-template   |
+| 0   | template      |
 | 1   | trebuchet     |
 | 2   | cubeConundrum |
 
-My personal input data is saved in the folder `inputs`. The puzzle solution is implemented in the folder `src` and the corresponding tests are kept in the folder `tests`.
+My personal input data is saved in the folder [inputs](./inputs). The puzzle solution is implemented in the folder [src](./src) and the corresponding tests are kept in the folder [tests](./tests).
+
+## Using the template for a puzzle
+
+1. Extend the table above with the chosen module name
+2. In each folder of [inputs](./inputs), [src](./src), [tests](./tests)
+
+   1. copy the template in that folder and give it the name of the chosen module
+   2. in the copied file, replace the word `template` by the name of the function implementing the solution
+
+3. Fill the file in the [inputs](./inputs) directory with the puzzle input
