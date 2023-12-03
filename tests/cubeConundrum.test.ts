@@ -2,6 +2,7 @@ import "chai/register-should";
 import { config } from "chai";
 import {
   cubeConundrum,
+  cubeConundrumPart2,
   cubesIn,
   isGamePossible,
   isSetPossible,
@@ -128,6 +129,20 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
     it.each([[2486]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/cubeConundrum.txt", "utf-8");
       cubeConundrum(input).should.equal(expected);
+    });
+  });
+});
+
+describe("cubeConundrumPart2", () => {
+  describe("given single game of one set", () => {
+    it.each([
+      [1, "Game 1: 1 red, 1 green, 1 blue"],
+      [2, "Game 1: 2 red, 1 green, 1 blue"],
+      [100, "Game 1: 10 red, 5 green, 2 blue"],
+      [0, "Game 1: 0 blue"],
+      [0, "Game 1: "],
+    ])("returns %p when %p", (expected, input) => {
+      cubeConundrumPart2(input).should.equal(expected);
     });
   });
 });

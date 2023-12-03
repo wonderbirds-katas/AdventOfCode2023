@@ -76,7 +76,27 @@
 // -----------------
 //
 // ... describe solution and algorithm idea roughly ...
+
 //
+export function cubeConundrumPart2(input: string): number {
+  let sum = 0;
+
+  const sets = getSetsIn(input);
+  for (const set of sets) {
+    const power = calculatePowerOfSet(set);
+    sum += power;
+  }
+
+  return sum;
+}
+
+function calculatePowerOfSet(set: string) {
+  const numberOfRed = cubesIn(set, "red");
+  const numberOfGreen = cubesIn(set, "green");
+  const numberOfBlue = cubesIn(set, "blue");
+  return numberOfRed * numberOfGreen * numberOfBlue;
+}
+
 export function cubeConundrum(input: string): number {
   let sum = 0;
 
@@ -96,16 +116,20 @@ export function isGamePossible(game: string) {
   if (game.length == 0) {
     return false;
   }
-
-  const startOfSets = game.indexOf(":");
-  const allSets = game.substring(startOfSets + 1);
-  const sets = allSets.split(";");
+  const sets = getSetsIn(game);
   for (const set of sets) {
     if (!isSetPossible(set)) {
       return false;
     }
   }
   return true;
+}
+
+function getSetsIn(game: string) {
+  const startOfSets = game.indexOf(":");
+  const allSets = game.substring(startOfSets + 1);
+  const sets = allSets.split(";");
+  return sets;
 }
 
 export function isSetPossible(set: string) {
