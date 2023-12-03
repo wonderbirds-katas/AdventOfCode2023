@@ -91,9 +91,9 @@ export function cubeConundrumPart2(input: string): number {
 }
 
 function calculatePowerOfSet(set: string) {
-  const numberOfRed = cubesIn(set, "red");
-  const numberOfGreen = cubesIn(set, "green");
-  const numberOfBlue = cubesIn(set, "blue");
+  const numberOfRed = Math.max(1, cubesIn(set, "red"));
+  const numberOfGreen = Math.max(1, cubesIn(set, "green"));
+  const numberOfBlue = Math.max(1, cubesIn(set, "blue"));
   return numberOfRed * numberOfGreen * numberOfBlue;
 }
 

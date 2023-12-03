@@ -139,8 +139,8 @@ describe("cubeConundrumPart2", () => {
       [1, "Game 1: 1 red, 1 green, 1 blue"],
       [2, "Game 1: 2 red, 1 green, 1 blue"],
       [100, "Game 1: 10 red, 5 green, 2 blue"],
-      [0, "Game 1: 0 blue"],
-      [0, "Game 1: "],
+      [1, "Game 1: 0 blue"],
+      [1, "Game 1: "],
     ])("returns %p when %p", (expected, input) => {
       cubeConundrumPart2(input).should.equal(expected);
     });
