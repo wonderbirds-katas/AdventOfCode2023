@@ -81,40 +81,39 @@
 export function cubeConundrumPart2(input: string): number {
   let powerPerGame: number[] = [];
 
-  const sets = getSetsIn(input);
+  const games = input.split("\n");
+  for (const game of games) {
+    if (game.length == 0) {
+      continue;
+    }
 
-  let numberOfRedPerSet: number[] = [];
-  let numberOfGreenPerSet: number[] = [];
-  let numberOfBluePerSet: number[] = [];
+    const sets = getSetsIn(game);
 
-  for (const set of sets) {
-    const numberOfRed = Math.max(1, cubesIn(set, "red"));
-    numberOfRedPerSet.push(numberOfRed);
+    let numberOfRedPerSet: number[] = [];
+    let numberOfGreenPerSet: number[] = [];
+    let numberOfBluePerSet: number[] = [];
 
-    const numberOfGreen = Math.max(1, cubesIn(set, "green"));
-    numberOfGreenPerSet.push(numberOfGreen);
+    for (const set of sets) {
+      const numberOfRed = Math.max(1, cubesIn(set, "red"));
+      numberOfRedPerSet.push(numberOfRed);
 
-    const numberOfBlue = Math.max(1, cubesIn(set, "blue"));
-    numberOfBluePerSet.push(numberOfBlue);
+      const numberOfGreen = Math.max(1, cubesIn(set, "green"));
+      numberOfGreenPerSet.push(numberOfGreen);
+
+      const numberOfBlue = Math.max(1, cubesIn(set, "blue"));
+      numberOfBluePerSet.push(numberOfBlue);
+    }
+
+    const maxRed = Math.max(...numberOfRedPerSet);
+    const maxGreen = Math.max(...numberOfGreenPerSet);
+    const maxBlue = Math.max(...numberOfBluePerSet);
+    const power = maxRed * maxGreen * maxBlue;
+
+    powerPerGame.push(power);
   }
-
-  const maxRed = Math.max(...numberOfRedPerSet);
-  const maxGreen = Math.max(...numberOfGreenPerSet);
-  const maxBlue = Math.max(...numberOfBluePerSet);
-  const power = maxRed * maxGreen * maxBlue;
-
-  powerPerGame.push(power);
 
   return powerPerGame.reduce((x, y) => x + y, 0);
 }
-
-function calculatePowerOfSet(set: string) {
-  const numberOfRed = Math.max(1, cubesIn(set, "red"));
-  const numberOfGreen = Math.max(1, cubesIn(set, "green"));
-  const numberOfBlue = Math.max(1, cubesIn(set, "blue"));
-  return numberOfRed * numberOfGreen * numberOfBlue;
-}
-
 export function cubeConundrum(input: string): number {
   let sum = 0;
 
