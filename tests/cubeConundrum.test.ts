@@ -145,4 +145,16 @@ describe("cubeConundrumPart2", () => {
       cubeConundrumPart2(input).should.equal(expected);
     });
   });
+
+  describe("given single game of multiple sets", () => {
+    it.each([
+      [20, "Game 1: 1 red, 2 green, 1 blue; 10 red"],
+      [
+        630,
+        "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
+      ],
+    ])("returns %p when %p", (expected, input) => {
+      cubeConundrumPart2(input).should.equal(expected);
+    });
+  });
 });

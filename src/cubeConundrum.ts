@@ -79,15 +79,33 @@
 
 //
 export function cubeConundrumPart2(input: string): number {
-  let sum = 0;
+  let powerPerGame: number[] = [];
 
   const sets = getSetsIn(input);
+
+  let numberOfRedPerSet: number[] = [];
+  let numberOfGreenPerSet: number[] = [];
+  let numberOfBluePerSet: number[] = [];
+
   for (const set of sets) {
-    const power = calculatePowerOfSet(set);
-    sum += power;
+    const numberOfRed = Math.max(1, cubesIn(set, "red"));
+    numberOfRedPerSet.push(numberOfRed);
+
+    const numberOfGreen = Math.max(1, cubesIn(set, "green"));
+    numberOfGreenPerSet.push(numberOfGreen);
+
+    const numberOfBlue = Math.max(1, cubesIn(set, "blue"));
+    numberOfBluePerSet.push(numberOfBlue);
   }
 
-  return sum;
+  const maxRed = Math.max(...numberOfRedPerSet);
+  const maxGreen = Math.max(...numberOfGreenPerSet);
+  const maxBlue = Math.max(...numberOfBluePerSet);
+  const power = maxRed * maxGreen * maxBlue;
+
+  powerPerGame.push(power);
+
+  return powerPerGame.reduce((x, y) => x + y, 0);
 }
 
 function calculatePowerOfSet(set: string) {
