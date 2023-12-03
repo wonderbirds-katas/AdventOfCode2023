@@ -5,7 +5,7 @@
 //
 // Tests from the problem description
 //
-// ... copy tests from problme description ...
+// ... copy tests from problem description ...
 //
 // Solution approach
 // -----------------
@@ -19,13 +19,13 @@
 //
 // Tests from the problem description
 //
-// ... copy tests from problme description ...
+// ... copy tests from problem description ...
 //
 // Solution approach
 // -----------------
 //
 // ... describe solution and algorithm idea roughly ...
 //
-export function solution(input: string): number {
+export function template(input: string): number {
   return 0;
 }
