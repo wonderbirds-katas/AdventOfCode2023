@@ -101,13 +101,22 @@ export class Symbol {
   ) {}
 }
 
-export function parseSymbols(schematic: string[][]): Symbol[][] {
+type Symbols = Symbol[];
+
+function isSymbol(candidate: string) {
+  return candidate !== "." && isNaN(Number(candidate));
+}
+
+export function parseSymbols(schematic: string[][]): Symbols {
+  const result: Symbols = [];
+
   const row = schematic[0];
   for (let column = 0; column < row.length; column++) {
     const candidate = row[column];
-    if (candidate !== "." && isNaN(Number(candidate))) {
-      return [[new Symbol(0, column)]];
+    if (isSymbol(candidate)) {
+      result.push(new Symbol(0, column));
     }
   }
-  return [[]];
+
+  return result;
 }

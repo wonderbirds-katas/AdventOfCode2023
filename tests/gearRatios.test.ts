@@ -56,14 +56,14 @@ describe("parseSymbols", () => {
     it("returns empty list of symbols when empty schematic", () => {
       const row = [[]];
       const actual = parseSymbols(row);
-      const expected = [[]];
+      const expected = [];
       actual.should.deep.equal(expected);
     });
 
     it.each([
-      [[[new Symbol(0, 0)]], ["*"]],
-      [[[new Symbol(0, 1)]], [".*"]],
-      [[[new Symbol(0, 4)]], ["....^..."]],
+      [[new Symbol(0, 0)], ["*"]],
+      [[new Symbol(0, 1)], [".*"]],
+      [[new Symbol(0, 4)], ["....^..."]],
     ])("returns %p when %p", (expected, schematic) => {
       const row = [schematic[0].split("")];
       parseSymbols(row).should.deep.equal(expected);
