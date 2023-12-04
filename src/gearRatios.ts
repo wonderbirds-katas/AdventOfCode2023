@@ -65,6 +65,7 @@
 // -------------------------
 //
 // Coordinate = record(row, column)
+//   The top left of the schematic has the coordinate (0, 0).
 //
 // Symbol = Coordinate
 // Symbols = Symbol[]
@@ -91,4 +92,22 @@
 //
 export function gearRatios(input: string): number {
   return 0;
+}
+
+export class Symbol {
+  constructor(
+    readonly row: number,
+    readonly column: number,
+  ) {}
+}
+
+export function parseSymbols(schematic: string[][]): Symbol[][] {
+  const row = schematic[0];
+  for (let column = 0; column < row.length; column++) {
+    const candidate = row[column];
+    if (candidate !== "." && isNaN(Number(candidate))) {
+      return [[new Symbol(0, column)]];
+    }
+  }
+  return [[]];
 }

@@ -1,6 +1,6 @@
 import "chai/register-should";
 import { config } from "chai";
-import { gearRatios } from "../src/gearRatios";
+import { gearRatios, parseSymbols, Symbol } from "../src/gearRatios";
 import { readFileSync } from "fs";
 import { beforeAll, describe, it } from "@jest/globals";
 import { JestReporter } from "approvals/lib/Providers/Jest/JestReporter";
@@ -48,5 +48,25 @@ describe("printBooleanMatrix", () => {
       [true, true, true, true, true],
     ];
     verify(printBooleanMatrix(booleanMatrix));
+  });
+});
+
+describe("parseSymbols", () => {
+  describe("given single symbol in single row", () => {
+    it("returns empty list of symbols when empty schematic", () => {
+      const row = [[]];
+      const actual = parseSymbols(row);
+      const expected = [[]];
+      actual.should.deep.equal(expected);
+    });
+
+    it.each([
+      [[[new Symbol(0, 0)]], ["*"]],
+      [[[new Symbol(0, 1)]], [".*"]],
+      [[[new Symbol(0, 4)]], ["....^..."]],
+    ])("returns %p when %p", (expected, schematic) => {
+      const row = [schematic[0].split("")];
+      parseSymbols(row).should.deep.equal(expected);
+    });
   });
 });
