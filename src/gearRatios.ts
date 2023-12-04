@@ -36,12 +36,44 @@
 // ...$.*....
 // .664.598..
 //
-// ... copy tests from problem description ...
-//
 // Solution approach
 // -----------------
 //
-// ... describe solution and algorithm idea roughly ...
+// symbols = Symbols.parseFrom(schematic): identify the coordinates of the symbols
+// parsePartNumbers(schematic, symbols):
+//   locateDigits:
+//     for each symbol
+//       identify the coordinates of the digits adjacent to the symbol
+//       for debugging: create a boolean matrix showing where a symbol is located in the schematic
+//
+//   locatePartNumbers:
+//     for each digit adjacent to a symbol
+//       identify leftmost digit coordinate
+//     for partNumber:
+//       identify partNumber length
+//
+//     for debugging: create a boolean matrix showing where a part number is located in the schematic
+//
+//   parsePartNumberValues:
+//     for each partNumber:
+//       parse value of the digit
+//
+// for each part number
+//   add the number to the sum of part numbers
+//
+// Data structures / objects
+// -------------------------
+//
+// Coordinate = record(row, column)
+//
+// Symbol = Coordinate
+// Symbols = Symbol[]
+//
+// Digit = Coordinate
+// Digits = Digit[]
+//
+// PartNumber = record(leftCoordinate: coordinate, length: number, value: number)
+// PartNumbers = PartNumber[]
 //
 // Part 2 - Understanding the problem
 // ==================================
