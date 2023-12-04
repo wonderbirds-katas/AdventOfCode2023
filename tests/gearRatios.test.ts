@@ -69,4 +69,15 @@ describe("parseSymbols", () => {
       parseSymbols(row).should.deep.equal(expected);
     });
   });
+
+  describe("given multiple symbols in single row", () => {
+    it.each([
+      [[new Symbol(0, 0), new Symbol(0, 1)], ["*/"]],
+      [[new Symbol(0, 2), new Symbol(0, 7)], ["..(....+."]],
+      [[new Symbol(0, 1), new Symbol(0, 3), new Symbol(0, 5)], [".&.*.,..."]],
+    ])("returns %p when %p", (expected, schematic) => {
+      const row = [schematic[0].split("")];
+      parseSymbols(row).should.deep.equal(expected);
+    });
+  });
 });
