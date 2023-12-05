@@ -116,11 +116,40 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
       );
     });
 
-    describe("and only single digit part numbers in row above symbol", () => {
+    describe("and only one single digit part numbers", () => {
       it.each([
-        [[new Coordinate(0, 0)], [new Coordinate(1, 1)], "1..\n.%.\n"],
-        [[new Coordinate(0, 1)], [new Coordinate(1, 1)], ".1.\n.%.\n"],
-        [[new Coordinate(0, 2)], [new Coordinate(1, 1)], "..1\n.%.\n"],
+        [[new Coordinate(0, 0)], [new Coordinate(1, 1)], "1..\n.%.\n..."],
+        [[new Coordinate(0, 1)], [new Coordinate(1, 1)], ".1.\n.%.\n..."],
+        [[new Coordinate(0, 2)], [new Coordinate(1, 1)], "..1\n.%.\n..."],
+        [[new Coordinate(1, 0)], [new Coordinate(1, 1)], "...\n1%.\n..."],
+        [[new Coordinate(1, 2)], [new Coordinate(1, 1)], "...\n.%1\n..."],
+        [[new Coordinate(2, 0)], [new Coordinate(1, 1)], "...\n.%.\n1.."],
+        [[new Coordinate(2, 1)], [new Coordinate(1, 1)], "...\n.%.\n.1."],
+        [[new Coordinate(2, 2)], [new Coordinate(1, 1)], "...\n.%.\n..1"],
+      ])(
+        "returns %j when symbol at %j and schematic is %p",
+        (expected, symbols, schematic) => {
+          locatePartNumberDigitsNextToSymbols(
+            schematic,
+            symbols,
+          ).should.deep.equal(expected);
+        },
+      );
+    });
+
+    describe("and multiple single digit part numbers", () => {
+      it.each([
+        [
+          [
+            new Coordinate(0, 0),
+            new Coordinate(0, 2),
+            new Coordinate(1, 0),
+            new Coordinate(1, 2),
+            new Coordinate(2, 1),
+          ],
+          [new Coordinate(1, 1)],
+          "1.1\n1%1\n.1.",
+        ],
       ])(
         "returns %j when symbol at %j and schematic is %p",
         (expected, symbols, schematic) => {

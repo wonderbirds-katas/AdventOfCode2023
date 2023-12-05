@@ -135,10 +135,12 @@ export function locatePartNumberDigitsNextToSymbols(
 ): Coordinate[] {
   let result: Coordinate[] = [];
   const rows = schematic.split("\n");
-  for (let columnIndex = 0; columnIndex < rows[0].length; columnIndex++) {
-    const candidate = rows[0][columnIndex];
-    if (!isNaN(Number(candidate))) {
-      result.push(new Coordinate(0, columnIndex));
+  for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+    for (let columnIndex = 0; columnIndex < rows[0].length; columnIndex++) {
+      const candidate = rows[rowIndex][columnIndex];
+      if (!isNaN(Number(candidate))) {
+        result.push(new Coordinate(rowIndex, columnIndex));
+      }
     }
   }
   return result;
