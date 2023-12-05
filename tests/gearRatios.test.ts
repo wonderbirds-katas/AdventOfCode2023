@@ -1,6 +1,11 @@
 import "chai/register-should";
 import { config } from "chai";
-import { gearRatios, parseSymbols, Symbol, Symbols } from "../src/gearRatios";
+import {
+  Coordinate,
+  gearRatios,
+  locatePartNumberDigitsNextToSymbols,
+  parseSymbols,
+} from "../src/gearRatios";
 import { readFileSync } from "fs";
 import { beforeAll, describe, it } from "@jest/globals";
 import { JestReporter } from "approvals/lib/Providers/Jest/JestReporter";
@@ -54,45 +59,71 @@ describe("printBooleanMatrix", () => {
 describe("parseSymbols", () => {
   describe("given single symbol in single row", () => {
     it("returns empty list of symbols when empty schematic", () => {
-      const row: string = "";
-      const actual: Symbols = parseSymbols(row);
-      const expected: Symbols = [];
+      const schematic: string = "";
+      const actual: Coordinate[] = parseSymbols(schematic);
+      const expected: Coordinate[] = [];
       actual.should.deep.equal(expected);
     });
 
     it.each([
-      [[new Symbol(0, 0)], "*"],
-      [[new Symbol(0, 1)], ".*"],
-      [[new Symbol(0, 4)], "....^..."],
-    ])("returns %p when %p", (expected: Symbols, schematic: string) => {
+      [[new Coordinate(0, 0)], "*"],
+      [[new Coordinate(0, 1)], ".*"],
+      [[new Coordinate(0, 4)], "....^..."],
+    ])("returns %p when %p", (expected: Coordinate[], schematic: string) => {
       parseSymbols(schematic).should.deep.equal(expected);
     });
   });
 
   describe("given multiple symbols in single row", () => {
     it.each([
-      [[new Symbol(0, 0), new Symbol(0, 1)], "*/"],
-      [[new Symbol(0, 2), new Symbol(0, 7)], "..(....+."],
-      [[new Symbol(0, 1), new Symbol(0, 3), new Symbol(0, 5)], ".&.*.,..."],
-    ])("returns %p when %p", (expected: Symbols, schematic: string) => {
+      [[new Coordinate(0, 0), new Coordinate(0, 1)], "*/"],
+      [[new Coordinate(0, 2), new Coordinate(0, 7)], "..(....+."],
+      [
+        [new Coordinate(0, 1), new Coordinate(0, 3), new Coordinate(0, 5)],
+        ".&.*.,...",
+      ],
+    ])("returns %p when %p", (expected: Coordinate[], schematic: string) => {
       parseSymbols(schematic).should.deep.equal(expected);
     });
   });
 
   describe("given multiple symbols in multiple rows", () => {
     it.each([
-      [[new Symbol(0, 2), new Symbol(1, 0)], "..%\n$.."],
+      [[new Coordinate(0, 2), new Coordinate(1, 0)], "..%\n$.."],
       [
         [
-          new Symbol(0, 2),
-          new Symbol(1, 1),
-          new Symbol(2, 0),
-          new Symbol(2, 2),
+          new Coordinate(0, 2),
+          new Coordinate(1, 1),
+          new Coordinate(2, 0),
+          new Coordinate(2, 2),
         ],
         "..%\n.$.\n_.!",
       ],
     ])("returns %p when %p", (expected, schematic) => {
       parseSymbols(schematic).should.deep.equal(expected);
     });
+  });
+});
+
+describe("locatePartNumberDigitsNextToSymbols", () => {
+  describe("given single symbol not at an edge of schematic", () => {
+    it("returns empty list of digits when no part numbers", () => {
+      const schematic: string = "...\n.%.\n...";
+      const symbols: Coordinate[] = [new Coordinate(1, 1)];
+      const expected: Coordinate[] = [];
+      locatePartNumberDigitsNextToSymbols(schematic, symbols).should.deep.equal(
+        expected,
+      );
+    });
+
+    it.each([[[new Coordinate(0, 0)], [new Coordinate(1, 1)], "1..\n.%.\n"]])(
+      "returns %p when %p",
+      (expected, symbols, schematic) => {
+        locatePartNumberDigitsNextToSymbols(
+          schematic,
+          symbols,
+        ).should.deep.equal(expected);
+      },
+    );
   });
 });

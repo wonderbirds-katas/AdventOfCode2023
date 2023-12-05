@@ -41,7 +41,7 @@
 //
 // symbols = Symbols.parseFrom(schematic): identify the coordinates of the symbols
 // parsePartNumbers(schematic, symbols):
-//   locateDigits:
+//   locatePartNumberDigitsNextToSymbols:
 //     for each symbol
 //       identify the coordinates of the digits adjacent to the symbol
 //       for debugging: create a boolean matrix showing where a symbol is located in the schematic
@@ -49,8 +49,11 @@
 //   locatePartNumbers:
 //     for each digit adjacent to a symbol
 //       identify leftmost digit coordinate
+//
+//   parsePartNumbers__nameIsUsedBySurroundingFunction:
 //     for partNumber:
 //       identify partNumber length
+//       parse partNumber value
 //
 //     for debugging: create a boolean matrix showing where a part number is located in the schematic
 //
@@ -94,21 +97,19 @@ export function gearRatios(input: string): number {
   return 0;
 }
 
-export class Symbol {
+export class Coordinate {
   constructor(
     readonly row: number,
     readonly column: number,
   ) {}
 }
 
-export type Symbols = Symbol[];
-
 function isSymbol(candidate: string) {
   return candidate !== "." && isNaN(Number(candidate));
 }
 
-export function parseSymbols(schematic: string): Symbols {
-  const result: Symbols = [];
+export function parseSymbols(schematic: string): Coordinate[] {
+  const result: Coordinate[] = [];
   const rows = schematic.split("\n");
 
   for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
@@ -116,10 +117,18 @@ export function parseSymbols(schematic: string): Symbols {
     for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
       const candidate = row[columnIndex];
       if (isSymbol(candidate)) {
-        result.push(new Symbol(rowIndex, columnIndex));
+        result.push(new Coordinate(rowIndex, columnIndex));
       }
     }
   }
 
   return result;
+}
+
+export function locatePartNumberDigitsNextToSymbols(
+  schematic: string,
+  symbols: Coordinate[],
+): Coordinate[] {
+  if (!isNaN(Number(schematic[0]))) return [new Coordinate(0, 0)];
+  return [];
 }
