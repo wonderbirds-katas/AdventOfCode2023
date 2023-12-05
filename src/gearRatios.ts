@@ -101,16 +101,16 @@ export class Symbol {
   ) {}
 }
 
-type Symbols = Symbol[];
+export type Symbols = Symbol[];
 
 function isSymbol(candidate: string) {
   return candidate !== "." && isNaN(Number(candidate));
 }
 
-export function parseSymbols(schematic: string[][]): Symbols {
+export function parseSymbols(schematic: string): Symbols {
   const result: Symbols = [];
 
-  const row = schematic[0];
+  const row = schematic.split("\n")[0];
   for (let column = 0; column < row.length; column++) {
     const candidate = row[column];
     if (isSymbol(candidate)) {

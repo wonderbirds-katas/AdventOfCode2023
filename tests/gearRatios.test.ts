@@ -1,6 +1,6 @@
 import "chai/register-should";
 import { config } from "chai";
-import { gearRatios, parseSymbols, Symbol } from "../src/gearRatios";
+import { gearRatios, parseSymbols, Symbol, Symbols } from "../src/gearRatios";
 import { readFileSync } from "fs";
 import { beforeAll, describe, it } from "@jest/globals";
 import { JestReporter } from "approvals/lib/Providers/Jest/JestReporter";
@@ -54,30 +54,28 @@ describe("printBooleanMatrix", () => {
 describe("parseSymbols", () => {
   describe("given single symbol in single row", () => {
     it("returns empty list of symbols when empty schematic", () => {
-      const row = [[]];
-      const actual = parseSymbols(row);
-      const expected = [];
+      const row: string = "";
+      const actual: Symbols = parseSymbols(row);
+      const expected: Symbols = [];
       actual.should.deep.equal(expected);
     });
 
     it.each([
-      [[new Symbol(0, 0)], ["*"]],
-      [[new Symbol(0, 1)], [".*"]],
-      [[new Symbol(0, 4)], ["....^..."]],
-    ])("returns %p when %p", (expected, schematic) => {
-      const row = [schematic[0].split("")];
-      parseSymbols(row).should.deep.equal(expected);
+      [[new Symbol(0, 0)], "*"],
+      [[new Symbol(0, 1)], ".*"],
+      [[new Symbol(0, 4)], "....^..."],
+    ])("returns %p when %p", (expected: Symbols, schematic: string) => {
+      parseSymbols(schematic).should.deep.equal(expected);
     });
   });
 
   describe("given multiple symbols in single row", () => {
     it.each([
-      [[new Symbol(0, 0), new Symbol(0, 1)], ["*/"]],
-      [[new Symbol(0, 2), new Symbol(0, 7)], ["..(....+."]],
-      [[new Symbol(0, 1), new Symbol(0, 3), new Symbol(0, 5)], [".&.*.,..."]],
-    ])("returns %p when %p", (expected, schematic) => {
-      const row = [schematic[0].split("")];
-      parseSymbols(row).should.deep.equal(expected);
+      [[new Symbol(0, 0), new Symbol(0, 1)], "*/"],
+      [[new Symbol(0, 2), new Symbol(0, 7)], "..(....+."],
+      [[new Symbol(0, 1), new Symbol(0, 3), new Symbol(0, 5)], ".&.*.,..."],
+    ])("returns %p when %p", (expected: Symbols, schematic: string) => {
+      parseSymbols(schematic).should.deep.equal(expected);
     });
   });
 });
