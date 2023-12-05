@@ -116,14 +116,20 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
       );
     });
 
-    it.each([[[new Coordinate(0, 0)], [new Coordinate(1, 1)], "1..\n.%.\n"]])(
-      "returns %p when %p",
-      (expected, symbols, schematic) => {
-        locatePartNumberDigitsNextToSymbols(
-          schematic,
-          symbols,
-        ).should.deep.equal(expected);
-      },
-    );
+    describe("and only single digit part numbers in row above symbol", () => {
+      it.each([
+        [[new Coordinate(0, 0)], [new Coordinate(1, 1)], "1..\n.%.\n"],
+        [[new Coordinate(0, 1)], [new Coordinate(1, 1)], ".1.\n.%.\n"],
+        [[new Coordinate(0, 2)], [new Coordinate(1, 1)], "..1\n.%.\n"],
+      ])(
+        "returns %j when symbol at %j and schematic is %p",
+        (expected, symbols, schematic) => {
+          locatePartNumberDigitsNextToSymbols(
+            schematic,
+            symbols,
+          ).should.deep.equal(expected);
+        },
+      );
+    });
   });
 });

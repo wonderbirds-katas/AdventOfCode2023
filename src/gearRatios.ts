@@ -46,6 +46,10 @@
 //       identify the coordinates of the digits adjacent to the symbol
 //       for debugging: create a boolean matrix showing where a symbol is located in the schematic
 //
+//   mergeAdjacentPartNumbers:
+//     for each digit coordinate:
+//       remove all digits right next to that coordinate
+//
 //   locatePartNumbers:
 //     for each digit adjacent to a symbol
 //       identify leftmost digit coordinate
@@ -129,6 +133,13 @@ export function locatePartNumberDigitsNextToSymbols(
   schematic: string,
   symbols: Coordinate[],
 ): Coordinate[] {
-  if (!isNaN(Number(schematic[0]))) return [new Coordinate(0, 0)];
-  return [];
+  let result: Coordinate[] = [];
+  const rows = schematic.split("\n");
+  for (let columnIndex = 0; columnIndex < rows[0].length; columnIndex++) {
+    const candidate = rows[0][columnIndex];
+    if (!isNaN(Number(candidate))) {
+      result.push(new Coordinate(0, columnIndex));
+    }
+  }
+  return result;
 }
