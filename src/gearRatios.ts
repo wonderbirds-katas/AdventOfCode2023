@@ -112,9 +112,9 @@ function isSymbol(candidate: string) {
   return candidate !== "." && isNaN(Number(candidate));
 }
 
-export function parseSymbols(schematic: string): Coordinate[] {
+export function parseSymbols(input: string): Coordinate[] {
   const result: Coordinate[] = [];
-  const rows = schematic.split("\n");
+  const rows = input.split("\n");
 
   for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
     const row = rows[rowIndex];
@@ -130,11 +130,11 @@ export function parseSymbols(schematic: string): Coordinate[] {
 }
 
 export function locatePartNumberDigitsNextToSymbols(
-  schematic: string,
+  input: string,
   symbols: Coordinate[],
 ): Coordinate[] {
   let result: Coordinate[] = [];
-  const rows = schematic.split("\n");
+  const rows = input.split("\n");
   for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
     for (let columnIndex = 0; columnIndex < rows[0].length; columnIndex++) {
       const candidate = rows[rowIndex][columnIndex];

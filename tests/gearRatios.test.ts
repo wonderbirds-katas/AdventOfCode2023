@@ -58,9 +58,9 @@ describe("printBooleanMatrix", () => {
 
 describe("parseSymbols", () => {
   describe("given single symbol in single row", () => {
-    it("returns empty list of symbols when empty schematic", () => {
-      const schematic: string = "";
-      const actual: Coordinate[] = parseSymbols(schematic);
+    it("returns empty list of symbols when empty input", () => {
+      const input: string = "";
+      const actual: Coordinate[] = parseSymbols(input);
       const expected: Coordinate[] = [];
       actual.should.deep.equal(expected);
     });
@@ -69,8 +69,8 @@ describe("parseSymbols", () => {
       [[new Coordinate(0, 0)], "*"],
       [[new Coordinate(0, 1)], ".*"],
       [[new Coordinate(0, 4)], "....^..."],
-    ])("returns %p when %p", (expected: Coordinate[], schematic: string) => {
-      parseSymbols(schematic).should.deep.equal(expected);
+    ])("returns %p when %p", (expected: Coordinate[], input: string) => {
+      parseSymbols(input).should.deep.equal(expected);
     });
   });
 
@@ -82,8 +82,8 @@ describe("parseSymbols", () => {
         [new Coordinate(0, 1), new Coordinate(0, 3), new Coordinate(0, 5)],
         ".&.*.,...",
       ],
-    ])("returns %p when %p", (expected: Coordinate[], schematic: string) => {
-      parseSymbols(schematic).should.deep.equal(expected);
+    ])("returns %p when %p", (expected: Coordinate[], input: string) => {
+      parseSymbols(input).should.deep.equal(expected);
     });
   });
 
@@ -99,19 +99,19 @@ describe("parseSymbols", () => {
         ],
         "..%\n.$.\n_.!",
       ],
-    ])("returns %p when %p", (expected, schematic) => {
-      parseSymbols(schematic).should.deep.equal(expected);
+    ])("returns %p when %p", (expected, input) => {
+      parseSymbols(input).should.deep.equal(expected);
     });
   });
 });
 
 describe("locatePartNumberDigitsNextToSymbols", () => {
-  describe("given single symbol not at an edge of schematic", () => {
+  describe("given single symbol not at an edge of input", () => {
     it("returns empty list of digits when no part numbers", () => {
-      const schematic: string = "...\n.%.\n...";
+      const input: string = "...\n.%.\n...";
       const symbols: Coordinate[] = [new Coordinate(1, 1)];
       const expected: Coordinate[] = [];
-      locatePartNumberDigitsNextToSymbols(schematic, symbols).should.deep.equal(
+      locatePartNumberDigitsNextToSymbols(input, symbols).should.deep.equal(
         expected,
       );
     });
@@ -127,12 +127,11 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
         [[new Coordinate(2, 1)], [new Coordinate(1, 1)], "...\n.%.\n.1."],
         [[new Coordinate(2, 2)], [new Coordinate(1, 1)], "...\n.%.\n..1"],
       ])(
-        "returns %j when symbol at %j and schematic is %p",
-        (expected, symbols, schematic) => {
-          locatePartNumberDigitsNextToSymbols(
-            schematic,
-            symbols,
-          ).should.deep.equal(expected);
+        "returns %j when symbol at %j and input is %p",
+        (expected, symbols, input) => {
+          locatePartNumberDigitsNextToSymbols(input, symbols).should.deep.equal(
+            expected,
+          );
         },
       );
     });
@@ -151,12 +150,11 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
           "1.1\n1%1\n.1.",
         ],
       ])(
-        "returns %j when symbol at %j and schematic is %p",
-        (expected, symbols, schematic) => {
-          locatePartNumberDigitsNextToSymbols(
-            schematic,
-            symbols,
-          ).should.deep.equal(expected);
+        "returns %j when symbol at %j and input is %p",
+        (expected, symbols, input) => {
+          locatePartNumberDigitsNextToSymbols(input, symbols).should.deep.equal(
+            expected,
+          );
         },
       );
     });
