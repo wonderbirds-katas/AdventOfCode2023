@@ -109,12 +109,15 @@ function isSymbol(candidate: string) {
 
 export function parseSymbols(schematic: string): Symbols {
   const result: Symbols = [];
+  const rows = schematic.split("\n");
 
-  const row = schematic.split("\n")[0];
-  for (let column = 0; column < row.length; column++) {
-    const candidate = row[column];
-    if (isSymbol(candidate)) {
-      result.push(new Symbol(0, column));
+  for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+    const row = rows[rowIndex];
+    for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
+      const candidate = row[columnIndex];
+      if (isSymbol(candidate)) {
+        result.push(new Symbol(rowIndex, columnIndex));
+      }
     }
   }
 

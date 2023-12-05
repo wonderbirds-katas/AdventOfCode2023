@@ -78,4 +78,21 @@ describe("parseSymbols", () => {
       parseSymbols(schematic).should.deep.equal(expected);
     });
   });
+
+  describe("given multiple symbols in multiple rows", () => {
+    it.each([
+      [[new Symbol(0, 2), new Symbol(1, 0)], "..%\n$.."],
+      [
+        [
+          new Symbol(0, 2),
+          new Symbol(1, 1),
+          new Symbol(2, 0),
+          new Symbol(2, 2),
+        ],
+        "..%\n.$.\n_.!",
+      ],
+    ])("returns %p when %p", (expected, schematic) => {
+      parseSymbols(schematic).should.deep.equal(expected);
+    });
+  });
 });
