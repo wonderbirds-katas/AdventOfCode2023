@@ -106,7 +106,7 @@ describe("parseSymbols", () => {
 });
 
 describe("locatePartNumberDigitsNextToSymbols", () => {
-  describe("given single symbol not at an edge of input", () => {
+  describe("given single symbol in the middle of a 3x3 input", () => {
     it("returns empty list of digits when no part numbers", () => {
       const input: string = "...\n.%.\n...";
       const symbols: Coordinate[] = [new Coordinate(1, 1)];
@@ -158,5 +158,22 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
         },
       );
     });
+  });
+
+  describe("given single symbol anywhere inside an NxN input", () => {
+    it.each([
+      [
+        [new Coordinate(1, 2), new Coordinate(2, 3), new Coordinate(3, 2)],
+        [new Coordinate(2, 2)],
+        ".1.1.\n..1..\n..%1.\n..1..\n11111",
+      ],
+    ])(
+      "returns %j when symbol at %j and input is %p",
+      (expected, symbols, input) => {
+        locatePartNumberDigitsNextToSymbols(input, symbols).should.deep.equal(
+          expected,
+        );
+      },
+    );
   });
 });

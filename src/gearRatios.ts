@@ -135,8 +135,14 @@ export function locatePartNumberDigitsNextToSymbols(
 ): Coordinate[] {
   let result: Coordinate[] = [];
   const rows = input.split("\n");
-  for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-    for (let columnIndex = 0; columnIndex < rows[0].length; columnIndex++) {
+
+  const symbol = symbols[0];
+  for (let rowIndex = symbol.row - 1; rowIndex <= symbol.row + 1; rowIndex++) {
+    for (
+      let columnIndex = symbol.column - 1;
+      columnIndex <= symbol.column + 1;
+      columnIndex++
+    ) {
       const candidate = rows[rowIndex][columnIndex];
       if (!isNaN(Number(candidate))) {
         result.push(new Coordinate(rowIndex, columnIndex));
