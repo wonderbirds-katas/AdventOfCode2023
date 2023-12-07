@@ -137,13 +137,19 @@ export function locatePartNumberDigitsNextToSymbols(
   const rows = input.split("\n");
 
   const symbol = symbols[0];
-  for (let rowIndex = symbol.row - 1; rowIndex <= symbol.row + 1; rowIndex++) {
-    for (
-      let columnIndex = symbol.column - 1;
-      columnIndex <= symbol.column + 1;
-      columnIndex++
-    ) {
-      const candidate = rows[rowIndex][columnIndex];
+
+  const minRow = Math.max(0, symbol.row - 1);
+  const maxRow = Math.min(rows.length - 1, symbol.row + 1);
+
+  for (let rowIndex = minRow; rowIndex <= maxRow; rowIndex++) {
+    const row = rows[rowIndex];
+    const rowLength = row.length;
+
+    const minColumn = Math.max(0, symbol.column - 1);
+    const maxColumn = Math.min(rowLength, symbol.column + 1);
+
+    for (let columnIndex = minColumn; columnIndex <= maxColumn; columnIndex++) {
+      const candidate = row[columnIndex];
       if (!isNaN(Number(candidate))) {
         result.push(new Coordinate(rowIndex, columnIndex));
       }

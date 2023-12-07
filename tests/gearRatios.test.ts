@@ -176,4 +176,30 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
       },
     );
   });
+
+  describe("given single symbol at edge of an 3x3 input", () => {
+    it.each([
+      [[], [new Coordinate(0, 0)], "#..\n...\n..."],
+      [[], [new Coordinate(0, 2)], "..#\n...\n..."],
+      [[], [new Coordinate(2, 0)], "...\n...\n#.."],
+      [[], [new Coordinate(2, 2)], "...\n...\n..#"],
+      [
+        [new Coordinate(0, 1), new Coordinate(1, 0), new Coordinate(1, 1)],
+        [new Coordinate(0, 0)],
+        "#1.\n11.\n...",
+      ],
+      [
+        [new Coordinate(1, 1), new Coordinate(1, 2), new Coordinate(2, 1)],
+        [new Coordinate(2, 2)],
+        "...\n.11\n.1#",
+      ],
+    ])(
+      "returns %j when symbol at %j and input is %p",
+      (expected, symbols, input) => {
+        locatePartNumberDigitsNextToSymbols(input, symbols).should.deep.equal(
+          expected,
+        );
+      },
+    );
+  });
 });
