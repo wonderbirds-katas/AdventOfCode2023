@@ -112,6 +112,12 @@ export function gearRatios(
   const symbols = parseSymbols(input);
   approvalTestPrinter.printParsed(symbols, rows, cols);
 
+  const partNumberDigits = locatePartNumberDigits(input, symbols);
+  approvalTestPrinter.printLocatedPartNumberDigits(
+    partNumberDigits,
+    rows,
+    cols,
+  );
   return 0;
 }
 
@@ -143,29 +149,33 @@ export function parseSymbols(input: string): Coordinate[] {
   return result;
 }
 
-export function locatePartNumberDigitsNextToSymbols(
+export function locatePartNumberDigits(
   input: string,
   symbols: Coordinate[],
 ): Coordinate[] {
   let result: Coordinate[] = [];
   const rows = input.split("\n");
 
-  const symbol = symbols[0];
+  for (const symbol of symbols) {
+    const minRow = Math.max(0, symbol.row - 1);
+    const maxRow = Math.min(rows.length - 1, symbol.row + 1);
 
-  const minRow = Math.max(0, symbol.row - 1);
-  const maxRow = Math.min(rows.length - 1, symbol.row + 1);
+    for (let rowIndex = minRow; rowIndex <= maxRow; rowIndex++) {
+      const row = rows[rowIndex];
+      const rowLength = row.length;
 
-  for (let rowIndex = minRow; rowIndex <= maxRow; rowIndex++) {
-    const row = rows[rowIndex];
-    const rowLength = row.length;
+      const minColumn = Math.max(0, symbol.column - 1);
+      const maxColumn = Math.min(rowLength, symbol.column + 1);
 
-    const minColumn = Math.max(0, symbol.column - 1);
-    const maxColumn = Math.min(rowLength, symbol.column + 1);
-
-    for (let columnIndex = minColumn; columnIndex <= maxColumn; columnIndex++) {
-      const candidate = row[columnIndex];
-      if (!isNaN(Number(candidate))) {
-        result.push(new Coordinate(rowIndex, columnIndex));
+      for (
+        let columnIndex = minColumn;
+        columnIndex <= maxColumn;
+        columnIndex++
+      ) {
+        const candidate = row[columnIndex];
+        if (!isNaN(Number(candidate))) {
+          result.push(new Coordinate(rowIndex, columnIndex));
+        }
       }
     }
   }
@@ -174,6 +184,7 @@ export function locatePartNumberDigitsNextToSymbols(
 
 export class ApprovalTestPrinter {
   parsedSymbols: string = "";
+  locatedPartNumberDigits: string = "";
 
   public printParsed(symbols: Coordinate[], rows: number, columns: number) {
     let parsedSymbolsMatrix: boolean[][] = new Array(rows)
@@ -186,6 +197,26 @@ export class ApprovalTestPrinter {
 
     this.parsedSymbols = this.printBooleanMatrix(parsedSymbolsMatrix);
   }
+
+  public printLocatedPartNumberDigits(
+    partNumberDigits: Coordinate[],
+    rows: number,
+    columns: number,
+  ) {
+    let partNumberDigitsMatrix: boolean[][] = new Array(rows)
+      .fill([])
+      .map(() => new Array(columns).fill(false));
+
+    for (const partNumberDigit of partNumberDigits) {
+      partNumberDigitsMatrix[partNumberDigit.row][partNumberDigit.column] =
+        true;
+    }
+
+    this.locatedPartNumberDigits = this.printBooleanMatrix(
+      partNumberDigitsMatrix,
+    );
+  }
+
   private printBooleanMatrix(booleanMatrix: boolean[][]) {
     let output = "";
     for (const row of booleanMatrix) {

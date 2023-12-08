@@ -4,7 +4,7 @@ import {
   ApprovalTestPrinter,
   Coordinate,
   gearRatios,
-  locatePartNumberDigitsNextToSymbols,
+  locatePartNumberDigits,
   parseSymbols,
 } from "../src/gearRatios";
 import { readFileSync } from "fs";
@@ -46,6 +46,11 @@ describe("approvals", () => {
   it("parse symbols", () => {
     gearRatios(input, approvalTestPrinter);
     verify(approvalTestPrinter.parsedSymbols);
+  });
+
+  it("locate part number digits", () => {
+    gearRatios(input, approvalTestPrinter);
+    verify(approvalTestPrinter.locatedPartNumberDigits);
   });
 });
 
@@ -104,9 +109,7 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
       const input: string = "...\n.%.\n...";
       const symbols: Coordinate[] = [new Coordinate(1, 1)];
       const expected: Coordinate[] = [];
-      locatePartNumberDigitsNextToSymbols(input, symbols).should.deep.equal(
-        expected,
-      );
+      locatePartNumberDigits(input, symbols).should.deep.equal(expected);
     });
 
     describe("and only one single digit part numbers", () => {
@@ -122,9 +125,7 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
       ])(
         "returns %j when symbol at %j and input is %p",
         (expected, symbols, input) => {
-          locatePartNumberDigitsNextToSymbols(input, symbols).should.deep.equal(
-            expected,
-          );
+          locatePartNumberDigits(input, symbols).should.deep.equal(expected);
         },
       );
     });
@@ -145,9 +146,7 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
       ])(
         "returns %j when symbol at %j and input is %p",
         (expected, symbols, input) => {
-          locatePartNumberDigitsNextToSymbols(input, symbols).should.deep.equal(
-            expected,
-          );
+          locatePartNumberDigits(input, symbols).should.deep.equal(expected);
         },
       );
     });
@@ -163,9 +162,7 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
     ])(
       "returns %j when symbol at %j and input is %p",
       (expected, symbols, input) => {
-        locatePartNumberDigitsNextToSymbols(input, symbols).should.deep.equal(
-          expected,
-        );
+        locatePartNumberDigits(input, symbols).should.deep.equal(expected);
       },
     );
   });
@@ -189,9 +186,7 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
     ])(
       "returns %j when symbol at %j and input is %p",
       (expected, symbols, input) => {
-        locatePartNumberDigitsNextToSymbols(input, symbols).should.deep.equal(
-          expected,
-        );
+        locatePartNumberDigits(input, symbols).should.deep.equal(expected);
       },
     );
   });
