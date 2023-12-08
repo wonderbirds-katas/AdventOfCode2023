@@ -1,7 +1,8 @@
 import "chai/register-should";
 import { config } from "chai";
 import {
-  ApprovalTestPrinter,
+  SnapshotRecorder,
+  RecordLocationsInStringMatrices,
   Coordinate,
   gearRatios,
   locatePartNumberDigits,
@@ -31,7 +32,7 @@ describe("gearRatios", () => {
 });
 
 describe("approvals", () => {
-  let approvalTestPrinter = new ApprovalTestPrinter();
+  let snapshotRecorder: SnapshotRecorder;
 
   const input = readFileSync("./inputs/gearRatios_approvals.txt", "utf-8");
 
@@ -40,17 +41,17 @@ describe("approvals", () => {
       reporters: [new JestReporter()],
     });
 
-    approvalTestPrinter = new ApprovalTestPrinter();
+    snapshotRecorder = new RecordLocationsInStringMatrices(5, 9);
   });
 
   it("parse symbols", () => {
-    gearRatios(input, approvalTestPrinter);
-    verify(approvalTestPrinter.parsedSymbols);
+    gearRatios(input, snapshotRecorder);
+    verify(snapshotRecorder.symbols);
   });
 
   it("locate part number digits", () => {
-    gearRatios(input, approvalTestPrinter);
-    verify(approvalTestPrinter.locatedPartNumberDigits);
+    gearRatios(input, snapshotRecorder);
+    verify(snapshotRecorder.partNumberDigits);
   });
 });
 

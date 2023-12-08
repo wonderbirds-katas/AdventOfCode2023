@@ -99,25 +99,18 @@
 //
 export function gearRatios(
   input: string,
-  approvalTestPrinter: ApprovalTestPrinter = new ApprovalTestPrinter(),
+  snapshotRecorder: SnapshotRecorder = new IgnoreSnapshots(),
 ): number {
   if (input === "") {
     return 0;
   }
-
   const schematic = input.split("\n").map((row) => row.split(""));
-  const rows = schematic.length;
-  const cols = schematic.length === 0 ? 0 : schematic[0].length;
 
   const symbols = parseSymbols(input);
-  approvalTestPrinter.printParsed(symbols, rows, cols);
+  snapshotRecorder.saveSymbols(symbols);
 
   const partNumberDigits = locatePartNumberDigits(input, symbols);
-  approvalTestPrinter.printLocatedPartNumberDigits(
-    partNumberDigits,
-    rows,
-    cols,
-  );
+  snapshotRecorder.savePartNumberDigits(partNumberDigits);
   return 0;
 }
 
@@ -182,39 +175,53 @@ export function locatePartNumberDigits(
   return result;
 }
 
-export class ApprovalTestPrinter {
-  parsedSymbols: string = "";
-  locatedPartNumberDigits: string = "";
+export interface SnapshotRecorder {
+  symbols: string;
+  partNumberDigits: string;
+  saveSymbols: (symbols: Coordinate[]) => void;
+  savePartNumberDigits: (partNumberDigits: Coordinate[]) => void;
+}
 
-  public printParsed(symbols: Coordinate[], rows: number, columns: number) {
-    let parsedSymbolsMatrix: boolean[][] = new Array(rows)
-      .fill([])
-      .map(() => new Array(columns).fill(false));
+class IgnoreSnapshots implements SnapshotRecorder {
+  partNumberDigits: string = "";
+  symbols: string = "";
 
-    for (const symbol of symbols) {
-      parsedSymbolsMatrix[symbol.row][symbol.column] = true;
-    }
+  savePartNumberDigits(partNumberDigits: Coordinate[]): void {}
 
-    this.parsedSymbols = this.printBooleanMatrix(parsedSymbolsMatrix);
+  saveSymbols(symbols: Coordinate[]): void {}
+}
+
+export class RecordLocationsInStringMatrices implements SnapshotRecorder {
+  symbols: string = "";
+  partNumberDigits: string = "";
+
+  private _rows: number;
+  private _columns: number;
+
+  constructor(rows: number, columns: number) {
+    this._rows = rows;
+    this._columns = columns;
   }
 
-  public printLocatedPartNumberDigits(
-    partNumberDigits: Coordinate[],
-    rows: number,
-    columns: number,
-  ) {
-    let partNumberDigitsMatrix: boolean[][] = new Array(rows)
+  public saveSymbols(coordinates: Coordinate[]) {
+    let matrix = this.toBooleanMatrix(coordinates);
+    this.symbols = this.printBooleanMatrix(matrix);
+  }
+
+  public savePartNumberDigits(coordinates: Coordinate[]) {
+    let matrix: boolean[][] = this.toBooleanMatrix(coordinates);
+    this.partNumberDigits = this.printBooleanMatrix(matrix);
+  }
+
+  private toBooleanMatrix(coordinates: Coordinate[]) {
+    let matrix: boolean[][] = new Array(this._rows)
       .fill([])
-      .map(() => new Array(columns).fill(false));
+      .map(() => new Array(this._columns).fill(false));
 
-    for (const partNumberDigit of partNumberDigits) {
-      partNumberDigitsMatrix[partNumberDigit.row][partNumberDigit.column] =
-        true;
+    for (const coordinate of coordinates) {
+      matrix[coordinate.row][coordinate.column] = true;
     }
-
-    this.locatedPartNumberDigits = this.printBooleanMatrix(
-      partNumberDigitsMatrix,
-    );
+    return matrix;
   }
 
   private printBooleanMatrix(booleanMatrix: boolean[][]) {
