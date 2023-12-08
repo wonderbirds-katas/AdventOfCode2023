@@ -1,6 +1,7 @@
 import "chai/register-should";
 import { config } from "chai";
 import {
+  ApprovalTestPrinter,
   Coordinate,
   gearRatios,
   locatePartNumberDigitsNextToSymbols,
@@ -29,30 +30,22 @@ describe("gearRatios", () => {
   });
 });
 
-describe("printBooleanMatrix", () => {
-  function printBooleanMatrix(booleanMatrix: boolean[][]) {
-    let output = "";
-    for (const row of booleanMatrix) {
-      output += row.map((b) => (b ? "1" : ".")).join("") + "\n";
-    }
-    return output;
-  }
+describe("approvals", () => {
+  let approvalTestPrinter = new ApprovalTestPrinter();
+
+  const input = readFileSync("./inputs/gearRatios_approvals.txt", "utf-8");
 
   beforeAll(() => {
     configure({
       reporters: [new JestReporter()],
     });
+
+    approvalTestPrinter = new ApprovalTestPrinter();
   });
 
-  it("should print", () => {
-    const booleanMatrix: boolean[][] = [
-      [true, false, false, false],
-      [false, true, false, false],
-      [false, false, true, false],
-      [false, false, false, false, false],
-      [true, true, true, true, true],
-    ];
-    verify(printBooleanMatrix(booleanMatrix));
+  it("parse symbols", () => {
+    gearRatios(input, approvalTestPrinter);
+    verify(approvalTestPrinter.parsedSymbols);
   });
 });
 

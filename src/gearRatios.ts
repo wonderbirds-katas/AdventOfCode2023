@@ -97,7 +97,21 @@
 //
 // ... describe solution and algorithm idea roughly ...
 //
-export function gearRatios(input: string): number {
+export function gearRatios(
+  input: string,
+  approvalTestPrinter: ApprovalTestPrinter = new ApprovalTestPrinter(),
+): number {
+  if (input === "") {
+    return 0;
+  }
+
+  const schematic = input.split("\n").map((row) => row.split(""));
+  const rows = schematic.length;
+  const cols = schematic.length === 0 ? 0 : schematic[0].length;
+
+  const symbols = parseSymbols(input);
+  approvalTestPrinter.printParsed(symbols, rows, cols);
+
   return 0;
 }
 
@@ -156,4 +170,27 @@ export function locatePartNumberDigitsNextToSymbols(
     }
   }
   return result;
+}
+
+export class ApprovalTestPrinter {
+  parsedSymbols: string = "";
+
+  public printParsed(symbols: Coordinate[], rows: number, columns: number) {
+    let parsedSymbolsMatrix: boolean[][] = new Array(rows)
+      .fill([])
+      .map(() => new Array(columns).fill(false));
+
+    for (const symbol of symbols) {
+      parsedSymbolsMatrix[symbol.row][symbol.column] = true;
+    }
+
+    this.parsedSymbols = this.printBooleanMatrix(parsedSymbolsMatrix);
+  }
+  private printBooleanMatrix(booleanMatrix: boolean[][]) {
+    let output = "";
+    for (const row of booleanMatrix) {
+      output += row.map((b) => (b ? "1" : ".")).join("") + "\n";
+    }
+    return output;
+  }
 }

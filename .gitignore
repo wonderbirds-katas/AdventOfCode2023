@@ -1,3 +1,8 @@
+# Approval tests
+tests/*.received.txt
+
+### Entries below this line have been generated using a tool
+
 # Created by https://www.toptal.com/developers/gitignore/api/node,webstorm+all,jetbrains+all,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,webstorm+all,jetbrains+all,visualstudiocode
 
