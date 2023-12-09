@@ -100,11 +100,16 @@ export function gearRatios(
   const symbols = schematic.parseSymbols();
   const partNumberDigits = schematic.locatePartNumberDigits(symbols);
   const partNumbers = schematic.expandPartNumbers(partNumberDigits);
+  const uniquePartNumbers = new Set<number>(partNumbers);
+  const sumOfPartNumbers = [...uniquePartNumbers].reduce(
+    (previous, current) => previous + current,
+    0,
+  );
 
   snapshotRecorder.saveSymbols(symbols);
   snapshotRecorder.savePartNumberDigits(partNumberDigits);
 
-  return 0;
+  return sumOfPartNumbers;
 }
 
 export class Coordinate {

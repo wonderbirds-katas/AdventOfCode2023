@@ -22,6 +22,22 @@ describe("gearRatios", () => {
     });
   });
 
+  describe("given input file", () => {
+    it.each([
+      [
+        123 + 98 + 983 + 12 + 78123,
+        "./inputs/gearRatios_approvals_all_unique.txt",
+      ],
+      [
+        123 + 456 + 78 + 23 + (456 - 456) + 100 + 200 + (200 - 200) + 300,
+        "./inputs/gearRatios_approvals_with_duplicates.txt",
+      ],
+    ])("returns %p for %p", (expected, path) => {
+      const input = readFileSync(path, "utf-8");
+      gearRatios(input).should.equal(expected);
+    });
+  });
+
   describe("given my personal puzzle input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/gearRatios.txt", "utf-8");
@@ -33,7 +49,10 @@ describe("gearRatios", () => {
 describe("approvals", () => {
   let snapshotRecorder: SnapshotRecorder;
 
-  const input = readFileSync("./inputs/gearRatios_approvals.txt", "utf-8");
+  const input = readFileSync(
+    "./inputs/gearRatios_approvals_all_unique.txt",
+    "utf-8",
+  );
 
   beforeAll(() => {
     configure({
