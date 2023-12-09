@@ -1,14 +1,13 @@
 import "chai/register-should";
 import { config } from "chai";
 import {
-  SnapshotRecorder,
-  RecordLocationsInStringMatrices,
   Coordinate,
+  expandPartNumbers,
   gearRatios,
   locatePartNumberDigits,
-  parseSymbols,
-  expandPartNumbers,
+  RecordLocationsInStringMatrices,
   Schematic,
+  SnapshotRecorder,
 } from "../src/gearRatios";
 import { readFileSync } from "fs";
 import { beforeAll, describe, it } from "@jest/globals";
@@ -61,7 +60,7 @@ describe("parseSymbols", () => {
   describe("given single symbol in single row", () => {
     it("returns empty list of symbols when empty input", () => {
       const input: string = "";
-      const actual: Coordinate[] = parseSymbols(new Schematic(input));
+      const actual: Coordinate[] = new Schematic(input).parseSymbols();
       const expected: Coordinate[] = [];
       actual.should.deep.equal(expected);
     });
@@ -71,7 +70,7 @@ describe("parseSymbols", () => {
       [[new Coordinate(0, 1)], ".*"],
       [[new Coordinate(0, 4)], "....^..."],
     ])("returns %p when %p", (expected: Coordinate[], input: string) => {
-      parseSymbols(new Schematic(input)).should.deep.equal(expected);
+      new Schematic(input).parseSymbols().should.deep.equal(expected);
     });
   });
 
@@ -84,7 +83,7 @@ describe("parseSymbols", () => {
         ".&.*.,...",
       ],
     ])("returns %p when %p", (expected: Coordinate[], input: string) => {
-      parseSymbols(new Schematic(input)).should.deep.equal(expected);
+      new Schematic(input).parseSymbols().should.deep.equal(expected);
     });
   });
 
@@ -101,7 +100,7 @@ describe("parseSymbols", () => {
         "..%\n.$.\n_.!",
       ],
     ])("returns %p when %p", (expected, input) => {
-      parseSymbols(new Schematic(input)).should.deep.equal(expected);
+      new Schematic(input).parseSymbols().should.deep.equal(expected);
     });
   });
 });

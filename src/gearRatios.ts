@@ -93,6 +93,22 @@ export class Schematic {
   constructor(input: string) {
     this.schematic = input.split("\n").map((row) => row.split(""));
   }
+
+  public parseSymbols(): Coordinate[] {
+    const result: Coordinate[] = [];
+
+    for (let rowIndex = 0; rowIndex < this.schematic.length; rowIndex++) {
+      const row = this.schematic[rowIndex];
+      for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
+        const candidate = row[columnIndex];
+        if (isSymbol(candidate)) {
+          result.push(new Coordinate(rowIndex, columnIndex));
+        }
+      }
+    }
+
+    return result;
+  }
 }
 
 export function gearRatios(
@@ -104,7 +120,7 @@ export function gearRatios(
   }
   const schematic = new Schematic(input);
 
-  const symbols = parseSymbols(schematic);
+  const symbols = schematic.parseSymbols();
   snapshotRecorder.saveSymbols(symbols);
 
   const partNumberDigits = locatePartNumberDigits(symbols, schematic);
@@ -121,22 +137,6 @@ export class Coordinate {
 
 function isSymbol(candidate: string) {
   return candidate !== "." && isNaN(Number(candidate));
-}
-
-export function parseSymbols(schematic: Schematic): Coordinate[] {
-  const result: Coordinate[] = [];
-
-  for (let rowIndex = 0; rowIndex < schematic.schematic.length; rowIndex++) {
-    const row = schematic.schematic[rowIndex];
-    for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
-      const candidate = row[columnIndex];
-      if (isSymbol(candidate)) {
-        result.push(new Coordinate(rowIndex, columnIndex));
-      }
-    }
-  }
-
-  return result;
 }
 
 export function locatePartNumberDigits(
