@@ -47,14 +47,10 @@ describe("gearRatios", () => {
 });
 
 describe("approvals", () => {
-  let snapshotRecorder: SnapshotRecorder;
-
   beforeAll(() => {
     configure({
       reporters: [new JestReporter()],
     });
-
-    snapshotRecorder = new RecordLocationsInStringMatrices(5, 9);
   });
 
   describe("given unique part numbers", () => {
@@ -62,6 +58,38 @@ describe("approvals", () => {
       "./inputs/gearRatios_approvals_all_unique.txt",
       "utf-8",
     );
+    let snapshotRecorder: SnapshotRecorder;
+
+    beforeAll(() => {
+      const schematic = new Schematic(input);
+      snapshotRecorder = new RecordLocationsInStringMatrices(
+        schematic.rows,
+        schematic.columns,
+      );
+    });
+
+    it("parse symbols", () => {
+      gearRatios(input, snapshotRecorder);
+      verify(snapshotRecorder.symbols);
+    });
+
+    it("locate part number digits", () => {
+      gearRatios(input, snapshotRecorder);
+      verify(snapshotRecorder.partNumberDigits);
+    });
+  });
+
+  describe("given my personal puzzle input", () => {
+    const input = readFileSync("./inputs/gearRatios.txt", "utf-8");
+    let snapshotRecorder: SnapshotRecorder;
+
+    beforeAll(() => {
+      const schematic = new Schematic(input);
+      snapshotRecorder = new RecordLocationsInStringMatrices(
+        schematic.rows,
+        schematic.columns,
+      );
+    });
 
     it("parse symbols", () => {
       gearRatios(input, snapshotRecorder);

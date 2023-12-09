@@ -130,6 +130,14 @@ export class Schematic {
     this._columns = this._schematic[0].length;
   }
 
+  get rows() {
+    return this._rows;
+  }
+
+  get columns() {
+    return this._columns;
+  }
+
   public parseSymbols(): Coordinate[] {
     const result: Coordinate[] = [];
 
