@@ -4,7 +4,6 @@ import {
   Coordinate,
   expandPartNumbers,
   gearRatios,
-  locatePartNumberDigits,
   RecordLocationsInStringMatrices,
   Schematic,
   SnapshotRecorder,
@@ -111,9 +110,9 @@ describe("locatePartNumberDigits", () => {
       const input: string = "...\n.%.\n...";
       const symbols: Coordinate[] = [new Coordinate(1, 1)];
       const expected: Coordinate[] = [];
-      locatePartNumberDigits(symbols, new Schematic(input)).should.deep.equal(
-        expected,
-      );
+      new Schematic(input)
+        .locatePartNumberDigits(symbols)
+        .should.deep.equal(expected);
     });
 
     describe("and only one single digit part numbers", () => {
@@ -129,10 +128,9 @@ describe("locatePartNumberDigits", () => {
       ])(
         "returns %j when symbol at %j and input is %p",
         (expected, symbols, input) => {
-          locatePartNumberDigits(
-            symbols,
-            new Schematic(input),
-          ).should.deep.equal(expected);
+          new Schematic(input)
+            .locatePartNumberDigits(symbols)
+            .should.deep.equal(expected);
         },
       );
     });
@@ -153,10 +151,9 @@ describe("locatePartNumberDigits", () => {
       ])(
         "returns %j when symbol at %j and input is %p",
         (expected, symbols, input) => {
-          locatePartNumberDigits(
-            symbols,
-            new Schematic(input),
-          ).should.deep.equal(expected);
+          new Schematic(input)
+            .locatePartNumberDigits(symbols)
+            .should.deep.equal(expected);
         },
       );
     });
@@ -172,9 +169,9 @@ describe("locatePartNumberDigits", () => {
     ])(
       "returns %j when symbol at %j and input is %p",
       (expected, symbols, input) => {
-        locatePartNumberDigits(symbols, new Schematic(input)).should.deep.equal(
-          expected,
-        );
+        new Schematic(input)
+          .locatePartNumberDigits(symbols)
+          .should.deep.equal(expected);
       },
     );
   });
@@ -198,9 +195,9 @@ describe("locatePartNumberDigits", () => {
     ])(
       "returns %j when symbol at %j and input is %p",
       (expected, symbols, input) => {
-        locatePartNumberDigits(symbols, new Schematic(input)).should.deep.equal(
-          expected,
-        );
+        new Schematic(input)
+          .locatePartNumberDigits(symbols)
+          .should.deep.equal(expected);
       },
     );
   });

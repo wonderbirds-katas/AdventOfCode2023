@@ -109,6 +109,35 @@ export class Schematic {
 
     return result;
   }
+
+  public locatePartNumberDigits(symbols: Coordinate[]): Coordinate[] {
+    let result: Coordinate[] = [];
+
+    for (const symbol of symbols) {
+      const minRow = Math.max(0, symbol.row - 1);
+      const maxRow = Math.min(this.schematic.length - 1, symbol.row + 1);
+
+      for (let rowIndex = minRow; rowIndex <= maxRow; rowIndex++) {
+        const row = this.schematic[rowIndex];
+        const rowLength = row.length;
+
+        const minColumn = Math.max(0, symbol.column - 1);
+        const maxColumn = Math.min(rowLength, symbol.column + 1);
+
+        for (
+          let columnIndex = minColumn;
+          columnIndex <= maxColumn;
+          columnIndex++
+        ) {
+          const candidate = row[columnIndex];
+          if (!isNaN(Number(candidate))) {
+            result.push(new Coordinate(rowIndex, columnIndex));
+          }
+        }
+      }
+    }
+    return result;
+  }
 }
 
 export function gearRatios(
@@ -123,7 +152,7 @@ export function gearRatios(
   const symbols = schematic.parseSymbols();
   snapshotRecorder.saveSymbols(symbols);
 
-  const partNumberDigits = locatePartNumberDigits(symbols, schematic);
+  const partNumberDigits = schematic.locatePartNumberDigits(symbols);
   snapshotRecorder.savePartNumberDigits(partNumberDigits);
   return 0;
 }
@@ -137,38 +166,6 @@ export class Coordinate {
 
 function isSymbol(candidate: string) {
   return candidate !== "." && isNaN(Number(candidate));
-}
-
-export function locatePartNumberDigits(
-  symbols: Coordinate[],
-  schematic: Schematic,
-): Coordinate[] {
-  let result: Coordinate[] = [];
-
-  for (const symbol of symbols) {
-    const minRow = Math.max(0, symbol.row - 1);
-    const maxRow = Math.min(schematic.schematic.length - 1, symbol.row + 1);
-
-    for (let rowIndex = minRow; rowIndex <= maxRow; rowIndex++) {
-      const row = schematic.schematic[rowIndex];
-      const rowLength = row.length;
-
-      const minColumn = Math.max(0, symbol.column - 1);
-      const maxColumn = Math.min(rowLength, symbol.column + 1);
-
-      for (
-        let columnIndex = minColumn;
-        columnIndex <= maxColumn;
-        columnIndex++
-      ) {
-        const candidate = row[columnIndex];
-        if (!isNaN(Number(candidate))) {
-          result.push(new Coordinate(rowIndex, columnIndex));
-        }
-      }
-    }
-  }
-  return result;
 }
 
 export function expandPartNumbers(
