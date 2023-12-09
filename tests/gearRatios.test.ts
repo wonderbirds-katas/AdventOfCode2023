@@ -7,6 +7,7 @@ import {
   gearRatios,
   locatePartNumberDigits,
   parseSymbols,
+  expandPartNumbers,
 } from "../src/gearRatios";
 import { readFileSync } from "fs";
 import { beforeAll, describe, it } from "@jest/globals";
@@ -104,7 +105,7 @@ describe("parseSymbols", () => {
   });
 });
 
-describe("locatePartNumberDigitsNextToSymbols", () => {
+describe("locatePartNumberDigits", () => {
   describe("given single symbol in the middle of a 3x3 input", () => {
     it("returns empty list of digits when no part numbers", () => {
       const input: string = "...\n.%.\n...";
@@ -188,6 +189,46 @@ describe("locatePartNumberDigitsNextToSymbols", () => {
       "returns %j when symbol at %j and input is %p",
       (expected, symbols, input) => {
         locatePartNumberDigits(input, symbols).should.deep.equal(expected);
+      },
+    );
+  });
+});
+
+describe("expandPartNumbers", () => {
+  describe("given single digit part numbers", () => {
+    it.each([
+      [[1], [new Coordinate(0, 0)], "1"],
+      [
+        [1, 2, 3],
+        [new Coordinate(0, 2), new Coordinate(1, 0), new Coordinate(2, 0)],
+        "..1\n2$.\n3",
+      ],
+    ])(
+      "returns %p when part number digits at %j and input %p",
+      (expected, partNumberDigits, input) => {
+        const schematic = input.split("\n").map((row) => row.split(""));
+        expandPartNumbers(schematic, partNumberDigits).should.deep.equal(
+          expected,
+        );
+      },
+    );
+  });
+
+  describe("given left digits of part number", () => {
+    it.each([
+      [[42], [new Coordinate(0, 1)], ".42\n%..\n..."],
+      [
+        [42, 12],
+        [new Coordinate(0, 2), new Coordinate(1, 2)],
+        "..42\n.%12\n...",
+      ],
+    ])(
+      "returns %p when part number digits at %j and input %p",
+      (expected, partNumberDigits, input) => {
+        const schematic = input.split("\n").map((row) => row.split(""));
+        expandPartNumbers(schematic, partNumberDigits).should.deep.equal(
+          expected,
+        );
       },
     );
   });

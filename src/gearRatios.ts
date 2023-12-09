@@ -46,24 +46,15 @@
 //       identify the coordinates of the digits adjacent to the symbol
 //       for debugging: create a boolean matrix showing where a symbol is located in the schematic
 //
-//   mergeAdjacentPartNumbers:
-//     for each digit coordinate:
-//       remove all digits right next to that coordinate
-//
-//   locatePartNumbers:
+//   expandPartNumbers:
 //     for each digit adjacent to a symbol
 //       identify leftmost digit coordinate
-//
-//   parsePartNumbers__nameIsUsedBySurroundingFunction:
-//     for partNumber:
 //       identify partNumber length
 //       parse partNumber value
 //
-//     for debugging: create a boolean matrix showing where a part number is located in the schematic
+//     for debugging: create a matrix showing only valid part numbers in the schematic
 //
-//   parsePartNumberValues:
-//     for each partNumber:
-//       parse value of the digit
+// reduce part numbers to single occurrence
 //
 // for each part number
 //   add the number to the sum of part numbers
@@ -171,6 +162,32 @@ export function locatePartNumberDigits(
         }
       }
     }
+  }
+  return result;
+}
+
+export function expandPartNumbers(
+  schematic: string[][],
+  coordinates: Coordinate[],
+): number[] {
+  let result: number[] = [];
+  for (const coordinate of coordinates) {
+    let column = coordinate.column;
+    let partNumber = 0;
+    let isLastDigitParsed = false;
+
+    do {
+      const digitString = schematic[coordinate.row][column];
+
+      isLastDigitParsed =
+        digitString === undefined || isNaN(Number(digitString));
+      if (!isLastDigitParsed) {
+        partNumber = partNumber * 10 + Number(digitString);
+      }
+      column++;
+    } while (!isLastDigitParsed);
+
+    result.push(partNumber);
   }
   return result;
 }
