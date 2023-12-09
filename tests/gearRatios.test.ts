@@ -8,6 +8,7 @@ import {
   locatePartNumberDigits,
   parseSymbols,
   expandPartNumbers,
+  Schematic,
 } from "../src/gearRatios";
 import { readFileSync } from "fs";
 import { beforeAll, describe, it } from "@jest/globals";
@@ -60,7 +61,7 @@ describe("parseSymbols", () => {
   describe("given single symbol in single row", () => {
     it("returns empty list of symbols when empty input", () => {
       const input: string = "";
-      const actual: Coordinate[] = parseSymbols(input);
+      const actual: Coordinate[] = parseSymbols(new Schematic(input));
       const expected: Coordinate[] = [];
       actual.should.deep.equal(expected);
     });
@@ -70,7 +71,7 @@ describe("parseSymbols", () => {
       [[new Coordinate(0, 1)], ".*"],
       [[new Coordinate(0, 4)], "....^..."],
     ])("returns %p when %p", (expected: Coordinate[], input: string) => {
-      parseSymbols(input).should.deep.equal(expected);
+      parseSymbols(new Schematic(input)).should.deep.equal(expected);
     });
   });
 
@@ -83,7 +84,7 @@ describe("parseSymbols", () => {
         ".&.*.,...",
       ],
     ])("returns %p when %p", (expected: Coordinate[], input: string) => {
-      parseSymbols(input).should.deep.equal(expected);
+      parseSymbols(new Schematic(input)).should.deep.equal(expected);
     });
   });
 
@@ -100,7 +101,7 @@ describe("parseSymbols", () => {
         "..%\n.$.\n_.!",
       ],
     ])("returns %p when %p", (expected, input) => {
-      parseSymbols(input).should.deep.equal(expected);
+      parseSymbols(new Schematic(input)).should.deep.equal(expected);
     });
   });
 });
@@ -111,7 +112,9 @@ describe("locatePartNumberDigits", () => {
       const input: string = "...\n.%.\n...";
       const symbols: Coordinate[] = [new Coordinate(1, 1)];
       const expected: Coordinate[] = [];
-      locatePartNumberDigits(input, symbols).should.deep.equal(expected);
+      locatePartNumberDigits(symbols, new Schematic(input)).should.deep.equal(
+        expected,
+      );
     });
 
     describe("and only one single digit part numbers", () => {
@@ -127,7 +130,10 @@ describe("locatePartNumberDigits", () => {
       ])(
         "returns %j when symbol at %j and input is %p",
         (expected, symbols, input) => {
-          locatePartNumberDigits(input, symbols).should.deep.equal(expected);
+          locatePartNumberDigits(
+            symbols,
+            new Schematic(input),
+          ).should.deep.equal(expected);
         },
       );
     });
@@ -148,7 +154,10 @@ describe("locatePartNumberDigits", () => {
       ])(
         "returns %j when symbol at %j and input is %p",
         (expected, symbols, input) => {
-          locatePartNumberDigits(input, symbols).should.deep.equal(expected);
+          locatePartNumberDigits(
+            symbols,
+            new Schematic(input),
+          ).should.deep.equal(expected);
         },
       );
     });
@@ -164,7 +173,9 @@ describe("locatePartNumberDigits", () => {
     ])(
       "returns %j when symbol at %j and input is %p",
       (expected, symbols, input) => {
-        locatePartNumberDigits(input, symbols).should.deep.equal(expected);
+        locatePartNumberDigits(symbols, new Schematic(input)).should.deep.equal(
+          expected,
+        );
       },
     );
   });
@@ -188,7 +199,9 @@ describe("locatePartNumberDigits", () => {
     ])(
       "returns %j when symbol at %j and input is %p",
       (expected, symbols, input) => {
-        locatePartNumberDigits(input, symbols).should.deep.equal(expected);
+        locatePartNumberDigits(symbols, new Schematic(input)).should.deep.equal(
+          expected,
+        );
       },
     );
   });
@@ -221,6 +234,31 @@ describe("expandPartNumbers", () => {
         [42, 12],
         [new Coordinate(0, 2), new Coordinate(1, 2)],
         "..42\n.%12\n...",
+      ],
+    ])(
+      "returns %p when part number digits at %j and input %p",
+      (expected, partNumberDigits, input) => {
+        const schematic = input.split("\n").map((row) => row.split(""));
+        expandPartNumbers(schematic, partNumberDigits).should.deep.equal(
+          expected,
+        );
+      },
+    );
+  });
+
+  describe("given ", () => {
+    xit.each([
+      [[42], [new Coordinate(0, 1)], ".42\n%..\n..."],
+      [
+        [42, 42, 12, 987, 987, 987],
+        [
+          new Coordinate(0, 1),
+          new Coordinate(0, 1),
+          new Coordinate(0, 1),
+          new Coordinate(0, 1),
+          new Coordinate(0, 1),
+        ],
+        "..42\n.%12\n987",
       ],
     ])(
       "returns %p when part number digits at %j and input %p",

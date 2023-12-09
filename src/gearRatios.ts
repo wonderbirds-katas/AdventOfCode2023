@@ -88,6 +88,13 @@
 //
 // ... describe solution and algorithm idea roughly ...
 //
+export class Schematic {
+  public schematic: string[][] = [[]];
+  constructor(input: string) {
+    this.schematic = input.split("\n").map((row) => row.split(""));
+  }
+}
+
 export function gearRatios(
   input: string,
   snapshotRecorder: SnapshotRecorder = new IgnoreSnapshots(),
@@ -95,12 +102,12 @@ export function gearRatios(
   if (input === "") {
     return 0;
   }
-  const schematic = input.split("\n").map((row) => row.split(""));
+  const schematic = new Schematic(input);
 
-  const symbols = parseSymbols(input);
+  const symbols = parseSymbols(schematic);
   snapshotRecorder.saveSymbols(symbols);
 
-  const partNumberDigits = locatePartNumberDigits(input, symbols);
+  const partNumberDigits = locatePartNumberDigits(symbols, schematic);
   snapshotRecorder.savePartNumberDigits(partNumberDigits);
   return 0;
 }
@@ -116,12 +123,11 @@ function isSymbol(candidate: string) {
   return candidate !== "." && isNaN(Number(candidate));
 }
 
-export function parseSymbols(input: string): Coordinate[] {
+export function parseSymbols(schematic: Schematic): Coordinate[] {
   const result: Coordinate[] = [];
-  const rows = input.split("\n");
 
-  for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-    const row = rows[rowIndex];
+  for (let rowIndex = 0; rowIndex < schematic.schematic.length; rowIndex++) {
+    const row = schematic.schematic[rowIndex];
     for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
       const candidate = row[columnIndex];
       if (isSymbol(candidate)) {
@@ -134,18 +140,17 @@ export function parseSymbols(input: string): Coordinate[] {
 }
 
 export function locatePartNumberDigits(
-  input: string,
   symbols: Coordinate[],
+  schematic: Schematic,
 ): Coordinate[] {
   let result: Coordinate[] = [];
-  const rows = input.split("\n");
 
   for (const symbol of symbols) {
     const minRow = Math.max(0, symbol.row - 1);
-    const maxRow = Math.min(rows.length - 1, symbol.row + 1);
+    const maxRow = Math.min(schematic.schematic.length - 1, symbol.row + 1);
 
     for (let rowIndex = minRow; rowIndex <= maxRow; rowIndex++) {
-      const row = rows[rowIndex];
+      const row = schematic.schematic[rowIndex];
       const rowLength = row.length;
 
       const minColumn = Math.max(0, symbol.column - 1);
