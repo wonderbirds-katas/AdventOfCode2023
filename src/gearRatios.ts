@@ -89,20 +89,24 @@
 // ... describe solution and algorithm idea roughly ...
 //
 export class Schematic {
-  public schematic: string[][] = [[]];
+  private readonly _schematic: string[][];
+  private readonly _rows: number;
+  private readonly _columns: number;
+
   constructor(input: string) {
-    this.schematic = input.split("\n").map((row) => row.split(""));
+    this._schematic = input.split("\n").map((row) => row.split(""));
+    this._rows = this._schematic.length;
+    this._columns = this._schematic[0].length;
   }
 
   public parseSymbols(): Coordinate[] {
     const result: Coordinate[] = [];
 
-    for (let rowIndex = 0; rowIndex < this.schematic.length; rowIndex++) {
-      const row = this.schematic[rowIndex];
-      for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
-        const candidate = row[columnIndex];
+    for (let row = 0; row < this._rows; row++) {
+      for (let column = 0; column < this._columns; column++) {
+        const candidate = this._schematic[row][column];
         if (isSymbol(candidate)) {
-          result.push(new Coordinate(rowIndex, columnIndex));
+          result.push(new Coordinate(row, column));
         }
       }
     }
@@ -115,23 +119,16 @@ export class Schematic {
 
     for (const symbol of symbols) {
       const minRow = Math.max(0, symbol.row - 1);
-      const maxRow = Math.min(this.schematic.length - 1, symbol.row + 1);
+      const maxRow = Math.min(this._rows - 1, symbol.row + 1);
 
-      for (let rowIndex = minRow; rowIndex <= maxRow; rowIndex++) {
-        const row = this.schematic[rowIndex];
-        const rowLength = row.length;
-
+      for (let row = minRow; row <= maxRow; row++) {
         const minColumn = Math.max(0, symbol.column - 1);
-        const maxColumn = Math.min(rowLength, symbol.column + 1);
+        const maxColumn = Math.min(this._columns - 1, symbol.column + 1);
 
-        for (
-          let columnIndex = minColumn;
-          columnIndex <= maxColumn;
-          columnIndex++
-        ) {
-          const candidate = row[columnIndex];
-          if (!isNaN(Number(candidate))) {
-            result.push(new Coordinate(rowIndex, columnIndex));
+        for (let column = minColumn; column <= maxColumn; column++) {
+          const candidate = this._schematic[row][column];
+          if (isNumber(candidate)) {
+            result.push(new Coordinate(row, column));
           }
         }
       }
@@ -139,7 +136,6 @@ export class Schematic {
     return result;
   }
 }
-
 export function gearRatios(
   input: string,
   snapshotRecorder: SnapshotRecorder = new IgnoreSnapshots(),
@@ -166,6 +162,10 @@ export class Coordinate {
 
 function isSymbol(candidate: string) {
   return candidate !== "." && isNaN(Number(candidate));
+}
+
+function isNumber(candidate: string) {
+  return !isNaN(Number(candidate));
 }
 
 export function expandPartNumbers(
@@ -205,9 +205,9 @@ class IgnoreSnapshots implements SnapshotRecorder {
   partNumberDigits: string = "";
   symbols: string = "";
 
-  savePartNumberDigits(partNumberDigits: Coordinate[]): void {}
+  savePartNumberDigits(_partNumberDigits: Coordinate[]): void {}
 
-  saveSymbols(symbols: Coordinate[]): void {}
+  saveSymbols(_symbols: Coordinate[]): void {}
 }
 
 export class RecordLocationsInStringMatrices implements SnapshotRecorder {
