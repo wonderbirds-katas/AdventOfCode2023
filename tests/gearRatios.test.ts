@@ -2,7 +2,6 @@ import "chai/register-should";
 import { config } from "chai";
 import {
   Coordinate,
-  expandPartNumbers,
   gearRatios,
   RecordLocationsInStringMatrices,
   Schematic,
@@ -215,10 +214,9 @@ describe("expandPartNumbers", () => {
     ])(
       "returns %p when part number digits at %j and input %p",
       (expected, partNumberDigits, input) => {
-        const schematic = input.split("\n").map((row) => row.split(""));
-        expandPartNumbers(schematic, partNumberDigits).should.deep.equal(
-          expected,
-        );
+        new Schematic(input)
+          .expandPartNumbers(partNumberDigits)
+          .should.deep.equal(expected);
       },
     );
   });
@@ -234,10 +232,9 @@ describe("expandPartNumbers", () => {
     ])(
       "returns %p when part number digits at %j and input %p",
       (expected, partNumberDigits, input) => {
-        const schematic = input.split("\n").map((row) => row.split(""));
-        expandPartNumbers(schematic, partNumberDigits).should.deep.equal(
-          expected,
-        );
+        new Schematic(input)
+          .expandPartNumbers(partNumberDigits)
+          .should.deep.equal(expected);
       },
     );
   });
@@ -259,10 +256,9 @@ describe("expandPartNumbers", () => {
     ])(
       "returns %p when part number digits at %j and input %p",
       (expected, partNumberDigits, input) => {
-        const schematic = input.split("\n").map((row) => row.split(""));
-        expandPartNumbers(schematic, partNumberDigits).should.deep.equal(
-          expected,
-        );
+        new Schematic(input)
+          .expandPartNumbers(partNumberDigits)
+          .should.deep.equal(expected);
       },
     );
   });

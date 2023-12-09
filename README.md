@@ -33,7 +33,7 @@ This way, you do not risk accidentally seeing solutions for puzzles you have not
 The following table maps the day of the advent of code puzzles to the filename prefixes of the corresponding solution.
 
 | Day | Module name   |
-| --- | ------------- |
+|-----|---------------|
 | 0   | template      |
 | 1   | trebuchet     |
 | 2   | cubeConundrum |

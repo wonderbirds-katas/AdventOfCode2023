@@ -98,10 +98,11 @@ export function gearRatios(
   const schematic = new Schematic(input);
 
   const symbols = schematic.parseSymbols();
-  snapshotRecorder.saveSymbols(symbols);
-
   const partNumberDigits = schematic.locatePartNumberDigits(symbols);
+
+  snapshotRecorder.saveSymbols(symbols);
   snapshotRecorder.savePartNumberDigits(partNumberDigits);
+
   return 0;
 }
 
@@ -159,6 +160,29 @@ export class Schematic {
     }
     return result;
   }
+
+  public expandPartNumbers(coordinates: Coordinate[]): number[] {
+    let result: number[] = [];
+    for (const coordinate of coordinates) {
+      let column = coordinate.column;
+      let partNumber = 0;
+      let isLastDigitParsed = false;
+
+      do {
+        const digitString = this._schematic[coordinate.row][column];
+
+        isLastDigitParsed =
+          digitString === undefined || isNaN(Number(digitString));
+        if (!isLastDigitParsed) {
+          partNumber = partNumber * 10 + Number(digitString);
+        }
+        column++;
+      } while (!isLastDigitParsed);
+
+      result.push(partNumber);
+    }
+    return result;
+  }
 }
 
 function isSymbol(candidate: string) {
@@ -167,32 +191,6 @@ function isSymbol(candidate: string) {
 
 function isNumber(candidate: string) {
   return !isNaN(Number(candidate));
-}
-
-export function expandPartNumbers(
-  schematic: string[][],
-  coordinates: Coordinate[],
-): number[] {
-  let result: number[] = [];
-  for (const coordinate of coordinates) {
-    let column = coordinate.column;
-    let partNumber = 0;
-    let isLastDigitParsed = false;
-
-    do {
-      const digitString = schematic[coordinate.row][column];
-
-      isLastDigitParsed =
-        digitString === undefined || isNaN(Number(digitString));
-      if (!isLastDigitParsed) {
-        partNumber = partNumber * 10 + Number(digitString);
-      }
-      column++;
-    } while (!isLastDigitParsed);
-
-    result.push(partNumber);
-  }
-  return result;
 }
 
 export interface SnapshotRecorder {
