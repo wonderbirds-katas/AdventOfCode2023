@@ -49,11 +49,6 @@ describe("gearRatios", () => {
 describe("approvals", () => {
   let snapshotRecorder: SnapshotRecorder;
 
-  const input = readFileSync(
-    "./inputs/gearRatios_approvals_all_unique.txt",
-    "utf-8",
-  );
-
   beforeAll(() => {
     configure({
       reporters: [new JestReporter()],
@@ -62,14 +57,21 @@ describe("approvals", () => {
     snapshotRecorder = new RecordLocationsInStringMatrices(5, 9);
   });
 
-  it("parse symbols", () => {
-    gearRatios(input, snapshotRecorder);
-    verify(snapshotRecorder.symbols);
-  });
+  describe("given unique part numbers", () => {
+    const input = readFileSync(
+      "./inputs/gearRatios_approvals_all_unique.txt",
+      "utf-8",
+    );
 
-  it("locate part number digits", () => {
-    gearRatios(input, snapshotRecorder);
-    verify(snapshotRecorder.partNumberDigits);
+    it("parse symbols", () => {
+      gearRatios(input, snapshotRecorder);
+      verify(snapshotRecorder.symbols);
+    });
+
+    it("locate part number digits", () => {
+      gearRatios(input, snapshotRecorder);
+      verify(snapshotRecorder.partNumberDigits);
+    });
   });
 });
 
