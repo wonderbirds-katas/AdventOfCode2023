@@ -99,6 +99,7 @@ export function gearRatios(
 
   const symbols = schematic.parseSymbols();
   const partNumberDigits = schematic.locatePartNumberDigits(symbols);
+  const partNumbers = schematic.expandPartNumbers(partNumberDigits);
 
   snapshotRecorder.saveSymbols(symbols);
   snapshotRecorder.savePartNumberDigits(partNumberDigits);
@@ -165,6 +166,17 @@ export class Schematic {
     let result: number[] = [];
     for (const coordinate of coordinates) {
       let column = coordinate.column;
+
+      // find the leftmost digit of the current part number
+      let isDigit = true;
+      while (isDigit) {
+        column--;
+        isDigit =
+          column >= 0 && isNumber(this._schematic[coordinate.row][column]);
+      }
+      column++;
+
+      // parse the part number starting from the leftmost digit
       let partNumber = 0;
       let isLastDigitParsed = false;
 

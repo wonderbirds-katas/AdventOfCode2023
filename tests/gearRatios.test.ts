@@ -225,9 +225,9 @@ describe("expandPartNumbers", () => {
     it.each([
       [[42], [new Coordinate(0, 1)], ".42\n%..\n..."],
       [
-        [42, 12],
+        [425, 612],
         [new Coordinate(0, 2), new Coordinate(1, 2)],
-        "..42\n.%12\n...",
+        "..425\n.%612\n...",
       ],
     ])(
       "returns %p when part number digits at %j and input %p",
@@ -239,19 +239,45 @@ describe("expandPartNumbers", () => {
     );
   });
 
-  describe("given ", () => {
-    xit.each([
-      [[42], [new Coordinate(0, 1)], ".42\n%..\n..."],
+  describe("given right digits of part number", () => {
+    it.each([
+      [[123], [new Coordinate(0, 2)], "123.\n...%\n...."],
+      [[123], [new Coordinate(1, 2)], "....\n123%\n...."],
+      [[123], [new Coordinate(2, 2)], "....\n...%\n123."],
       [
-        [42, 42, 12, 987, 987, 987],
+        [123, 456, 789],
+        [new Coordinate(0, 2), new Coordinate(1, 2), new Coordinate(2, 2)],
+        "123.\n456%\n789.",
+      ],
+    ])(
+      "returns %p when part number digits at %j and input %p",
+      (expected, partNumberDigits, input) => {
+        new Schematic(input)
+          .expandPartNumbers(partNumberDigits)
+          .should.deep.equal(expected);
+      },
+    );
+  });
+
+  describe("given part numbers at arbitrary locations", () => {
+    it.each([
+      [
+        [12345, 12345, 12345, 67, 89, 876, 876],
         [
-          new Coordinate(0, 1),
-          new Coordinate(0, 1),
-          new Coordinate(0, 1),
-          new Coordinate(0, 1),
-          new Coordinate(0, 1),
+          new Coordinate(1, 1),
+          new Coordinate(1, 2),
+          new Coordinate(1, 3),
+          new Coordinate(2, 1),
+          new Coordinate(2, 3),
+          new Coordinate(3, 1),
+          new Coordinate(3, 2),
         ],
-        "..42\n.%12\n987",
+        `.....
+12345
+67=89
+876..
+.....
+.....`,
       ],
     ])(
       "returns %p when part number digits at %j and input %p",
