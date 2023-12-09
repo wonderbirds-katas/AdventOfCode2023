@@ -88,6 +88,30 @@
 //
 // ... describe solution and algorithm idea roughly ...
 //
+export function gearRatios(
+  input: string,
+  snapshotRecorder: SnapshotRecorder = new IgnoreSnapshots(),
+): number {
+  if (input === "") {
+    return 0;
+  }
+  const schematic = new Schematic(input);
+
+  const symbols = schematic.parseSymbols();
+  snapshotRecorder.saveSymbols(symbols);
+
+  const partNumberDigits = schematic.locatePartNumberDigits(symbols);
+  snapshotRecorder.savePartNumberDigits(partNumberDigits);
+  return 0;
+}
+
+export class Coordinate {
+  constructor(
+    readonly row: number,
+    readonly column: number,
+  ) {}
+}
+
 export class Schematic {
   private readonly _schematic: string[][];
   private readonly _rows: number;
@@ -135,29 +159,6 @@ export class Schematic {
     }
     return result;
   }
-}
-export function gearRatios(
-  input: string,
-  snapshotRecorder: SnapshotRecorder = new IgnoreSnapshots(),
-): number {
-  if (input === "") {
-    return 0;
-  }
-  const schematic = new Schematic(input);
-
-  const symbols = schematic.parseSymbols();
-  snapshotRecorder.saveSymbols(symbols);
-
-  const partNumberDigits = schematic.locatePartNumberDigits(symbols);
-  snapshotRecorder.savePartNumberDigits(partNumberDigits);
-  return 0;
-}
-
-export class Coordinate {
-  constructor(
-    readonly row: number,
-    readonly column: number,
-  ) {}
 }
 
 function isSymbol(candidate: string) {
