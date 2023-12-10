@@ -32,6 +32,7 @@ describe("gearRatios", () => {
         123 + 456 + 78 + 23 + (456 - 456) + 100 + 200 + (200 - 200) + 300,
         "./inputs/gearRatios_approvals_with_duplicates.txt",
       ],
+      [4361, "./inputs/gearRatios_from_puzzle_description.txt"],
     ])("returns %p for %p", (expected, path) => {
       const input = readFileSync(path, "utf-8");
       gearRatios(input).should.equal(expected);
@@ -56,6 +57,32 @@ describe("approvals", () => {
   describe("given unique part numbers", () => {
     const input = readFileSync(
       "./inputs/gearRatios_approvals_all_unique.txt",
+      "utf-8",
+    );
+    let snapshotRecorder: SnapshotRecorder;
+
+    beforeAll(() => {
+      const schematic = new Schematic(input);
+      snapshotRecorder = new RecordLocationsInStringMatrices(
+        schematic.rows,
+        schematic.columns,
+      );
+    });
+
+    it("parse symbols", () => {
+      gearRatios(input, snapshotRecorder);
+      verify(snapshotRecorder.symbols);
+    });
+
+    it("locate part number digits", () => {
+      gearRatios(input, snapshotRecorder);
+      verify(snapshotRecorder.partNumberDigits);
+    });
+  });
+
+  describe("given puzzle input from description", () => {
+    const input = readFileSync(
+      "./inputs/gearRatios_from_puzzle_description.txt",
       "utf-8",
     );
     let snapshotRecorder: SnapshotRecorder;
