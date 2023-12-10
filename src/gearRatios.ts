@@ -134,6 +134,13 @@ export class Coordinate {
   ) {}
 }
 
+export class PartNumber {
+  constructor(
+    readonly topLeft: Coordinate,
+    readonly value: number,
+  ) {}
+}
+
 export class Schematic {
   private readonly _schematic: string[][];
   private readonly _rows: number;
@@ -238,13 +245,6 @@ function isNumber(candidate: string) {
   return !isNaN(Number(candidate));
 }
 
-class PartNumber {
-  constructor(
-    readonly topLeft: Coordinate,
-    readonly value: number,
-  ) {}
-}
-
 export interface SnapshotRecorder {
   symbols: string;
   partNumberDigits: string;
@@ -264,74 +264,4 @@ class IgnoreSnapshots implements SnapshotRecorder {
   savePartNumberDigits(_partNumberDigits: Coordinate[]): void {}
 
   savePartNumbers(_partNumbers: PartNumber[]): void {}
-}
-
-export class RecordLocationsInStringMatrices implements SnapshotRecorder {
-  symbols: string = "";
-  partNumberDigits: string = "";
-  partNumbers: string = "";
-
-  private _rows: number;
-  private _columns: number;
-
-  constructor(rows: number, columns: number) {
-    this._rows = rows;
-    this._columns = columns;
-  }
-
-  public saveSymbols(coordinates: Coordinate[]) {
-    let matrix = this.toBooleanMatrix(coordinates);
-    this.symbols = this.printBooleanMatrix(matrix);
-  }
-
-  public savePartNumberDigits(coordinates: Coordinate[]) {
-    let matrix: boolean[][] = this.toBooleanMatrix(coordinates);
-    this.partNumberDigits = this.printBooleanMatrix(matrix);
-  }
-
-  public savePartNumbers(partNumbers: PartNumber[]) {
-    let matrix: string[][] = new Array(this._rows)
-      .fill([])
-      .map(() => new Array(this._columns).fill("."));
-
-    for (const partNumber of partNumbers) {
-      const valueStr = partNumber.value.toString();
-      for (let index = 0; index < valueStr.length; index++) {
-        matrix[partNumber.topLeft.row][partNumber.topLeft.column + index] =
-          valueStr[index];
-      }
-    }
-
-    this.partNumbers = this.printStringMatrix(matrix);
-  }
-
-  private toBooleanMatrix(coordinates: Coordinate[]) {
-    let matrix: boolean[][] = new Array(this._rows)
-      .fill([])
-      .map(() => new Array(this._columns).fill(false));
-
-    for (const coordinate of coordinates) {
-      matrix[coordinate.row][coordinate.column] = true;
-    }
-    return matrix;
-  }
-
-  private printBooleanMatrix(booleanMatrix: boolean[][]) {
-    let output = "";
-    for (const row of booleanMatrix) {
-      output += row.map((b) => (b ? "1" : ".")).join("") + "\n";
-    }
-    return output;
-  }
-
-  private printStringMatrix(stringMatrix: string[][]) {
-    let output = "";
-    for (const row of stringMatrix) {
-      for (const character of row) {
-        output += character;
-      }
-      output += "\n";
-    }
-    return output;
-  }
 }

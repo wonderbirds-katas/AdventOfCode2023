@@ -3,7 +3,7 @@ import { config } from "chai";
 import {
   Coordinate,
   gearRatios,
-  RecordLocationsInStringMatrices,
+  PartNumber,
   Schematic,
   SnapshotRecorder,
 } from "../src/gearRatios";
@@ -54,80 +54,134 @@ describe("approvals", () => {
     });
   });
 
-  describe("given unique part numbers", () => {
-    const input = readFileSync(
-      "./inputs/gearRatios_approvals_all_unique.txt",
-      "utf-8",
+  function prepareDataSource(path: string): [string, SnapshotRecorder] {
+    const input = readFileSync(path, "utf-8");
+    const schematic = new Schematic(input);
+    const snapshotRecorder = new RecordLocationsInStringMatrices(
+      schematic.rows,
+      schematic.columns,
     );
-    let snapshotRecorder: SnapshotRecorder;
 
-    beforeAll(() => {
-      const schematic = new Schematic(input);
-      snapshotRecorder = new RecordLocationsInStringMatrices(
-        schematic.rows,
-        schematic.columns,
-      );
-    });
+    return [input, snapshotRecorder];
+  }
+
+  describe("given unique part numbers", () => {
+    const inputPath = "./inputs/gearRatios_approvals_all_unique.txt";
 
     it("parse symbols", () => {
+      const [input, snapshotRecorder] = prepareDataSource(inputPath);
       gearRatios(input, snapshotRecorder);
       verify(snapshotRecorder.symbols);
     });
 
     it("locate part number digits", () => {
+      const [input, snapshotRecorder] = prepareDataSource(inputPath);
       gearRatios(input, snapshotRecorder);
       verify(snapshotRecorder.partNumberDigits);
     });
   });
 
   describe("given puzzle input from description", () => {
-    const input = readFileSync(
-      "./inputs/gearRatios_from_puzzle_description.txt",
-      "utf-8",
-    );
-    let snapshotRecorder: SnapshotRecorder;
-
-    beforeAll(() => {
-      const schematic = new Schematic(input);
-      snapshotRecorder = new RecordLocationsInStringMatrices(
-        schematic.rows,
-        schematic.columns,
-      );
-    });
+    const inputPath = "./inputs/gearRatios_from_puzzle_description.txt";
 
     it("parse symbols", () => {
+      const [input, snapshotRecorder] = prepareDataSource(inputPath);
       gearRatios(input, snapshotRecorder);
       verify(snapshotRecorder.symbols);
     });
 
     it("locate part number digits", () => {
+      const [input, snapshotRecorder] = prepareDataSource(inputPath);
       gearRatios(input, snapshotRecorder);
       verify(snapshotRecorder.partNumberDigits);
     });
   });
 
   describe("given my personal puzzle input", () => {
-    const input = readFileSync("./inputs/gearRatios.txt", "utf-8");
-    let snapshotRecorder: SnapshotRecorder;
-
-    beforeAll(() => {
-      const schematic = new Schematic(input);
-      snapshotRecorder = new RecordLocationsInStringMatrices(
-        schematic.rows,
-        schematic.columns,
-      );
-    });
+    const inputPath = "./inputs/gearRatios.txt";
 
     it("parse symbols", () => {
+      const [input, snapshotRecorder] = prepareDataSource(inputPath);
       gearRatios(input, snapshotRecorder);
       verify(snapshotRecorder.symbols);
     });
 
     it("locate entire part numbers", () => {
+      const [input, snapshotRecorder] = prepareDataSource(inputPath);
       gearRatios(input, snapshotRecorder);
       verify(snapshotRecorder.partNumbers);
     });
   });
+
+  class RecordLocationsInStringMatrices implements SnapshotRecorder {
+    symbols: string = "";
+    partNumberDigits: string = "";
+    partNumbers: string = "";
+
+    private _rows: number;
+    private _columns: number;
+
+    constructor(rows: number, columns: number) {
+      this._rows = rows;
+      this._columns = columns;
+    }
+
+    public saveSymbols(coordinates: Coordinate[]) {
+      let matrix = this.toBooleanMatrix(coordinates);
+      this.symbols = this.printBooleanMatrix(matrix);
+    }
+
+    public savePartNumberDigits(coordinates: Coordinate[]) {
+      let matrix: boolean[][] = this.toBooleanMatrix(coordinates);
+      this.partNumberDigits = this.printBooleanMatrix(matrix);
+    }
+
+    public savePartNumbers(partNumbers: PartNumber[]) {
+      let matrix: string[][] = new Array(this._rows)
+        .fill([])
+        .map(() => new Array(this._columns).fill("."));
+
+      for (const partNumber of partNumbers) {
+        const valueStr = partNumber.value.toString();
+        for (let index = 0; index < valueStr.length; index++) {
+          matrix[partNumber.topLeft.row][partNumber.topLeft.column + index] =
+            valueStr[index];
+        }
+      }
+
+      this.partNumbers = this.printStringMatrix(matrix);
+    }
+
+    private toBooleanMatrix(coordinates: Coordinate[]) {
+      let matrix: boolean[][] = new Array(this._rows)
+        .fill([])
+        .map(() => new Array(this._columns).fill(false));
+
+      for (const coordinate of coordinates) {
+        matrix[coordinate.row][coordinate.column] = true;
+      }
+      return matrix;
+    }
+
+    private printBooleanMatrix(booleanMatrix: boolean[][]) {
+      let output = "";
+      for (const row of booleanMatrix) {
+        output += row.map((b) => (b ? "1" : ".")).join("") + "\n";
+      }
+      return output;
+    }
+
+    private printStringMatrix(stringMatrix: string[][]) {
+      let output = "";
+      for (const row of stringMatrix) {
+        for (const character of row) {
+          output += character;
+        }
+        output += "\n";
+      }
+      return output;
+    }
+  }
 });
 
 describe("parseSymbols", () => {
