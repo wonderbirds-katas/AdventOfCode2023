@@ -99,8 +99,12 @@ export function gearRatios(
 
   const symbols = schematic.parseSymbols();
   const partNumberDigits = schematic.locatePartNumberDigits(symbols);
-  const partNumbers = schematic.expandPartNumbers(partNumberDigits);
-  const uniquePartNumbers = new Set<number>(partNumbers);
+  const partNumbersWithCoordinates =
+    schematic.expandPartNumbers(partNumberDigits);
+  const partNumberValues = partNumbersWithCoordinates.map(
+    (partNumber) => partNumber.value,
+  );
+  const uniquePartNumbers = new Set<number>(partNumberValues);
   const sumOfPartNumbers = [...uniquePartNumbers].reduce(
     (previous, current) => previous + current,
     0,
@@ -108,6 +112,7 @@ export function gearRatios(
 
   snapshotRecorder.saveSymbols(symbols);
   snapshotRecorder.savePartNumberDigits(partNumberDigits);
+  snapshotRecorder.savePartNumbers(partNumbersWithCoordinates);
 
   return sumOfPartNumbers;
 }
@@ -175,26 +180,29 @@ export class Schematic {
     return result;
   }
 
-  public expandPartNumbers(coordinates: Coordinate[]): number[] {
-    let result: number[] = [];
-    for (const coordinate of coordinates) {
-      let column = coordinate.column;
+  public expandPartNumbers(digitCoordinates: Coordinate[]): PartNumber[] {
+    let partNumbersWithCoordinates: PartNumber[] = [];
+
+    for (const digitCoordinate of digitCoordinates) {
+      let column = digitCoordinate.column;
 
       // find the leftmost digit of the current part number
       let isDigit = true;
       while (isDigit) {
         column--;
         isDigit =
-          column >= 0 && isNumber(this._schematic[coordinate.row][column]);
+          column >= 0 && isNumber(this._schematic[digitCoordinate.row][column]);
       }
       column++;
+
+      let partNumberCoordinate = new Coordinate(digitCoordinate.row, column);
 
       // parse the part number starting from the leftmost digit
       let partNumber = 0;
       let isLastDigitParsed = false;
 
       do {
-        const digitString = this._schematic[coordinate.row][column];
+        const digitString = this._schematic[digitCoordinate.row][column];
 
         isLastDigitParsed =
           digitString === undefined || isNaN(Number(digitString));
@@ -204,9 +212,11 @@ export class Schematic {
         column++;
       } while (!isLastDigitParsed);
 
-      result.push(partNumber);
+      partNumbersWithCoordinates.push(
+        new PartNumber(partNumberCoordinate, partNumber),
+      );
     }
-    return result;
+    return partNumbersWithCoordinates;
   }
 }
 
@@ -218,25 +228,38 @@ function isNumber(candidate: string) {
   return !isNaN(Number(candidate));
 }
 
+class PartNumber {
+  constructor(
+    readonly topLeft: Coordinate,
+    readonly value: number,
+  ) {}
+}
+
 export interface SnapshotRecorder {
   symbols: string;
   partNumberDigits: string;
+  partNumbers: string;
   saveSymbols: (symbols: Coordinate[]) => void;
   savePartNumberDigits: (partNumberDigits: Coordinate[]) => void;
+  savePartNumbers: (partNumbers: PartNumber[]) => void;
 }
 
 class IgnoreSnapshots implements SnapshotRecorder {
   partNumberDigits: string = "";
   symbols: string = "";
+  partNumbers: string = "";
+
+  saveSymbols(_symbols: Coordinate[]): void {}
 
   savePartNumberDigits(_partNumberDigits: Coordinate[]): void {}
 
-  saveSymbols(_symbols: Coordinate[]): void {}
+  savePartNumbers(_partNumbers: PartNumber[]): void {}
 }
 
 export class RecordLocationsInStringMatrices implements SnapshotRecorder {
   symbols: string = "";
   partNumberDigits: string = "";
+  partNumbers: string = "";
 
   private _rows: number;
   private _columns: number;
@@ -256,6 +279,22 @@ export class RecordLocationsInStringMatrices implements SnapshotRecorder {
     this.partNumberDigits = this.printBooleanMatrix(matrix);
   }
 
+  public savePartNumbers(partNumbers: PartNumber[]) {
+    let matrix: string[][] = new Array(this._rows)
+      .fill([])
+      .map(() => new Array(this._columns).fill("."));
+
+    for (const partNumber of partNumbers) {
+      const valueStr = partNumber.value.toString();
+      for (let index = 0; index < valueStr.length; index++) {
+        matrix[partNumber.topLeft.row][partNumber.topLeft.column + index] =
+          valueStr[index];
+      }
+    }
+
+    this.partNumbers = this.printStringMatrix(matrix);
+  }
+
   private toBooleanMatrix(coordinates: Coordinate[]) {
     let matrix: boolean[][] = new Array(this._rows)
       .fill([])
@@ -271,6 +310,17 @@ export class RecordLocationsInStringMatrices implements SnapshotRecorder {
     let output = "";
     for (const row of booleanMatrix) {
       output += row.map((b) => (b ? "1" : ".")).join("") + "\n";
+    }
+    return output;
+  }
+
+  private printStringMatrix(stringMatrix: string[][]) {
+    let output = "";
+    for (const row of stringMatrix) {
+      for (const character of row) {
+        output += character;
+      }
+      output += "\n";
     }
     return output;
   }

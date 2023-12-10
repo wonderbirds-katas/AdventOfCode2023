@@ -123,9 +123,9 @@ describe("approvals", () => {
       verify(snapshotRecorder.symbols);
     });
 
-    it("locate part number digits", () => {
+    it("locate entire part numbers", () => {
       gearRatios(input, snapshotRecorder);
-      verify(snapshotRecorder.partNumberDigits);
+      verify(snapshotRecorder.partNumbers);
     });
   });
 });
@@ -292,6 +292,7 @@ describe("expandPartNumbers", () => {
       (expected, partNumberDigits, input) => {
         new Schematic(input)
           .expandPartNumbers(partNumberDigits)
+          .map((partNumber) => partNumber.value)
           .should.deep.equal(expected);
       },
     );
@@ -310,6 +311,7 @@ describe("expandPartNumbers", () => {
       (expected, partNumberDigits, input) => {
         new Schematic(input)
           .expandPartNumbers(partNumberDigits)
+          .map((partNumber) => partNumber.value)
           .should.deep.equal(expected);
       },
     );
@@ -330,6 +332,7 @@ describe("expandPartNumbers", () => {
       (expected, partNumberDigits, input) => {
         new Schematic(input)
           .expandPartNumbers(partNumberDigits)
+          .map((partNumber) => partNumber.value)
           .should.deep.equal(expected);
       },
     );
@@ -360,6 +363,7 @@ describe("expandPartNumbers", () => {
       (expected, partNumberDigits, input) => {
         new Schematic(input)
           .expandPartNumbers(partNumberDigits)
+          .map((partNumber) => partNumber.value)
           .should.deep.equal(expected);
       },
     );
