@@ -113,6 +113,7 @@ describe("approvals", () => {
     });
   });
 
+  // Capture variable states for approval tests
   class RecordLocationsInStringMatrices implements SnapshotRecorder {
     symbols: string = "";
     partNumberDigits: string = "";

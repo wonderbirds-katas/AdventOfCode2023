@@ -54,7 +54,9 @@
 //
 //     for debugging: create a matrix showing only valid part numbers in the schematic
 //
-// reduce part numbers to single occurrence
+// remove oubliettes from part numbers
+//   (the algorithm above finds multiple instances of the same part number, one for each of its digits
+//   next to a symbol)
 //
 // for each part number
 //   add the number to the sum of part numbers
@@ -99,22 +101,22 @@ export function gearRatios(
 
   const symbols = schematic.parseSymbols();
   const partNumberDigits = schematic.locatePartNumberDigits(symbols);
-  const partNumbers = schematic.expandPartNumbers(partNumberDigits);
+  const partNumbersWithOubliettes =
+    schematic.expandPartNumbers(partNumberDigits);
 
-  const filteredPartNumbers: PartNumber[] = [];
-  const checkedPartNumberRowsColumnHashes = new Set<number>();
-  for (const partNumber of partNumbers) {
+  // remove oubliettes
+  const partNumbers: PartNumber[] = [];
+  const processedPartNumberHashes = new Set<number>();
+  for (const partNumber of partNumbersWithOubliettes) {
     const hash = partNumber.topLeft.row * 1000 + partNumber.topLeft.column;
-    if (!checkedPartNumberRowsColumnHashes.has(hash)) {
-      checkedPartNumberRowsColumnHashes.add(hash);
-      filteredPartNumbers.push(partNumber);
+    if (!processedPartNumberHashes.has(hash)) {
+      processedPartNumberHashes.add(hash);
+      partNumbers.push(partNumber);
     }
   }
 
-  const partNumberValues = filteredPartNumbers.map(
-    (partNumber) => partNumber.value,
-  );
-  //  const uniquePartNumbers = new Set<number>(partNumberValues);
+  const partNumberValues = partNumbers.map((partNumber) => partNumber.value);
+
   const sumOfPartNumbers = [...partNumberValues].reduce(
     (previous, current) => previous + current,
     0,
@@ -122,7 +124,7 @@ export function gearRatios(
 
   snapshotRecorder.saveSymbols(symbols);
   snapshotRecorder.savePartNumberDigits(partNumberDigits);
-  snapshotRecorder.savePartNumbers(filteredPartNumbers);
+  snapshotRecorder.savePartNumbers(partNumbers);
 
   return sumOfPartNumbers;
 }
@@ -245,6 +247,7 @@ function isNumber(candidate: string) {
   return !isNaN(Number(candidate));
 }
 
+// Capture human-readable text for approval tests
 export interface SnapshotRecorder {
   symbols: string;
   partNumberDigits: string;
@@ -254,6 +257,7 @@ export interface SnapshotRecorder {
   savePartNumbers: (partNumbers: PartNumber[]) => void;
 }
 
+// Don't capture but discard all requests - this implementation is used in production
 class IgnoreSnapshots implements SnapshotRecorder {
   partNumberDigits: string = "";
   symbols: string = "";
