@@ -99,20 +99,30 @@ export function gearRatios(
 
   const symbols = schematic.parseSymbols();
   const partNumberDigits = schematic.locatePartNumberDigits(symbols);
-  const partNumbersWithCoordinates =
-    schematic.expandPartNumbers(partNumberDigits);
-  const partNumberValues = partNumbersWithCoordinates.map(
+  const partNumbers = schematic.expandPartNumbers(partNumberDigits);
+
+  const filteredPartNumbers: PartNumber[] = [];
+  const checkedPartNumberRowsColumnHashes = new Set<number>();
+  for (const partNumber of partNumbers) {
+    const hash = partNumber.topLeft.row * 1000 + partNumber.topLeft.column;
+    if (!checkedPartNumberRowsColumnHashes.has(hash)) {
+      checkedPartNumberRowsColumnHashes.add(hash);
+      filteredPartNumbers.push(partNumber);
+    }
+  }
+
+  const partNumberValues = filteredPartNumbers.map(
     (partNumber) => partNumber.value,
   );
-  const uniquePartNumbers = new Set<number>(partNumberValues);
-  const sumOfPartNumbers = [...uniquePartNumbers].reduce(
+  //  const uniquePartNumbers = new Set<number>(partNumberValues);
+  const sumOfPartNumbers = [...partNumberValues].reduce(
     (previous, current) => previous + current,
     0,
   );
 
   snapshotRecorder.saveSymbols(symbols);
   snapshotRecorder.savePartNumberDigits(partNumberDigits);
-  snapshotRecorder.savePartNumbers(partNumbersWithCoordinates);
+  snapshotRecorder.savePartNumbers(filteredPartNumbers);
 
   return sumOfPartNumbers;
 }

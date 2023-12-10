@@ -29,7 +29,7 @@ describe("gearRatios", () => {
         "./inputs/gearRatios_approvals_all_unique.txt",
       ],
       [
-        123 + 456 + 78 + 23 + (456 - 456) + 100 + 200 + (200 - 200) + 300,
+        123 + 456 + 78 + 23 + 456 + 100 + 200 + 200 + 300,
         "./inputs/gearRatios_approvals_with_duplicates.txt",
       ],
       [4361, "./inputs/gearRatios_from_puzzle_description.txt"],
@@ -40,7 +40,7 @@ describe("gearRatios", () => {
   });
 
   describe("given my personal puzzle input", () => {
-    it.each([[0]])("returns %p", (expected) => {
+    it.each([[532331]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/gearRatios.txt", "utf-8");
       gearRatios(input).should.equal(expected);
     });
