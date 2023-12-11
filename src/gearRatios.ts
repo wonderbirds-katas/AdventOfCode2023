@@ -79,7 +79,9 @@
 // Part 2 - Understanding the problem
 // ==================================
 //
-// ... list some simple tests showing how I understand the puzzle ...
+// Find gears, i.e. "*" with exactly two numbers factor1 and factor2 next to it.
+// GearRatio = factor1 * factor2
+// result = sum(GearRatios)
 //
 // Tests from the problem description
 //
