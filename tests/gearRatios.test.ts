@@ -2,7 +2,9 @@ import "chai/register-should";
 import { config } from "chai";
 import {
   Coordinate,
+  Gear,
   gearRatios,
+  gearRatiosPart2,
   PartNumber,
   Schematic,
   SnapshotRecorder,
@@ -420,6 +422,43 @@ describe("expandPartNumbers", () => {
           .expandPartNumbers(partNumberDigits)
           .map((partNumber) => partNumber.value)
           .should.deep.equal(expected);
+      },
+    );
+  });
+});
+
+describe("gearRatiosPart2", () => {
+  describe("given theGiven", () => {
+    it.each([
+      [6, 2, 3],
+      [20, 4, 5],
+    ])(
+      "returns %p when factor1 = %p and factor2 = %p",
+      (expected, factor1, factor2) => {
+        let input = `${factor1}..\n.*.\n..${factor2}`;
+        gearRatiosPart2(input).should.deep.equal(expected);
+      },
+    );
+  });
+});
+
+describe("findGears", () => {
+  describe("given theGiven", () => {
+    it.each([
+      [2, 3],
+      [4, 5],
+    ])(
+      "returns gear when factor1 = %p and factor2 = %p",
+      (factor1, factor2) => {
+        new Schematic(`${factor1}..\n.*.\n..${factor2}`)
+          .findGears()
+          .should.deep.equal(
+            new Gear(
+              new Coordinate(1, 1),
+              new PartNumber(new Coordinate(0, 0), factor1),
+              new PartNumber(new Coordinate(2, 2), factor2),
+            ),
+          );
       },
     );
   });
