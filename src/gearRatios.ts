@@ -262,16 +262,27 @@ export class Schematic {
   findGears(): Gear[] {
     const symbol = new Coordinate(1, 1);
 
-    const factor1 = Number(this._schematic[0][0]);
-    const factor2 = Number(this._schematic[2][2]);
+    const partNumberDigits = this.locatePartNumberDigits([symbol]);
 
-    return [
-      new Gear(
-        symbol,
-        new PartNumber(new Coordinate(0, 0), factor1),
-        new PartNumber(new Coordinate(2, 2), factor2),
-      ),
-    ];
+    const factor1Coordinate = partNumberDigits[0];
+    const factor1 = Number(
+      this._schematic[factor1Coordinate.row][factor1Coordinate.column],
+    );
+    const part1 = new PartNumber(
+      new Coordinate(factor1Coordinate.row, factor1Coordinate.column),
+      factor1,
+    );
+
+    const factor2Coordinate = partNumberDigits[1];
+    const factor2 = Number(
+      this._schematic[factor2Coordinate.row][factor2Coordinate.column],
+    );
+    const part2 = new PartNumber(
+      new Coordinate(factor2Coordinate.row, factor2Coordinate.column),
+      factor2,
+    );
+
+    return [new Gear(symbol, part1, part2)];
   }
 }
 

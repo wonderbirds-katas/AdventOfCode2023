@@ -443,7 +443,7 @@ describe("gearRatiosPart2", () => {
 });
 
 describe("findGears", () => {
-  describe("given a single gear", () => {
+  describe("given a single gear and single digit part numbers", () => {
     it.each([
       [
         "2..\n.*.\n..3",
@@ -459,6 +459,22 @@ describe("findGears", () => {
           new Coordinate(1, 1),
           new PartNumber(new Coordinate(0, 0), 4),
           new PartNumber(new Coordinate(2, 2), 5),
+        ),
+      ],
+      [
+        "...\n3*7\n...",
+        new Gear(
+          new Coordinate(1, 1),
+          new PartNumber(new Coordinate(1, 0), 3),
+          new PartNumber(new Coordinate(1, 2), 7),
+        ),
+      ],
+      [
+        ".8.\n.*\n9..",
+        new Gear(
+          new Coordinate(1, 1),
+          new PartNumber(new Coordinate(0, 1), 8),
+          new PartNumber(new Coordinate(2, 0), 9),
         ),
       ],
     ])("%p => %j", (input, expected) => {
