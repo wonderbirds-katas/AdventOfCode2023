@@ -93,9 +93,14 @@
 // ... describe solution and algorithm idea roughly ...
 //
 export function gearRatiosPart2(input: string) {
-  let gear = new Schematic(input).findGears();
-  let ratio = gear.factor1.value * gear.factor2.value;
-  return ratio;
+  let gears = new Schematic(input).findGears();
+
+  let sum = 0;
+  for (const gear of gears) {
+    sum += gear.factor1.value * gear.factor2.value;
+  }
+
+  return sum;
 }
 
 export function gearRatios(
@@ -254,15 +259,19 @@ export class Schematic {
     return partNumbersWithCoordinates;
   }
 
-  findGears() {
+  findGears(): Gear[] {
     const symbol = new Coordinate(1, 1);
+
     const factor1 = Number(this._schematic[0][0]);
     const factor2 = Number(this._schematic[2][2]);
-    return new Gear(
-      symbol,
-      new PartNumber(new Coordinate(0, 0), factor1),
-      new PartNumber(new Coordinate(2, 2), factor2),
-    );
+
+    return [
+      new Gear(
+        symbol,
+        new PartNumber(new Coordinate(0, 0), factor1),
+        new PartNumber(new Coordinate(2, 2), factor2),
+      ),
+    ];
   }
 }
 

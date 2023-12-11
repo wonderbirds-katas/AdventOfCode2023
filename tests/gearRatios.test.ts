@@ -428,7 +428,7 @@ describe("expandPartNumbers", () => {
 });
 
 describe("gearRatiosPart2", () => {
-  describe("given theGiven", () => {
+  describe("given a single gear", () => {
     it.each([
       [6, 2, 3],
       [20, 4, 5],
@@ -443,23 +443,26 @@ describe("gearRatiosPart2", () => {
 });
 
 describe("findGears", () => {
-  describe("given theGiven", () => {
+  describe("given a single gear", () => {
     it.each([
-      [2, 3],
-      [4, 5],
-    ])(
-      "returns gear when factor1 = %p and factor2 = %p",
-      (factor1, factor2) => {
-        new Schematic(`${factor1}..\n.*.\n..${factor2}`)
-          .findGears()
-          .should.deep.equal(
-            new Gear(
-              new Coordinate(1, 1),
-              new PartNumber(new Coordinate(0, 0), factor1),
-              new PartNumber(new Coordinate(2, 2), factor2),
-            ),
-          );
-      },
-    );
+      [
+        "2..\n.*.\n..3",
+        new Gear(
+          new Coordinate(1, 1),
+          new PartNumber(new Coordinate(0, 0), 2),
+          new PartNumber(new Coordinate(2, 2), 3),
+        ),
+      ],
+      [
+        "4..\n.*.\n..5",
+        new Gear(
+          new Coordinate(1, 1),
+          new PartNumber(new Coordinate(0, 0), 4),
+          new PartNumber(new Coordinate(2, 2), 5),
+        ),
+      ],
+    ])("%p => %j", (input, expected) => {
+      new Schematic(input).findGears().should.deep.equal([expected]);
+    });
   });
 });
