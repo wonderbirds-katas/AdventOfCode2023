@@ -530,4 +530,68 @@ describe("findGears", () => {
       new Schematic(input).findGears().should.deep.equal([]);
     });
   });
+
+  describe("given multiple gears with non-overlapping part numbers", () => {
+    it.each([
+      [
+        "two non-overlapping gears",
+        `.........
+.1.3.....
+.*.*.....
+.2.4.....`,
+        [
+          new Gear(
+            new Coordinate(2, 1),
+            new PartNumber(new Coordinate(1, 1), 1),
+            new PartNumber(new Coordinate(3, 1), 2),
+          ),
+          new Gear(
+            new Coordinate(2, 3),
+            new PartNumber(new Coordinate(1, 3), 3),
+            new PartNumber(new Coordinate(3, 3), 4),
+          ),
+        ],
+      ],
+      [
+        "two overlapping gears",
+        `.........
+.1.3.....
+.*2*.....
+.........`,
+        [
+          new Gear(
+            new Coordinate(2, 1),
+            new PartNumber(new Coordinate(1, 1), 1),
+            new PartNumber(new Coordinate(2, 2), 2),
+          ),
+          new Gear(
+            new Coordinate(2, 3),
+            new PartNumber(new Coordinate(1, 3), 3),
+            new PartNumber(new Coordinate(2, 2), 2),
+          ),
+        ],
+      ],
+      [
+        "two overlapping gears and one non-gear",
+        `.........
+.1....4..
+.*2*3*...
+......5..`,
+        [
+          new Gear(
+            new Coordinate(2, 1),
+            new PartNumber(new Coordinate(1, 1), 1),
+            new PartNumber(new Coordinate(2, 2), 2),
+          ),
+          new Gear(
+            new Coordinate(2, 3),
+            new PartNumber(new Coordinate(2, 2), 2),
+            new PartNumber(new Coordinate(2, 4), 3),
+          ),
+        ],
+      ],
+    ])("%p => %j", (_description, input, expected) => {
+      new Schematic(input).findGears().should.deep.equal(expected);
+    });
+  });
 });

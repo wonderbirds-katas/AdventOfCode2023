@@ -261,18 +261,19 @@ export class Schematic {
 
   findGears(): Gear[] {
     const symbols = this.parseSymbols();
+    const result: Gear[] = [];
 
-    const symbol = symbols[0];
+    for (const symbol of symbols) {
+      const partNumberDigits = this.locatePartNumberDigits([symbol]);
+      let mergedDigits = this.mergeDigitsOfSamePartNumber(partNumberDigits);
+      const partNumbers = this.expandPartNumbers(mergedDigits);
 
-    const partNumberDigits = this.locatePartNumberDigits([symbol]);
-    let mergedDigits = this.mergeDigitsOfSamePartNumber(partNumberDigits);
-    const partNumbers = this.expandPartNumbers(mergedDigits);
-
-    if (partNumbers.length != 2) {
-      return [];
+      if (partNumbers.length === 2) {
+        result.push(new Gear(symbol, partNumbers[0], partNumbers[1]));
+      }
     }
 
-    return [new Gear(symbol, partNumbers[0], partNumbers[1])];
+    return result;
   }
 
   private mergeDigitsOfSamePartNumber(partNumberDigits: Coordinate[]) {
