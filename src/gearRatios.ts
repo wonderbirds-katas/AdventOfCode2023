@@ -260,29 +260,36 @@ export class Schematic {
   }
 
   findGears(): Gear[] {
-    const symbol = new Coordinate(1, 1);
+    const symbols = this.parseSymbols();
+
+    const symbol = symbols[0];
 
     const partNumberDigits = this.locatePartNumberDigits([symbol]);
+    let mergedDigits = this.mergeDigitsOfSamePartNumber(partNumberDigits);
+    const partNumbers = this.expandPartNumbers(mergedDigits);
 
-    const factor1Coordinate = partNumberDigits[0];
-    const factor1 = Number(
-      this._schematic[factor1Coordinate.row][factor1Coordinate.column],
-    );
-    const part1 = new PartNumber(
-      new Coordinate(factor1Coordinate.row, factor1Coordinate.column),
-      factor1,
-    );
+    return [new Gear(symbol, partNumbers[0], partNumbers[1])];
+  }
 
-    const factor2Coordinate = partNumberDigits[1];
-    const factor2 = Number(
-      this._schematic[factor2Coordinate.row][factor2Coordinate.column],
-    );
-    const part2 = new PartNumber(
-      new Coordinate(factor2Coordinate.row, factor2Coordinate.column),
-      factor2,
-    );
+  private mergeDigitsOfSamePartNumber(partNumberDigits: Coordinate[]) {
+    let mergedDigits: Coordinate[] = [];
+    let previous = partNumberDigits[0];
+    mergedDigits.push(previous);
 
-    return [new Gear(symbol, part1, part2)];
+    let index = 1;
+    while (index < partNumberDigits.length) {
+      let current = partNumberDigits[index];
+      if (
+        current.row != previous.row ||
+        current.column != previous.column + 1
+      ) {
+        mergedDigits.push(current);
+      }
+
+      previous = current;
+      index++;
+    }
+    return mergedDigits;
   }
 }
 

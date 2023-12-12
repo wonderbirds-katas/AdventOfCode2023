@@ -481,4 +481,43 @@ describe("findGears", () => {
       new Schematic(input).findGears().should.deep.equal([expected]);
     });
   });
+
+  describe("given a single gear and multi-digit part numbers", () => {
+    it.each([
+      [
+        "21.\n.*.\n..3",
+        new Gear(
+          new Coordinate(1, 1),
+          new PartNumber(new Coordinate(0, 0), 21),
+          new PartNumber(new Coordinate(2, 2), 3),
+        ),
+      ],
+      [
+        "819\n.*.\n.23",
+        new Gear(
+          new Coordinate(1, 1),
+          new PartNumber(new Coordinate(0, 0), 819),
+          new PartNumber(new Coordinate(2, 1), 23),
+        ),
+      ],
+      [
+        "..819..\n451*...\n.......",
+        new Gear(
+          new Coordinate(1, 3),
+          new PartNumber(new Coordinate(0, 2), 819),
+          new PartNumber(new Coordinate(1, 0), 451),
+        ),
+      ],
+      [
+        ".819.....\n....*....\n....98765",
+        new Gear(
+          new Coordinate(1, 4),
+          new PartNumber(new Coordinate(0, 1), 819),
+          new PartNumber(new Coordinate(2, 4), 98765),
+        ),
+      ],
+    ])("%p => %j", (input, expected) => {
+      new Schematic(input).findGears().should.deep.equal([expected]);
+    });
+  });
 });
