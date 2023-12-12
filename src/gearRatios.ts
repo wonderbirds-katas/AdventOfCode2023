@@ -268,10 +268,18 @@ export class Schematic {
     let mergedDigits = this.mergeDigitsOfSamePartNumber(partNumberDigits);
     const partNumbers = this.expandPartNumbers(mergedDigits);
 
+    if (partNumbers.length != 2) {
+      return [];
+    }
+
     return [new Gear(symbol, partNumbers[0], partNumbers[1])];
   }
 
   private mergeDigitsOfSamePartNumber(partNumberDigits: Coordinate[]) {
+    if (partNumberDigits.length < 2) {
+      return partNumberDigits;
+    }
+
     let mergedDigits: Coordinate[] = [];
     let previous = partNumberDigits[0];
     mergedDigits.push(previous);

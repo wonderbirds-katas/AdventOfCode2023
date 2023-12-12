@@ -520,4 +520,14 @@ describe("findGears", () => {
       new Schematic(input).findGears().should.deep.equal([expected]);
     });
   });
+
+  describe("given single gear edge cases", () => {
+    it.each([
+      ["returns [] when no part number", "...\n.*.\n..."],
+      ["returns [] when only a single part number", "21.\n.*.\n..."],
+      ["returns [] when too many part numbers", "21.\n7*.\n..9"],
+    ])("%s", (_description, input) => {
+      new Schematic(input).findGears().should.deep.equal([]);
+    });
+  });
 });
