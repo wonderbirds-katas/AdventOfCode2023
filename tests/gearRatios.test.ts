@@ -443,6 +443,23 @@ describe("gearRatiosPart2", () => {
       },
     );
   });
+
+  describe("given input file", () => {
+    it.each([[467835, "./inputs/gearRatios_from_puzzle_description.txt"]])(
+      "returns %p for %p",
+      (expected, path) => {
+        const input = readFileSync(path, "utf-8");
+        gearRatiosPart2(input).should.equal(expected);
+      },
+    );
+  });
+
+  describe("given my personal puzzle input", () => {
+    it.each([[82301120]])("returns %p", (expected) => {
+      const input = readFileSync("./inputs/gearRatios.txt", "utf-8");
+      gearRatiosPart2(input).should.equal(expected);
+    });
+  });
 });
 
 describe("findGears", () => {
