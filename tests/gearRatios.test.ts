@@ -594,4 +594,13 @@ describe("findGears", () => {
       new Schematic(input).findGears().should.deep.equal(expected);
     });
   });
+
+  describe("given non-gear symbol", () => {
+    it.each([["returns [] when not a gear symbol", "21.\n.&.\n..9"]])(
+      "%s",
+      (_description, input) => {
+        new Schematic(input).findGears().should.deep.equal([]);
+      },
+    );
+  });
 });
