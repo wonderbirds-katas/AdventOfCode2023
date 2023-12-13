@@ -183,13 +183,15 @@ export class Schematic {
     return this._columns;
   }
 
-  public parseSymbols(): Coordinate[] {
+  public parseSymbols(
+    predicate: (candidate: string) => boolean = isSymbol,
+  ): Coordinate[] {
     const result: Coordinate[] = [];
 
     for (let row = 0; row < this._rows; row++) {
       for (let column = 0; column < this._columns; column++) {
         const candidate = this._schematic[row][column];
-        if (isSymbol(candidate)) {
+        if (predicate(candidate)) {
           result.push(new Coordinate(row, column));
         }
       }
