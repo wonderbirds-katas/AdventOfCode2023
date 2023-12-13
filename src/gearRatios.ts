@@ -262,7 +262,7 @@ export class Schematic {
   }
 
   findGears(): Gear[] {
-    const symbols = this.parseSymbols();
+    const symbols = this.parseSymbols((candidate) => candidate === "*");
     const result: Gear[] = [];
 
     for (const symbol of symbols) {
