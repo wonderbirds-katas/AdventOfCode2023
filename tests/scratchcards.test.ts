@@ -27,6 +27,18 @@ describe("scratchcards", () => {
     });
   });
 
+  describe("GIVEN single card with arbitrary winning numbers", () => {
+    describe("WHEN I have an arbitrary sequence of numbers", () => {
+      it.each([
+        [0, "Card 1: 1 2 3 4 5 | 0"],
+        [1, "Card 1: 1 2 3 4 5 | 0 1"],
+        [2, "Card 1: 2 42 8711 | 0 1 2 3 4 42"],
+      ])("THEN returns %d for %p", (expected, input) => {
+        scratchcards(input).should.equal(expected);
+      });
+    });
+  });
+
   describe("GIVEN multiple cards with single winning number", () => {
     describe("WHEN I only have single non-winning numbers", () => {
       it.each([
@@ -42,7 +54,17 @@ Card 3: 0 | 1`,
     });
   });
 
-  xdescribe("given my personal puzzle input", () => {
+  describe("GIVEN example puzzle input", () => {
+    it.each([[13]])("returns %p", (expected) => {
+      const input = readFileSync(
+        "./inputs/scratchcards_from_puzzle_description.txt",
+        "utf-8",
+      );
+      scratchcards(input).should.equal(expected);
+    });
+  });
+
+  xdescribe("GIVEN my personal puzzle input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/scratchcards.txt", "utf-8");
       scratchcards(input).should.equal(expected);
