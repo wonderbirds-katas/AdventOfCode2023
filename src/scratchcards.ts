@@ -11,16 +11,16 @@ function calculateValueOf(scratchcard: string) {
   return numberOfMatches > 0 ? Math.pow(2, numberOfMatches - 1) : 0;
 }
 
-function parseWinningNumbers(scratchcard: string) {
-  const regex = /:\s*([\d\s]+)\s\|/;
-  const allDigitGroupsAsString = scratchcard.match(regex);
-  const separatedDigitGroups = allDigitGroupsAsString![1].split(" ");
-  return separatedDigitGroups.map((digitGroup) => Number(digitGroup));
+function parseMyNumbers(scratchcard: string) {
+  return parsNumbersInGroup(scratchcard, /\|\s*([\d\s]+)/);
 }
 
-function parseMyNumbers(scratchcard: string) {
-  const regex = /\|\s*([\d\s]+)/;
-  const allDigitGroupsAsString = scratchcard.match(regex);
+function parseWinningNumbers(scratchcard: string) {
+  return parsNumbersInGroup(scratchcard, /:\s*([\d\s]+)\s\|/);
+}
+
+function parsNumbersInGroup(scratchcard: string, groupDefinition: RegExp) {
+  const allDigitGroupsAsString = scratchcard.match(groupDefinition);
   const separatedDigitGroups = allDigitGroupsAsString![1].split(" ");
   return separatedDigitGroups.map((digitGroup) => Number(digitGroup));
 }
