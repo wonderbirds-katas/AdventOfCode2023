@@ -1,22 +1,22 @@
 export function scratchcardsPart2(input: string): number {
   const scratchcards = parseScratchcards(input);
-  const numberOfCardsPerIndex = Array(scratchcards.length).fill(1);
+  const copiesPerCard = Array(scratchcards.length).fill(1);
 
   for (let index = 0; index < scratchcards.length; index++) {
     const scratchcard = scratchcards[index];
     const value = calculateNumberOfMatches(scratchcard);
-    const multiples = numberOfCardsPerIndex[index];
+    const copies = copiesPerCard[index];
 
     for (
       let indexOfWonCard = index + 1;
       indexOfWonCard < index + 1 + value;
       indexOfWonCard++
     ) {
-      numberOfCardsPerIndex[indexOfWonCard] += multiples;
+      copiesPerCard[indexOfWonCard] += copies;
     }
   }
 
-  return numberOfCardsPerIndex.reduce(sum);
+  return copiesPerCard.reduce(sum);
 }
 
 export function scratchcards(input: string): number {
