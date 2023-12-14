@@ -4,7 +4,7 @@ export function scratchcardsPart2(input: string): number {
 
   for (let index = 0; index < scratchcards.length; index++) {
     const scratchcard = scratchcards[index];
-    const value = calculateValueOf(scratchcard);
+    const value = calculateNumberOfMatches(scratchcard);
     const multiples = numberOfCardsPerIndex[index];
 
     for (
@@ -26,15 +26,18 @@ export function scratchcards(input: string): number {
 
 function parseScratchcards(input: string) {
   const inputWithSingleNumberSeparator = input.replaceAll(/ +/g, " ");
-  const scratchcards = inputWithSingleNumberSeparator.split("\n");
-  return scratchcards;
+  return inputWithSingleNumberSeparator.split("\n");
 }
 
 function calculateValueOf(scratchcard: string) {
+  let numberOfMatches = calculateNumberOfMatches(scratchcard);
+  return numberOfMatches > 0 ? Math.pow(2, numberOfMatches - 1) : 0;
+}
+
+function calculateNumberOfMatches(scratchcard: string) {
   let winningNumbers = parseWinningNumbers(scratchcard);
   let myNumbers = parseMyNumbers(scratchcard);
-  let numberOfMatches = countMatchesOf(myNumbers, winningNumbers);
-  return numberOfMatches > 0 ? Math.pow(2, numberOfMatches - 1) : 0;
+  return countMatchesOf(myNumbers, winningNumbers);
 }
 
 function parseWinningNumbers(scratchcard: string) {

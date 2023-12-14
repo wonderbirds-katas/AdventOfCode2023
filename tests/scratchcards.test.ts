@@ -104,8 +104,8 @@ Card 2: 0 | 1`,
     });
   });
 
-  xdescribe("GIVEN example puzzle input", () => {
-    it.each([[13]])("returns %p", (expected) => {
+  describe("GIVEN example puzzle input", () => {
+    it.each([[30]])("returns %p", (expected) => {
       const input = readFileSync(
         "./inputs/scratchcards_from_puzzle_description.txt",
         "utf-8",
@@ -114,8 +114,8 @@ Card 2: 0 | 1`,
     });
   });
 
-  xdescribe("GIVEN my personal puzzle input", () => {
-    it.each([[18653]])("returns %p", (expected) => {
+  describe("GIVEN my personal puzzle input", () => {
+    it.each([[5921508]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/scratchcards.txt", "utf-8");
       scratchcardsPart2(input).should.equal(expected);
     });
