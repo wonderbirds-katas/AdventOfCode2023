@@ -2,31 +2,30 @@ export function scratchcards(input: string): number {
   return input.split("\n").map(calculateValueOf).reduce(sum);
 }
 
-// Test cases:
-// 0 | 1 -> 0
-// 0 | 0 -> 1
-// 1 | 1 -> 1
-// 0 1 | 0 -> 1
-// 0 1 | 1 -> 1
-// ...
-// 0 1 2 3 | 1 1 1 1 1 -> 2^(5-1) = 16
 function calculateValueOf(_scratchcard: string) {
-  let winningCards = parseWinningCards(_scratchcard);
-  let myCards = parseMyCards(_scratchcard);
-  let numberOfMatches = countMatchesOf(myCards, winningCards);
-  return numberOfMatches > 0 ? /* Math.pow(2, numberOfMatches - 1) */ 0 : 0;
+  let winningNumbers = parseWinningNumbers(_scratchcard);
+  let myNumbers = parseMyNumbers(_scratchcard);
+  let numberOfMatches = countMatchesOf(myNumbers, winningNumbers);
+  return numberOfMatches > 0 ? Math.pow(2, numberOfMatches - 1) : 0;
 }
 
-function parseWinningCards(_scratchcard: string) {
-  return [0];
+function parseWinningNumbers(scratchcard: string) {
+  const regex = /:\s*([\d\s]+)\s\|/;
+  const allDigitGroupsAsString = scratchcard.match(regex);
+  const separatedDigitGroups = allDigitGroupsAsString![1].split(" ");
+  return separatedDigitGroups.map((digitGroup) => Number(digitGroup));
 }
 
-function parseMyCards(_scratchcard: string) {
-  return [0];
+function parseMyNumbers(scratchcard: string) {
+  const regex = /\|\s*([\d\s]+)/;
+  const allDigitGroupsAsString = scratchcard.match(regex);
+  const separatedDigitGroups = allDigitGroupsAsString![1].split(" ");
+  return separatedDigitGroups.map((digitGroup) => Number(digitGroup));
 }
 
-function countMatchesOf(my_cards: number[], in_winning_cards: number[]) {
-  return 0;
+function countMatchesOf(myNumbers: number[], winningNumbers: number[]) {
+  return myNumbers.filter((myNumber) => winningNumbers.includes(myNumber))
+    .length;
 }
 
 const sum = (a: number, b: number) => a + b;

@@ -15,6 +15,16 @@ describe("scratchcards", () => {
         },
       );
     });
+
+    describe("WHEN I have the same winning number multiple times", () => {
+      it.each([
+        [1, "Card 1: 0 | 0"],
+        [2, "Card 1: 0 | 0 0"],
+        [16, "Card 1: 17 | 17 17 17 17 17"],
+      ])("THEN returns %d for %p", (expected, input) => {
+        scratchcards(input).should.equal(expected);
+      });
+    });
   });
 
   describe("GIVEN multiple cards with single winning number", () => {
