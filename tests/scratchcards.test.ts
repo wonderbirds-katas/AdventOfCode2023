@@ -1,6 +1,6 @@
 import "chai/register-should";
 import { config } from "chai";
-import { scratchcards } from "../src/scratchcards";
+import { scratchcards, scratchcardsPart2 } from "../src/scratchcards";
 import { readFileSync } from "fs";
 
 config.truncateThreshold = 0;
@@ -72,6 +72,52 @@ Card 3: 0 | 1`,
     it.each([[18653]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/scratchcards.txt", "utf-8");
       scratchcards(input).should.equal(expected);
+    });
+  });
+});
+
+describe("scratchcardsPart2", () => {
+  describe("GIVEN multiple cards with arbitrary winning numbers", () => {
+    describe("WHEN I win 0 additional cards", () => {
+      it.each([
+        [1, `Card 1: 0 | 1`],
+        [
+          2,
+          `Card 1: 0 | 1
+Card 2: 0 | 1`,
+        ],
+      ])("THEN returns %d for %p", (expected, input) => {
+        scratchcardsPart2(input).should.equal(expected);
+      });
+    });
+
+    describe("WHEN I win additional cards", () => {
+      it.each([
+        [
+          3,
+          `Card 1: 0 | 0
+Card 2: 0 | 1`,
+        ],
+      ])("THEN returns %d for %p", (expected, input) => {
+        scratchcardsPart2(input).should.equal(expected);
+      });
+    });
+  });
+
+  xdescribe("GIVEN example puzzle input", () => {
+    it.each([[13]])("returns %p", (expected) => {
+      const input = readFileSync(
+        "./inputs/scratchcards_from_puzzle_description.txt",
+        "utf-8",
+      );
+      scratchcardsPart2(input).should.equal(expected);
+    });
+  });
+
+  xdescribe("GIVEN my personal puzzle input", () => {
+    it.each([[18653]])("returns %p", (expected) => {
+      const input = readFileSync("./inputs/scratchcards.txt", "utf-8");
+      scratchcardsPart2(input).should.equal(expected);
     });
   });
 });

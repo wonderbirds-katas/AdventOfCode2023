@@ -1,7 +1,33 @@
+export function scratchcardsPart2(input: string): number {
+  const scratchcards = parseScratchcards(input);
+  const numberOfCardsPerIndex = Array(scratchcards.length).fill(1);
+
+  for (let index = 0; index < scratchcards.length; index++) {
+    const scratchcard = scratchcards[index];
+    const value = calculateValueOf(scratchcard);
+    const multiples = numberOfCardsPerIndex[index];
+
+    for (
+      let indexOfWonCard = index + 1;
+      indexOfWonCard < index + 1 + value;
+      indexOfWonCard++
+    ) {
+      numberOfCardsPerIndex[indexOfWonCard] += multiples;
+    }
+  }
+
+  return numberOfCardsPerIndex.reduce(sum);
+}
+
 export function scratchcards(input: string): number {
+  const scratchcards = parseScratchcards(input);
+  return scratchcards.map(calculateValueOf).reduce(sum);
+}
+
+function parseScratchcards(input: string) {
   const inputWithSingleNumberSeparator = input.replaceAll(/ +/g, " ");
   const scratchcards = inputWithSingleNumberSeparator.split("\n");
-  return scratchcards.map(calculateValueOf).reduce(sum);
+  return scratchcards;
 }
 
 function calculateValueOf(scratchcard: string) {
