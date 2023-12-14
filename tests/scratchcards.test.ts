@@ -33,6 +33,10 @@ describe("scratchcards", () => {
         [0, "Card 1: 1 2 3 4 5 | 0"],
         [1, "Card 1: 1 2 3 4 5 | 0 1"],
         [2, "Card 1: 2 42 8711 | 0 1 2 3 4 42"],
+        [
+          Math.pow(2, 9),
+          "Card   1: 66 92  4 54 39 76 49 27 61 56 | 66 59 85 54 61 86 37 49  6 18 81 39  4 56  2 48 76 72 71 25 27 67 10 92 13",
+        ],
       ])("THEN returns %d for %p", (expected, input) => {
         scratchcards(input).should.equal(expected);
       });
@@ -64,8 +68,8 @@ Card 3: 0 | 1`,
     });
   });
 
-  xdescribe("GIVEN my personal puzzle input", () => {
-    it.each([[0]])("returns %p", (expected) => {
+  describe("GIVEN my personal puzzle input", () => {
+    it.each([[18653]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/scratchcards.txt", "utf-8");
       scratchcards(input).should.equal(expected);
     });
