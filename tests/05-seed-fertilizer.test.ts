@@ -65,6 +65,44 @@ temperature-to-humidity map:
 
 humidity-to-location map:`,
       ],
+      [
+        42,
+        42,
+        `42
+
+seed-to-soil map:
+
+soil-to-fertilizer map:
+
+fertilizer-to-water map:
+
+water-to-light map:
+
+light-to-temperature map:
+
+temperature-to-humidity map:
+
+humidity-to-location map:`,
+      ],
+      [
+        100,
+        100,
+        `100
+
+seed-to-soil map:
+
+soil-to-fertilizer map:
+
+fertilizer-to-water map:
+
+water-to-light map:
+
+light-to-temperature map:
+
+temperature-to-humidity map:
+
+humidity-to-location map:`,
+      ],
     ])("returns %p when seed number %p", (expected, _seed, input) => {
       seedLocation(input).should.equal(expected);
     });

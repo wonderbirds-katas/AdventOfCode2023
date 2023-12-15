@@ -1,6 +1,8 @@
 export function seedLocation(input: string): number {
-  const seeds = parseSeeds(input);
-  const mappers = parseMappers(input);
+  const inputLines = input.split("\n");
+
+  const seeds = parseSeeds(inputLines);
+  const mappers = parseMappers(inputLines);
 
   for (const mapper of mappers) {
     for (const seed of seeds) {
@@ -37,11 +39,12 @@ class MapperBuilder {
   }
 }
 
-function parseSeeds(input: string): Seed[] {
-  return [new Seed(Number(input[0]))];
+function parseSeeds(input: string[]): Seed[] {
+  const numbers = input[0].split(" ").map((str) => Number(str));
+  return numbers.map((number) => new Seed(number));
 }
 
-function parseMappers(input: string): Mapper[] {
+function parseMappers(input: string[]): Mapper[] {
   const builder = new MapperBuilder();
   builder.setSourceProperty("");
   builder.setDestinationProperty("");
