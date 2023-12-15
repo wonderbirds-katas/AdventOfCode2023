@@ -38,7 +38,7 @@ The following table maps the day of the advent of code puzzles to the filename p
 | 1   | trebuchet                             |                                                      |
 | 2   | cubeConundrum                         |                                                      |
 | 3   | gearRatios                            |                                                      |
-| 3   | [scratchcards](./src/scratchcards.ts) | [scratchcards.test.ts](./tests/scratchcards.test.ts) |
+| 4   | [scratchcards](./src/scratchcards.ts) | [scratchcards.test.ts](./tests/scratchcards.test.ts) |
 
 My personal input data is saved in the folder [inputs](./inputs). The puzzle solution is implemented in the folder [src](./src) and the corresponding tests are kept in the folder [tests](./tests).
 
