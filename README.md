@@ -32,13 +32,14 @@ This way, you do not risk accidentally seeing solutions for puzzles you have not
 
 The following table maps the day of the advent of code puzzles to the filename prefixes of the corresponding solution.
 
-| Day | Solution                              | Tests                                                |
-|-----|---------------------------------------|------------------------------------------------------|
-| 0   | template                              |                                                      |
-| 1   | trebuchet                             |                                                      |
-| 2   | cubeConundrum                         |                                                      |
-| 3   | gearRatios                            |                                                      |
-| 4   | [scratchcards](./src/scratchcards.ts) | [scratchcards.test.ts](./tests/scratchcards.test.ts) |
+| Day | Solution                                        | Tests                                                          |
+|-----|-------------------------------------------------|----------------------------------------------------------------|
+| 0   | template                                        |                                                                |
+| 1   | trebuchet                                       |                                                                |
+| 2   | cubeConundrum                                   |                                                                |
+| 3   | gearRatios                                      |                                                                |
+| 4   | [scratchcards](./src/scratchcards.ts)           | [scratchcards.test.ts](./tests/scratchcards.test.ts)           |
+| 5   | [5-seed-fertilizer](./src/05-seed-fertilizer.ts) | [05-seed-fertilizer.test.ts](./tests/05-seed-fertilizer.test.ts) |
 
 My personal input data is saved in the folder [inputs](./inputs). The puzzle solution is implemented in the folder [src](./src) and the corresponding tests are kept in the folder [tests](./tests).
 
