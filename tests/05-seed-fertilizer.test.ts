@@ -108,6 +108,96 @@ humidity-to-location map:`,
     });
   });
 
+  describe("given locations are sorted differently", () => {
+    it.each([
+      [
+        1,
+        "locations in ascending order",
+        `1 2 3
+
+seed-to-soil map:
+
+soil-to-fertilizer map:
+
+fertilizer-to-water map:
+
+water-to-light map:
+
+light-to-temperature map:
+
+temperature-to-humidity map:
+
+humidity-to-location map:`,
+      ],
+      [
+        1,
+        "locations in descending order",
+        `3 2 1
+
+seed-to-soil map:
+
+soil-to-fertilizer map:
+
+fertilizer-to-water map:
+
+water-to-light map:
+
+light-to-temperature map:
+
+temperature-to-humidity map:
+
+humidity-to-location map:`,
+      ],
+      [
+        1,
+        "locations in mixed order",
+        `3 22 1 14 7 2
+
+seed-to-soil map:
+
+soil-to-fertilizer map:
+
+fertilizer-to-water map:
+
+water-to-light map:
+
+light-to-temperature map:
+
+temperature-to-humidity map:
+
+humidity-to-location map:`,
+      ],
+    ])("returns %p when %s", (expected, _description, input) => {
+      seedLocation(input).should.equal(expected);
+    });
+  });
+
+  xdescribe("given one map contains a relevant mapping", () => {
+    it.each([
+      [
+        42,
+        "seed-to-soil map",
+        `100
+
+seed-to-soil map:
+
+soil-to-fertilizer map:
+
+fertilizer-to-water map:
+
+water-to-light map:
+
+light-to-temperature map:
+
+temperature-to-humidity map:
+
+humidity-to-location map:`,
+      ],
+    ])("returns %p when mapping in %p", (expected, _seed, input) => {
+      seedLocation(input).should.equal(expected);
+    });
+  });
+
   xdescribe("given my personal puzzle input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/05-seed-fertilizer.txt", "utf-8");

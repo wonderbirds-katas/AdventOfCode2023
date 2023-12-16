@@ -10,7 +10,9 @@ export function seedLocation(input: string): number {
     }
   }
 
-  return seeds[0].properties["location"];
+  const locations: number[] = seeds.map((seed) => seed.properties["location"]);
+
+  return Math.min(...locations);
 }
 
 class Seed {
