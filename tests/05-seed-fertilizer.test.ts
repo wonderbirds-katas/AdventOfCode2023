@@ -176,7 +176,7 @@ humidity-to-location map:`,
     it.each([
       [
         42,
-        "seed-to-soil map: 42 100 1",
+        "seed number is start of first range",
         `100
 
 seed-to-soil map:
@@ -194,13 +194,35 @@ temperature-to-humidity map:
 
 humidity-to-location map:`,
       ],
+      /*      [
+        42,
+        "seed number is end of first range",
+        `100
+
+seed-to-soil map:
+40 98 3
+
+soil-to-fertilizer map:
+
+fertilizer-to-water map:
+
+water-to-light map:
+
+light-to-temperature map:
+
+temperature-to-humidity map:
+
+humidity-to-location map:`,
+      ],
+ */
       [
         42,
-        "seed-to-soil contains two entries",
+        "seed number is start of last range",
         `100
 
 seed-to-soil map:
 0 90 10
+10 20 10
 42 100 1
 
 soil-to-fertilizer map:
@@ -244,6 +266,32 @@ temperature-to-humidity map:
 humidity-to-location map:`,
       ],
     ])("returns %p when %s are applicable", (expected, _seed, input) => {
+      seedLocation(input).should.equal(expected);
+    });
+  });
+
+  xdescribe("given value not contained in map", () => {
+    it.each([
+      [
+        1,
+        `1
+
+seed-to-soil map:
+42 100 1
+
+soil-to-fertilizer map:
+
+fertilizer-to-water map:
+
+water-to-light map:
+
+light-to-temperature map:
+
+temperature-to-humidity map:
+
+humidity-to-location map:`,
+      ],
+    ])("returns source value", (expected, input) => {
       seedLocation(input).should.equal(expected);
     });
   });

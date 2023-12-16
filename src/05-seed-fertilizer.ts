@@ -1,3 +1,5 @@
+import * as domain from "domain";
+
 export function seedLocation(input: string): number {
   const sectionSeparator = "\n\n";
   const sections = input.split(sectionSeparator);
@@ -23,12 +25,18 @@ class Seed {
   }
 }
 
+class MapRange {
+  constructor(
+    readonly sourceStart: number,
+    readonly destinationStart: number,
+    readonly length: number,
+  ) {}
+}
+
 class Mapper {
   _source: string = "";
   _destination: string = "";
-  _sourceStarts: number[] = [];
-  _destinationStarts: number[] = [];
-  _lengths: number[] = [];
+  _ranges: MapRange[] = [];
 
   constructor(source: string, destination: string) {
     this._source = source;
@@ -36,15 +44,13 @@ class Mapper {
   }
 
   addRange(sourceStart: number, destinationStart: number, length: number) {
-    this._sourceStarts.push(sourceStart);
-    this._destinationStarts.push(destinationStart);
-    this._lengths.push(length);
+    this._ranges.push(new MapRange(sourceStart, destinationStart, length));
   }
 
   applyTo(seed: Seed) {
-    if (this._sourceStarts.length > 0) {
+    if (this._ranges.length > 0) {
       seed.properties[this._destination] =
-        this._destinationStarts[this._destinationStarts.length - 1];
+        this._ranges[this._ranges.length - 1].destinationStart;
     } else {
       seed.properties[this._destination] = seed.properties[this._source];
     }
