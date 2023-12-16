@@ -1,5 +1,3 @@
-import * as domain from "domain";
-
 export function seedLocation(input: string): number {
   const sectionSeparator = "\n\n";
   const sections = input.split(sectionSeparator);
@@ -31,6 +29,15 @@ class MapRange {
     readonly destinationStart: number,
     readonly length: number,
   ) {}
+
+  includes(value: number): boolean {
+    return this.sourceStart <= value && value < this.sourceStart + this.length;
+  }
+
+  map(value: number): number {
+    const offset = value - this.sourceStart;
+    return this.destinationStart + offset;
+  }
 }
 
 class Mapper {
@@ -48,17 +55,25 @@ class Mapper {
   }
 
   applyTo(seed: Seed) {
-    if (this._ranges.length > 0) {
-      seed.properties[this._destination] =
-        this._ranges[this._ranges.length - 1].destinationStart;
+    const sourceValue = seed.properties[this._source];
+
+    const matchingRanges = this._ranges.filter((range) =>
+      range.includes(sourceValue),
+    );
+
+    if (matchingRanges.length > 0) {
+      seed.properties[this._destination] = matchingRanges[0].map(sourceValue);
     } else {
-      seed.properties[this._destination] = seed.properties[this._source];
+      seed.properties[this._destination] = sourceValue;
     }
   }
 }
 
 function parseSeeds(sections: string[]): Seed[] {
-  const numbers = sections[0].split(" ").map((str) => Number(str));
+  const numbers = sections[0]
+    .slice("seeds: ".length)
+    .split(" ")
+    .map((str) => Number(str));
   return numbers.map((number) => new Seed(number));
 }
 
