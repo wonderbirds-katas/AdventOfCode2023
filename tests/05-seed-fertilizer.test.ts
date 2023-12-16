@@ -172,14 +172,15 @@ humidity-to-location map:`,
     });
   });
 
-  xdescribe("given one map contains a relevant mapping", () => {
+  describe("given one map contains a relevant mapping", () => {
     it.each([
       [
         42,
-        "seed-to-soil map",
+        "seed-to-soil map: 42 100 1",
         `100
 
 seed-to-soil map:
+42 100 1
 
 soil-to-fertilizer map:
 
@@ -193,7 +194,28 @@ temperature-to-humidity map:
 
 humidity-to-location map:`,
       ],
-    ])("returns %p when mapping in %p", (expected, _seed, input) => {
+      [
+        42,
+        "seed-to-soil contains two entries",
+        `100
+
+seed-to-soil map:
+0 90 10
+42 100 1
+
+soil-to-fertilizer map:
+
+fertilizer-to-water map:
+
+water-to-light map:
+
+light-to-temperature map:
+
+temperature-to-humidity map:
+
+humidity-to-location map:`,
+      ],
+    ])("returns %p when %s", (expected, _seed, input) => {
       seedLocation(input).should.equal(expected);
     });
   });
