@@ -1,37 +1,56 @@
-type ParseSeedsFunction = (sections: string[]) => Seed[];
-
-export function seedLocationPart2(input: string): number {
-  return seedLocation(input, parseSeedsPart2);
-}
-
-export function parseSeedsPart2(sections: string[]): Seed[] {
+export function* seedGenerator(sections: string[]): Generator<Seed> {
   const numbers = getNumbersFrom(sections[0]);
 
   const startValues = numbers.filter((_, index) => index % 2 == 0);
   const intervalLengths = numbers.filter((_, index) => index % 2 == 1);
 
-  const seedNumbers: number[] = [];
+  const seedCount = intervalLengths.reduce((acc, next) => acc + next, 0);
+  const percent_0_1 = Math.ceil(0.001 * seedCount);
+  console.log(`The generator will produce ${seedCount} numbers`);
+
+  let counter = 0;
 
   for (let index = 0; index < startValues.length; index++) {
     const startValue = startValues[index];
     const intervalLength = intervalLengths[index];
-    const seedNumberRange = Array.from(Array(intervalLength).keys()).map(
-      (x) => startValue + x,
-    );
-    seedNumbers.push(...seedNumberRange);
-  }
+    for (
+      let seedNumber = startValue;
+      seedNumber < startValue + intervalLength;
+      seedNumber++
+    ) {
+      yield new Seed(seedNumber);
 
-  return seedNumbers.map((seedNumber) => new Seed(seedNumber));
+      counter++;
+      if (counter % percent_0_1 == 0) {
+        const percent = 100.0 * (counter / seedCount);
+        console.log(`Processed ${percent.toFixed(1)} %`);
+      }
+    }
+  }
 }
 
-export function seedLocation(
-  input: string,
-  parseSeedsFn: ParseSeedsFunction = parseSeeds,
-): number {
+export function seedLocationPart2(input: string): number {
   const sectionSeparator = "\n\n";
   const sections = input.split(sectionSeparator);
 
-  const seeds = parseSeedsFn(sections);
+  const mappers = parseMappers(sections);
+
+  let minimumLocation = Number.MAX_SAFE_INTEGER;
+  for (const seed of seedGenerator(sections)) {
+    for (const mapper of mappers) {
+      mapper.applyTo(seed);
+    }
+    minimumLocation = Math.min(minimumLocation, seed.properties["location"]);
+  }
+
+  return Math.min(minimumLocation);
+}
+
+export function seedLocation(input: string): number {
+  const sectionSeparator = "\n\n";
+  const sections = input.split(sectionSeparator);
+
+  const seeds = parseSeeds(sections);
   const mappers = parseMappers(sections);
 
   for (const mapper of mappers) {

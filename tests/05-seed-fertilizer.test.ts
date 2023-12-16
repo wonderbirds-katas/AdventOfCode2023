@@ -1,8 +1,8 @@
 import "chai/register-should";
 import { config } from "chai";
 import {
-  parseSeedsPart2,
   Seed,
+  seedGenerator,
   seedLocation,
   seedLocationPart2,
 } from "../src/05-seed-fertilizer";
@@ -311,7 +311,7 @@ humidity-to-location map:`,
   });
 });
 
-describe("parseSeedsPart2", () => {
+describe("seedGenerator", () => {
   describe("given two numbers", () => {
     it.each([
       [[new Seed(1)], ["seeds: 1 1"]],
@@ -320,7 +320,7 @@ describe("parseSeedsPart2", () => {
         ["seeds: 10 2 20 3"],
       ],
     ])("returns %p for %p", (expected, input) => {
-      parseSeedsPart2(input).should.deep.equal(expected);
+      [...seedGenerator(input)].should.deep.equal(expected);
     });
   });
 });
@@ -329,7 +329,7 @@ describe("seedLocationPart2", () => {
   describe("given my personal puzzle input", () => {
     it.each([
       [46, "05-seed-fertilizer-from-puzzle-description.txt"],
-      // [0, "05-seed-fertilizer.txt"],
+      [37384986, "05-seed-fertilizer.txt"],
     ])("returns %p for file %p", (expected, path) => {
       const input = readFileSync(`./inputs/${path}`, "utf-8");
       seedLocationPart2(input).should.equal(expected);
