@@ -1,6 +1,11 @@
 import "chai/register-should";
 import { config } from "chai";
-import { seedLocation } from "../src/05-seed-fertilizer";
+import {
+  parseSeedsPart2,
+  Seed,
+  seedLocation,
+  seedLocationPart2,
+} from "../src/05-seed-fertilizer";
 import { readFileSync } from "fs";
 
 config.truncateThreshold = 0;
@@ -302,6 +307,32 @@ humidity-to-location map:`,
     ])("returns %p for file %p", (expected, path) => {
       const input = readFileSync(`./inputs/${path}`, "utf-8");
       seedLocation(input).should.equal(expected);
+    });
+  });
+});
+
+describe("parseSeedsPart2", () => {
+  describe("given two numbers", () => {
+    it.each([
+      [[new Seed(1)], ["seeds: 1 1"]],
+      [
+        [new Seed(10), new Seed(11), new Seed(20), new Seed(21), new Seed(23)],
+        ["seeds: 10 2 20 3"],
+      ],
+    ])("returns %p for %p", (expected, input) => {
+      parseSeedsPart2(input).should.deep.equal(expected);
+    });
+  });
+});
+
+describe("seedLocationPart2", () => {
+  describe("given my personal puzzle input", () => {
+    it.each([
+      [46, "05-seed-fertilizer-from-puzzle-description.txt"],
+      // [0, "05-seed-fertilizer.txt"],
+    ])("returns %p for file %p", (expected, path) => {
+      const input = readFileSync(`./inputs/${path}`, "utf-8");
+      seedLocationPart2(input).should.equal(expected);
     });
   });
 });

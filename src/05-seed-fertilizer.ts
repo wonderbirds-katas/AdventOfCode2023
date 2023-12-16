@@ -1,8 +1,37 @@
-export function seedLocation(input: string): number {
+type ParseSeedsFunction = (sections: string[]) => Seed[];
+
+export function seedLocationPart2(input: string): number {
+  return seedLocation(input, parseSeedsPart2);
+}
+
+export function parseSeedsPart2(sections: string[]): Seed[] {
+  const numbers = getNumbersFrom(sections[0]);
+
+  const startValues = numbers.filter((_, index) => index % 2 == 0);
+  const intervalLengths = numbers.filter((_, index) => index % 2 == 1);
+
+  const seedNumbers: number[] = [];
+
+  for (let index = 0; index < startValues.length; index++) {
+    const startValue = startValues[index];
+    const intervalLength = intervalLengths[index];
+    const seedNumberRange = Array.from(Array(intervalLength).keys()).map(
+      (x) => startValue + x,
+    );
+    seedNumbers.push(...seedNumberRange);
+  }
+
+  return seedNumbers.map((seedNumber) => new Seed(seedNumber));
+}
+
+export function seedLocation(
+  input: string,
+  parseSeedsFn: ParseSeedsFunction = parseSeeds,
+): number {
   const sectionSeparator = "\n\n";
   const sections = input.split(sectionSeparator);
 
-  const seeds = parseSeeds(sections);
+  const seeds = parseSeedsFn(sections);
   const mappers = parseMappers(sections);
 
   for (const mapper of mappers) {
@@ -16,7 +45,7 @@ export function seedLocation(input: string): number {
   return Math.min(...locations);
 }
 
-class Seed {
+export class Seed {
   properties: Map<string, number> = new Map<string, number>();
   constructor(theNumber: number) {
     this.properties["seed"] = theNumber;
@@ -70,11 +99,15 @@ class Mapper {
 }
 
 function parseSeeds(sections: string[]): Seed[] {
-  const numbers = sections[0]
+  const seedNumbers = getNumbersFrom(sections[0]);
+  return seedNumbers.map((seedNumber) => new Seed(seedNumber));
+}
+
+function getNumbersFrom(seedLine: string) {
+  return seedLine
     .slice("seeds: ".length)
     .split(" ")
     .map((str) => Number(str));
-  return numbers.map((number) => new Seed(number));
 }
 
 function parseMappers(sections: string[]): Mapper[] {
