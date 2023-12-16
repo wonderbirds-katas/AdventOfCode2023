@@ -220,6 +220,34 @@ humidity-to-location map:`,
     });
   });
 
+  describe("given multiple maps contain relevant mappings", () => {
+    it.each([
+      [
+        1,
+        "seed-to-soil map and soil-to-fertilizer map",
+        `100
+
+seed-to-soil map:
+42 100 1
+
+soil-to-fertilizer map:
+1 42 1
+
+fertilizer-to-water map:
+
+water-to-light map:
+
+light-to-temperature map:
+
+temperature-to-humidity map:
+
+humidity-to-location map:`,
+      ],
+    ])("returns %p when %s are applicable", (expected, _seed, input) => {
+      seedLocation(input).should.equal(expected);
+    });
+  });
+
   xdescribe("given my personal puzzle input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/05-seed-fertilizer.txt", "utf-8");

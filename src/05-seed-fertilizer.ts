@@ -24,11 +24,16 @@ class Seed {
 }
 
 class Mapper {
+  _source: string = "";
+  _destination: string = "";
   _sourceStarts: number[] = [];
   _destinationStarts: number[] = [];
   _lengths: number[] = [];
 
-  constructor(source: string, destination: string) {}
+  constructor(source: string, destination: string) {
+    this._source = source;
+    this._destination = destination;
+  }
 
   addRange(sourceStart: number, destinationStart: number, length: number) {
     this._sourceStarts.push(sourceStart);
@@ -38,10 +43,10 @@ class Mapper {
 
   applyTo(seed: Seed) {
     if (this._sourceStarts.length > 0) {
-      seed.properties["location"] =
+      seed.properties[this._destination] =
         this._destinationStarts[this._destinationStarts.length - 1];
     } else {
-      seed.properties["location"] = seed.properties["seed"];
+      seed.properties[this._destination] = seed.properties[this._source];
     }
   }
 }
@@ -52,22 +57,26 @@ function parseSeeds(sections: string[]): Seed[] {
 }
 
 function parseMappers(sections: string[]): Mapper[] {
-  // parse source and destination categories
-  // while not empty line
-  //   parse range
-  //   add range
+  const result: Mapper[] = [];
 
-  const section = sections[1];
+  const mapSections = sections.slice(1);
+  for (const section of mapSections) {
+    const matchGroups = section.match(/([^-]+)-to-([^ ]+) map:/);
+    const source = matchGroups![1];
+    const destination = matchGroups![2];
 
-  const mapper = new Mapper("", "");
+    const mapper = new Mapper(source, destination);
 
-  const ranges = section.split("\n").slice(1);
-  for (const range of ranges) {
-    const [destinationStart, sourceStart, length] = range
-      .split(" ")
-      .map((str) => Number(str));
-    mapper.addRange(sourceStart, destinationStart, length);
+    const ranges = section.split("\n").slice(1);
+    for (const range of ranges) {
+      const [destinationStart, sourceStart, length] = range
+        .split(" ")
+        .map((str) => Number(str));
+      mapper.addRange(sourceStart, destinationStart, length);
+    }
+
+    result.push(mapper);
   }
 
-  return [mapper];
+  return result;
 }
