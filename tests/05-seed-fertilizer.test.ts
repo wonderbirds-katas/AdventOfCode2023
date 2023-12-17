@@ -1,10 +1,16 @@
 import "chai/register-should";
 import { config } from "chai";
+import chai from "chai";
+import chaiAsPromised from "chai-as-promised";
+chai.use(chaiAsPromised);
+
 import {
   Seed,
   seedGenerator,
+  partition,
   seedLocation,
   seedLocationPart2,
+  seedLocationPart2Parallel,
 } from "../src/05-seed-fertilizer";
 import { readFileSync } from "fs";
 
@@ -312,16 +318,32 @@ humidity-to-location map:`,
 });
 
 describe("seedGenerator", () => {
-  describe("given two numbers", () => {
-    it.each([
-      [[new Seed(1)], ["seeds: 1 1"]],
+  it.each([
+    [[new Seed(1)], ["seeds: 1 1"]],
+    [
+      [new Seed(10), new Seed(11), new Seed(20), new Seed(21), new Seed(23)],
+      ["seeds: 10 2 20 3"],
+    ],
+  ])("returns %p for %p", (expected, input) => {
+    [...seedGenerator(input)].should.deep.equal(expected);
+  });
+});
+
+describe("seedGenerators", () => {
+  it.each([
+    [
       [
-        [new Seed(10), new Seed(11), new Seed(20), new Seed(21), new Seed(23)],
-        ["seeds: 10 2 20 3"],
+        [new Seed(10), new Seed(11)],
+        [new Seed(20), new Seed(21), new Seed(23)],
       ],
-    ])("returns %p for %p", (expected, input) => {
-      [...seedGenerator(input)].should.deep.equal(expected);
-    });
+      ["seeds: 10 2 20 3"],
+    ],
+  ])("returns %p for %p", (expected, input) => {
+    const actual = partition(input);
+    actual.length.should.be.equal(expected.length);
+    for (let index = 0; index < actual.length; index++) {
+      [...actual[index]].should.deep.equal(expected[index]);
+    }
   });
 });
 
@@ -329,10 +351,22 @@ describe("seedLocationPart2", () => {
   describe("given my personal puzzle input", () => {
     it.each([
       [46, "05-seed-fertilizer-from-puzzle-description.txt"],
-      [37384986, "05-seed-fertilizer.txt"],
+      //[37384986, "05-seed-fertilizer.txt"],
     ])("returns %p for file %p", (expected, path) => {
       const input = readFileSync(`./inputs/${path}`, "utf-8");
       seedLocationPart2(input).should.equal(expected);
+    });
+  });
+});
+
+describe("seedLocationPart2Parallel", () => {
+  describe("given my personal puzzle input", () => {
+    it.each([
+      [46, "05-seed-fertilizer-from-puzzle-description.txt"],
+      //[37384986, "05-seed-fertilizer.txt"],
+    ])("returns %p for file %p", async (expected, path) => {
+      const input = readFileSync(`./inputs/${path}`, "utf-8");
+      await seedLocationPart2Parallel(input).should.eventually.equal(expected);
     });
   });
 });

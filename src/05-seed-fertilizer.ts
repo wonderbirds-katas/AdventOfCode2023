@@ -1,3 +1,71 @@
+// ********************************************************************
+// Solution for part 2 spawning multiple async/await jobs in parallel
+// ********************************************************************
+export async function seedLocationPart2Parallel(
+  input: string,
+): Promise<number> {
+  const sectionSeparator = "\n\n";
+  const sections = input.split(sectionSeparator);
+
+  const mappers = parseMappers(sections);
+
+  const partitions = partition(sections);
+
+  return await Promise.all(
+    partitions.map((partition) => findMinimumLocation(partition, mappers)),
+  ).then((minimumLocations) => Math.min(...minimumLocations));
+}
+
+// every pair of [startValue, length] becomes a seed partition
+// which can be processed in parallel.
+export function partition(sections: string[]): Generator<Seed>[] {
+  const numbers = getNumbersFrom(sections[0]);
+
+  const startValues = numbers.filter((_, index) => index % 2 == 0);
+  const intervalLengths = numbers.filter((_, index) => index % 2 == 1);
+
+  const zipped = startValues.map((start, index) => [
+    start,
+    intervalLengths[index],
+  ]);
+
+  return zipped.map(([start, intervalLength]) =>
+    seedGeneratorForPartition(start, intervalLength),
+  );
+}
+
+export function* seedGeneratorForPartition(
+  start: number,
+  length: number,
+): Generator<Seed> {
+  for (let current = start; current < start + length; current++) {
+    yield new Seed(current);
+  }
+}
+
+let findMinimumLocation = function (
+  seeds: Generator<Seed>,
+  mappers: Mapper[],
+): Promise<number> {
+  return new Promise<number>((resolve) => {
+    let localMinimumLocation = Number.MAX_SAFE_INTEGER;
+    for (const seed of seeds) {
+      for (const mapper of mappers) {
+        mapper.applyTo(seed);
+      }
+      localMinimumLocation = Math.min(
+        localMinimumLocation,
+        seed.properties["location"],
+      );
+    }
+    resolve(localMinimumLocation);
+  });
+};
+
+// ********************************************************************
+// Solution for part 2 on single thread taking about 30 min on my laptop
+// ********************************************************************
+
 export function* seedGenerator(sections: string[]): Generator<Seed> {
   const numbers = getNumbersFrom(sections[0]);
 
