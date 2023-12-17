@@ -7,7 +7,7 @@ chai.use(chaiAsPromised);
 import {
   Seed,
   seedGenerator,
-  partition,
+  splitIntoPartitions,
   seedLocation,
   seedLocationPart2,
   seedLocationPart2Parallel,
@@ -339,7 +339,7 @@ describe("seedGenerators", () => {
       ["seeds: 10 2 20 3"],
     ],
   ])("returns %p for %p", (expected, input) => {
-    const actual = partition(input);
+    const actual = splitIntoPartitions(input);
     actual.length.should.be.equal(expected.length);
     for (let index = 0; index < actual.length; index++) {
       [...actual[index]].should.deep.equal(expected[index]);
@@ -363,7 +363,7 @@ describe("seedLocationPart2Parallel", () => {
   describe("given my personal puzzle input", () => {
     it.each([
       [46, "05-seed-fertilizer-from-puzzle-description.txt"],
-      //[37384986, "05-seed-fertilizer.txt"],
+      // [37384986, "05-seed-fertilizer.txt"],
     ])("returns %p for file %p", async (expected, path) => {
       const input = readFileSync(`./inputs/${path}`, "utf-8");
       await seedLocationPart2Parallel(input).should.eventually.equal(expected);

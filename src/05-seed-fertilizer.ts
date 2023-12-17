@@ -9,16 +9,22 @@ export async function seedLocationPart2Parallel(
 
   const mappers = parseMappers(sections);
 
-  const partitions = partition(sections);
+  const [partitions, lengths] = splitIntoPartitions(sections);
+  console.log("Partition sizes: " + lengths.join(", "));
 
-  return await Promise.all(
-    partitions.map((partition) => findMinimumLocation(partition, mappers)),
-  ).then((minimumLocations) => Math.min(...minimumLocations));
+  const promises = partitions.map(async (partition) =>
+    findMinimumLocation(partition, mappers),
+  );
+  return await Promise.all(promises).then((minimumLocations) =>
+    Math.min(...minimumLocations),
+  );
 }
 
 // every pair of [startValue, length] becomes a seed partition
 // which can be processed in parallel.
-export function partition(sections: string[]): Generator<Seed>[] {
+export function splitIntoPartitions(
+  sections: string[],
+): [Generator<Seed>[], number[]] {
   const numbers = getNumbersFrom(sections[0]);
 
   const startValues = numbers.filter((_, index) => index % 2 == 0);
@@ -29,18 +35,32 @@ export function partition(sections: string[]): Generator<Seed>[] {
     intervalLengths[index],
   ]);
 
-  return zipped.map(([start, intervalLength]) =>
-    seedGeneratorForPartition(start, intervalLength),
-  );
+  return [
+    zipped.map(([start, intervalLength], index) =>
+      seedGeneratorForPartition(start, intervalLength, index + 1),
+    ),
+    intervalLengths,
+  ];
 }
 
 export function* seedGeneratorForPartition(
   start: number,
   length: number,
+  partitionNumber: number,
 ): Generator<Seed> {
+  const seedsPerPercent = Math.floor(length / 100.0);
+
+  console.log(`Partition ${partitionNumber}: just started`);
+
   for (let current = start; current < start + length; current++) {
+    if (current % seedsPerPercent === 0) {
+      const percent = (100.0 * (current - start)) / length;
+      console.log(`Partition ${partitionNumber}: ${percent.toFixed(1)} %`);
+    }
     yield new Seed(current);
   }
+
+  console.log(`Partition ${partitionNumber}: done`);
 }
 
 let findMinimumLocation = function (
