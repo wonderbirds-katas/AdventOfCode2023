@@ -66,6 +66,23 @@ let findMinimumLocation = function (
 // Solution for part 2 on single thread taking about 30 min on my laptop
 // ********************************************************************
 
+export function seedLocationPart2(input: string): number {
+  const sectionSeparator = "\n\n";
+  const sections = input.split(sectionSeparator);
+
+  const mappers = parseMappers(sections);
+
+  let minimumLocation = Number.MAX_SAFE_INTEGER;
+  for (const seed of seedGenerator(sections)) {
+    for (const mapper of mappers) {
+      mapper.applyTo(seed);
+    }
+    minimumLocation = Math.min(minimumLocation, seed.properties["location"]);
+  }
+
+  return Math.min(minimumLocation);
+}
+
 export function* seedGenerator(sections: string[]): Generator<Seed> {
   const numbers = getNumbersFrom(sections[0]);
 
@@ -97,22 +114,9 @@ export function* seedGenerator(sections: string[]): Generator<Seed> {
   }
 }
 
-export function seedLocationPart2(input: string): number {
-  const sectionSeparator = "\n\n";
-  const sections = input.split(sectionSeparator);
-
-  const mappers = parseMappers(sections);
-
-  let minimumLocation = Number.MAX_SAFE_INTEGER;
-  for (const seed of seedGenerator(sections)) {
-    for (const mapper of mappers) {
-      mapper.applyTo(seed);
-    }
-    minimumLocation = Math.min(minimumLocation, seed.properties["location"]);
-  }
-
-  return Math.min(minimumLocation);
-}
+// ********************************************************************
+// Solution for part 1
+// ********************************************************************
 
 export function seedLocation(input: string): number {
   const sectionSeparator = "\n\n";
@@ -136,23 +140,6 @@ export class Seed {
   properties: Map<string, number> = new Map<string, number>();
   constructor(theNumber: number) {
     this.properties["seed"] = theNumber;
-  }
-}
-
-class MapRange {
-  constructor(
-    readonly sourceStart: number,
-    readonly destinationStart: number,
-    readonly length: number,
-  ) {}
-
-  includes(value: number): boolean {
-    return this.sourceStart <= value && value < this.sourceStart + this.length;
-  }
-
-  map(value: number): number {
-    const offset = value - this.sourceStart;
-    return this.destinationStart + offset;
   }
 }
 
@@ -182,6 +169,23 @@ class Mapper {
     } else {
       seed.properties[this._destination] = sourceValue;
     }
+  }
+}
+
+class MapRange {
+  constructor(
+    readonly sourceStart: number,
+    readonly destinationStart: number,
+    readonly length: number,
+  ) {}
+
+  includes(value: number): boolean {
+    return this.sourceStart <= value && value < this.sourceStart + this.length;
+  }
+
+  map(value: number): number {
+    const offset = value - this.sourceStart;
+    return this.destinationStart + offset;
   }
 }
 
