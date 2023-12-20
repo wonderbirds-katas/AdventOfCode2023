@@ -24,8 +24,8 @@
 // This is done by finding the zero transitions of the formula d - d_win = 0 using the p-q formula:
 // (Note: I did the maths on a sheet of paper)
 //
-// t_press_lower = Math.ceil(t_race / 2 - sqrt( ( t_race / 2 ) ^ 2 - d_win )
-// t_press_upper = Math.ceil(t_race / 2 - sqrt( ( t_race / 2 ) ^ 2 - d_win )
+// t_press_lower = ceil(t_race / 2 - sqrt( ( t_race / 2 ) ^ 2 - d_win )
+// t_press_upper = floor(t_race / 2 + sqrt( ( t_race / 2 ) ^ 2 - d_win )
 //
 // winning_possibilities = t_press_upper - p_press_lower + 1
 //
@@ -46,5 +46,52 @@
 // ... describe solution and algorithm idea roughly ...
 //
 export function waitForIt(input: string): number {
-  return 0;
+  const rows = input.split("\n");
+  const times = inputRowToNumbers(rows[0], "Times:");
+  const distances = inputRowToNumbers(rows[1], "Distance:");
+
+  let result = 1;
+  for (let i = 0; i < times.length; i++) {
+    const [left, right] = calculateInterval(times[i], distances[i]);
+    result *= right - left + 1;
+  }
+
+  return result;
+}
+
+function inputRowToNumbers(row: string, prefix: string) {
+  return row
+    .substring(prefix.length)
+    .trim()
+    .replaceAll(/\s+/g, " ")
+    .split(" ")
+    .map((s) => Number(s));
+}
+
+export function calculateInterval(t_race: number, d_win: number): number[] {
+  // find the left root of the distance equation
+  let t_press_lower = Math.ceil(
+    t_race / 2 - Math.sqrt((t_race / 2) ** 2 - d_win),
+  );
+
+  // find the right root of the distance equation
+  let t_press_upper = Math.floor(
+    t_race / 2 + Math.sqrt((t_race / 2) ** 2 - d_win),
+  );
+
+  // correct left interval boundary so that the
+  // distance is larger, not equal to the winning distance
+  const distance_lower = t_press_lower * (t_race - t_press_lower);
+  if (Math.abs(distance_lower - d_win) < Number.EPSILON) {
+    t_press_lower += 1;
+  }
+
+  // correct right interval boundary so that the
+  // distance is larger, not equal to the winning distance
+  const distance_upper = t_press_upper * (t_race - t_press_upper);
+  if (Math.abs(distance_upper - d_win) < Number.EPSILON) {
+    t_press_upper -= 1;
+  }
+
+  return [t_press_lower, t_press_upper];
 }
