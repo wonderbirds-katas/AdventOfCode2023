@@ -6,7 +6,7 @@ import {
   PartNumber,
   Schematic,
   SnapshotRecorder,
-} from "../src/gearRatios";
+} from "../src/03-gearRatios";
 import { readFileSync } from "fs";
 import { beforeAll, describe, it } from "@jest/globals";
 import { JestReporter } from "approvals/lib/Providers/Jest/JestReporter";
@@ -26,13 +26,13 @@ describe("gearRatios", () => {
     it.each([
       [
         123 + 98 + 983 + 12 + 78123,
-        "./inputs/gearRatios_approvals_all_unique.txt",
+        "./inputs/03-gearRatios_approvals_all_unique.txt",
       ],
       [
         123 + 456 + 78 + 23 + 456 + 100 + 200 + 200 + 300,
-        "./inputs/gearRatios_approvals_with_duplicates.txt",
+        "./inputs/03-gearRatios_approvals_with_duplicates.txt",
       ],
-      [4361, "./inputs/gearRatios_from_puzzle_description.txt"],
+      [4361, "./inputs/03-gearRatios_from_puzzle_description.txt"],
     ])("returns %p for %p", (expected, path) => {
       const input = readFileSync(path, "utf-8");
       gearRatios(input).should.equal(expected);
@@ -41,7 +41,7 @@ describe("gearRatios", () => {
 
   describe("given my personal puzzle input", () => {
     it.each([[532331]])("returns %p", (expected) => {
-      const input = readFileSync("./inputs/gearRatios.txt", "utf-8");
+      const input = readFileSync("./inputs/03-gearRatios.txt", "utf-8");
       gearRatios(input).should.equal(expected);
     });
   });
@@ -66,7 +66,7 @@ describe("approvals", () => {
   }
 
   describe("given unique part numbers", () => {
-    const inputPath = "./inputs/gearRatios_approvals_all_unique.txt";
+    const inputPath = "./inputs/03-gearRatios_approvals_all_unique.txt";
 
     it("parse symbols", () => {
       const [input, snapshotRecorder] = prepareDataSource(inputPath);
@@ -82,7 +82,7 @@ describe("approvals", () => {
   });
 
   describe("given puzzle input from description", () => {
-    const inputPath = "./inputs/gearRatios_from_puzzle_description.txt";
+    const inputPath = "./inputs/03-gearRatios_from_puzzle_description.txt";
 
     it("parse symbols", () => {
       const [input, snapshotRecorder] = prepareDataSource(inputPath);
@@ -98,7 +98,7 @@ describe("approvals", () => {
   });
 
   describe("given my personal puzzle input", () => {
-    const inputPath = "./inputs/gearRatios.txt";
+    const inputPath = "./inputs/03-gearRatios.txt";
 
     it("parse symbols", () => {
       const [input, snapshotRecorder] = prepareDataSource(inputPath);
