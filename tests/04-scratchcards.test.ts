@@ -107,7 +107,7 @@ Card 2: 0 | 1`,
   describe("GIVEN example puzzle input", () => {
     it.each([[30]])("returns %p", (expected) => {
       const input = readFileSync(
-        "./inputs/scratchcards_from_puzzle_description.txt",
+        "./inputs/04-scratchcards_from_puzzle_description.txt",
         "utf-8",
       );
       scratchcardsPart2(input).should.equal(expected);
@@ -116,7 +116,7 @@ Card 2: 0 | 1`,
 
   describe("GIVEN my personal puzzle input", () => {
     it.each([[5921508]])("returns %p", (expected) => {
-      const input = readFileSync("./inputs/scratchcards.txt", "utf-8");
+      const input = readFileSync("./inputs/04-scratchcards.txt", "utf-8");
       scratchcardsPart2(input).should.equal(expected);
     });
   });
