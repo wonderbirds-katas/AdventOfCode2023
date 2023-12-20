@@ -1,6 +1,6 @@
 import "chai/register-should";
 import { config } from "chai";
-import { trebuchet } from "../src/trebuchet";
+import { trebuchet } from "../src/01-trebuchet";
 import { readFileSync } from "fs";
 
 config.truncateThreshold = 0;
@@ -76,7 +76,7 @@ treb7uchet`;
 
 describe("given my personal puzzle input", () => {
   it("returns 53974", () => {
-    const input = readFileSync("./inputs/trebuchet.txt", "utf-8");
+    const input = readFileSync("./inputs/01-trebuchet.txt", "utf-8");
     trebuchet(input).should.equal(53974);
   });
 });
