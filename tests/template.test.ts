@@ -3,9 +3,11 @@ import { config } from "chai";
 import { template } from "../src/template";
 import { readFileSync } from "fs";
 import { beforeAll, describe, it } from "@jest/globals";
-import { configure } from "approvals";
 import { JestReporter } from "approvals/lib/Providers/Jest/JestReporter";
 import { verify } from "approvals/lib/Providers/Jest/JestApprovals";
+
+// @ts-ignore: unfortunately, approvals/lib/Approvals.js implicitly has an any type
+import { configure } from "approvals";
 
 config.truncateThreshold = 0;
 

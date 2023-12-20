@@ -75,7 +75,7 @@ let findMinimumLocation = function (
       }
       localMinimumLocation = Math.min(
         localMinimumLocation,
-        seed.properties["location"],
+        seed.properties.get("location")!,
       );
     }
     resolve(localMinimumLocation);
@@ -97,7 +97,10 @@ export function seedLocationPart2(input: string): number {
     for (const mapper of mappers) {
       mapper.applyTo(seed);
     }
-    minimumLocation = Math.min(minimumLocation, seed.properties["location"]);
+    minimumLocation = Math.min(
+      minimumLocation,
+      seed.properties.get("location")!,
+    );
   }
 
   return Math.min(minimumLocation);
@@ -151,7 +154,9 @@ export function seedLocation(input: string): number {
     }
   }
 
-  const locations: number[] = seeds.map((seed) => seed.properties["location"]);
+  const locations: number[] = seeds.map(
+    (seed) => seed.properties.get("location")!,
+  );
 
   return Math.min(...locations);
 }
@@ -159,7 +164,7 @@ export function seedLocation(input: string): number {
 export class Seed {
   properties: Map<string, number> = new Map<string, number>();
   constructor(theNumber: number) {
-    this.properties["seed"] = theNumber;
+    this.properties.set("seed", theNumber);
   }
 }
 
@@ -178,16 +183,19 @@ class Mapper {
   }
 
   applyTo(seed: Seed) {
-    const sourceValue = seed.properties[this._source];
+    const sourceValue = seed.properties.get(this._source)!;
 
     const matchingRanges = this._ranges.filter((range) =>
       range.includes(sourceValue),
     );
 
     if (matchingRanges.length > 0) {
-      seed.properties[this._destination] = matchingRanges[0].map(sourceValue);
+      seed.properties.set(
+        this._destination,
+        matchingRanges[0].map(sourceValue),
+      );
     } else {
-      seed.properties[this._destination] = sourceValue;
+      seed.properties.set(this._destination, sourceValue);
     }
   }
 }
