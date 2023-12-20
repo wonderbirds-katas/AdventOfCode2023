@@ -32,11 +32,11 @@ This way, you do not risk accidentally seeing solutions for puzzles you have not
 
 The following table maps the day of the advent of code puzzles to the filename prefixes of the corresponding solution.
 
-| Day | Module name   |
-|-----|---------------|
-| 0   | template      |
-| 1   | trebuchet     |
-| 2   | cubeConundrum |
+| Day | Solution                                      | Tests                                                     | Description                                    |
+|-----|-----------------------------------------------|-----------------------------------------------------------|------------------------------------------------|
+| 0   | template                                      |                                                           |                                                |
+| 1   | [01-trebuchet](./src/01-trebuchet.ts)         | [01-trebuchet.test](./tests/01-trebuchet.test.ts)         | Decode numbers in strings like "tre3bu7chsixt" |
+| 2   | [02-cubeConundrum](./src/02-cubeConundrum.ts) | [02-cubeConundrum.test](./tests/02-cubeConundrum.test.ts) | Draw colored cubes from a bag                  |
 
 My personal input data is saved in the folder [inputs](./inputs). The puzzle solution is implemented in the folder [src](./src) and the corresponding tests are kept in the folder [tests](./tests).
 
