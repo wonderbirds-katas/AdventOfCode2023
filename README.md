@@ -40,6 +40,7 @@ The following table maps the day of the advent of code puzzles to the filename p
 | 3   | gearRatios                                       |                                                                  | Identify numbers in huge text file               |
 | 4   | [scratchcards](./src/scratchcards.ts)            | [scratchcards.test.ts](./tests/scratchcards.test.ts)             | Match numbers to winning numbers on scratchcards |
 | 5   | [5-seed-fertilizer](./src/05-seed-fertilizer.ts) | [05-seed-fertilizer.test.ts](./tests/05-seed-fertilizer.test.ts) | Apply number mapping ranges subsequently         |
+| 6   | [06-wait-for-it](./src/06-wait-for-it.ts)        | [06-wait-for-it.test.ts](./tests/06-wait-for-it.test.ts)         | Find range of inputs to win a race               |
 
 My personal input data is saved in the folder [inputs](./inputs). The puzzle solution is implemented in the folder [src](./src) and the corresponding tests are kept in the folder [tests](./tests).
 
