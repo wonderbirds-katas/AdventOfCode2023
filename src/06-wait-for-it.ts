@@ -45,10 +45,23 @@
 //
 // ... describe solution and algorithm idea roughly ...
 //
-export function waitForIt(input: string): number {
+type InputRowToNumbers = (input: string, prefix: string) => number[];
+
+export function waitForItPart2(input: string): number {
+  return waitForIt(input, inputRowToNumbersPart2);
+}
+
+function inputRowToNumbersPart2(row: string, prefix: string) {
+  return inputRowToNumbers(row, prefix, false);
+}
+
+export function waitForIt(
+  input: string,
+  customInputRowToNumbers: InputRowToNumbers = inputRowToNumbers,
+): number {
   const rows = input.split("\n");
-  const times = inputRowToNumbers(rows[0], "Times:");
-  const distances = inputRowToNumbers(rows[1], "Distance:");
+  const times = customInputRowToNumbers(rows[0], "Times:");
+  const distances = customInputRowToNumbers(rows[1], "Distance:");
 
   let result = 1;
   for (let i = 0; i < times.length; i++) {
@@ -59,11 +72,16 @@ export function waitForIt(input: string): number {
   return result;
 }
 
-function inputRowToNumbers(row: string, prefix: string) {
+function inputRowToNumbers(
+  row: string,
+  prefix: string,
+  keepSpaceBetweenNumbers: boolean = true,
+) {
+  const replacementForSpacesBetweenNumbers = keepSpaceBetweenNumbers ? " " : "";
   return row
     .substring(prefix.length)
     .trim()
-    .replaceAll(/\s+/g, " ")
+    .replaceAll(/\s+/g, replacementForSpacesBetweenNumbers)
     .split(" ")
     .map((s) => Number(s));
 }

@@ -2,7 +2,11 @@ import "chai/register-should";
 import { config } from "chai";
 import { readFileSync } from "fs";
 import { describe, it } from "@jest/globals";
-import { calculateInterval, waitForIt } from "../src/06-wait-for-it";
+import {
+  calculateInterval,
+  waitForIt,
+  waitForItPart2,
+} from "../src/06-wait-for-it";
 
 config.truncateThreshold = 0;
 
@@ -42,6 +46,25 @@ Distance:  ${d_win}`;
     it.each([[861300]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/06-wait-for-it.txt", "utf-8");
       waitForIt(input).should.equal(expected);
+    });
+  });
+});
+
+describe("waitForItPart2", () => {
+  describe("given puzzle description input", () => {
+    it.each([[71503]])("returns %p", (expected) => {
+      const input = readFileSync(
+        "./inputs/06-wait-for-it-from-puzzle-description.txt",
+        "utf-8",
+      );
+      waitForItPart2(input).should.equal(expected);
+    });
+  });
+
+  describe("given my personal puzzle input", () => {
+    it.each([[28101347]])("returns %p", (expected) => {
+      const input = readFileSync("./inputs/06-wait-for-it.txt", "utf-8");
+      waitForItPart2(input).should.equal(expected);
     });
   });
 });
