@@ -32,15 +32,15 @@ This way, you do not risk accidentally seeing solutions for puzzles you have not
 
 The following table maps the day of the advent of code puzzles to the filename prefixes of the corresponding solution.
 
-| Day | Solution                                         | Tests                                                            | Description                                      |
-|-----|--------------------------------------------------|------------------------------------------------------------------|--------------------------------------------------|
-| 0   | template                                         |                                                                  |                                                  |
-| 1   | trebuchet                                        |                                                                  | Decode numbers in strings like "tre3bu7chsixt"   |
-| 2   | cubeConundrum                                    |                                                                  | Draw colored cubes from a bag                    |
-| 3   | gearRatios                                       |                                                                  | Identify numbers in huge text file               |
-| 4   | [scratchcards](./src/scratchcards.ts)            | [scratchcards.test.ts](./tests/scratchcards.test.ts)             | Match numbers to winning numbers on scratchcards |
-| 5   | [5-seed-fertilizer](./src/05-seed-fertilizer.ts) | [05-seed-fertilizer.test.ts](./tests/05-seed-fertilizer.test.ts) | Apply number mapping ranges subsequently         |
-| 6   | [06-wait-for-it](./src/06-wait-for-it.ts)        | [06-wait-for-it.test.ts](./tests/06-wait-for-it.test.ts)         | Find range of inputs to win a race               |
+| Day | Solution                                          | Tests                                                            | Description                                      |
+|-----|---------------------------------------------------|------------------------------------------------------------------|--------------------------------------------------|
+| 0   | template                                          |                                                                  |                                                  |
+| 1   | [01-trebuchet](./src/01-trebuchet.ts)             | [01-trebuchet.test](./tests/01-trebuchet.test.ts)                | Decode numbers in strings like "tre3bu7chsixt"   |
+| 2   | [02-cubeConundrum](./src/02-cubeConundrum.ts)     | [02-cubeConundrum.test](./tests/02-cubeConundrum.test.ts)        | Draw colored cubes from a bag                    |
+| 3   | [03-gearRatios](./src/03-gearRatios.ts)           | [03-gearRatios.test](./tests/03-gearRatios.test.ts)              | Identify numbers in huge text file               |
+| 4   | [04-scratchcards](./src/04-scratchcards.ts)       | [04-scratchcards.test.ts](./tests/04-scratchcards.test.ts)       | Match numbers to winning numbers on scratchcards |
+| 5   | [05-seed-fertilizer](./src/05-seed-fertilizer.ts) | [05-seed-fertilizer.test.ts](./tests/05-seed-fertilizer.test.ts) | Apply number mapping ranges subsequently         |
+| 6   | [06-wait-for-it](./src/06-wait-for-it.ts)         | [06-wait-for-it.test.ts](./tests/06-wait-for-it.test.ts)         | Find range of inputs to win a race               |
 
 My personal input data is saved in the folder [inputs](./inputs). The puzzle solution is implemented in the folder [src](./src) and the corresponding tests are kept in the folder [tests](./tests).
 
