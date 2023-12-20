@@ -1,6 +1,6 @@
 import "chai/register-should";
 import { config } from "chai";
-import { scratchcards, scratchcardsPart2 } from "../src/scratchcards";
+import { scratchcards, scratchcardsPart2 } from "../src/04-scratchcards";
 import { readFileSync } from "fs";
 
 config.truncateThreshold = 0;
@@ -61,7 +61,7 @@ Card 3: 0 | 1`,
   describe("GIVEN example puzzle input", () => {
     it.each([[13]])("returns %p", (expected) => {
       const input = readFileSync(
-        "./inputs/scratchcards_from_puzzle_description.txt",
+        "./inputs/04-scratchcards_from_puzzle_description.txt",
         "utf-8",
       );
       scratchcards(input).should.equal(expected);
@@ -70,7 +70,7 @@ Card 3: 0 | 1`,
 
   describe("GIVEN my personal puzzle input", () => {
     it.each([[18653]])("returns %p", (expected) => {
-      const input = readFileSync("./inputs/scratchcards.txt", "utf-8");
+      const input = readFileSync("./inputs/04-scratchcards.txt", "utf-8");
       scratchcards(input).should.equal(expected);
     });
   });
