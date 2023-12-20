@@ -321,7 +321,7 @@ describe("seedGenerator", () => {
   it.each([
     [[new Seed(1)], ["seeds: 1 1"]],
     [
-      [new Seed(10), new Seed(11), new Seed(20), new Seed(21), new Seed(23)],
+      [new Seed(10), new Seed(11), new Seed(20), new Seed(21), new Seed(22)],
       ["seeds: 10 2 20 3"],
     ],
   ])("returns %p for %p", (expected, input) => {
@@ -334,12 +334,12 @@ describe("seedGenerators", () => {
     [
       [
         [new Seed(10), new Seed(11)],
-        [new Seed(20), new Seed(21), new Seed(23)],
+        [new Seed(20), new Seed(21), new Seed(22)],
       ],
       ["seeds: 10 2 20 3"],
     ],
   ])("returns %p for %p", (expected, input) => {
-    const actual = splitIntoPartitions(input);
+    const [actual, _] = splitIntoPartitions(input);
     actual.length.should.be.equal(expected.length);
     for (let index = 0; index < actual.length; index++) {
       [...actual[index]].should.deep.equal(expected[index]);
