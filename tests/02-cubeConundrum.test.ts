@@ -5,7 +5,7 @@ import {
   cubesIn,
   isGamePossible,
   isSetPossible,
-} from "../src/cubeConundrum";
+} from "../src/02-cubeConundrum";
 import { readFileSync } from "fs";
 
 config.truncateThreshold = 0;
@@ -126,7 +126,7 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
 
   describe("given my personal puzzle input", () => {
     it.each([[2486]])("returns %p", (expected) => {
-      const input = readFileSync("./inputs/cubeConundrum.txt", "utf-8");
+      const input = readFileSync("./inputs/02-cubeConundrum.txt", "utf-8");
       cubeConundrum(input).should.equal(expected);
     });
   });
