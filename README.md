@@ -41,6 +41,7 @@ The following table maps the day of the advent of code puzzles to the filename p
 | 4   | [04-scratchcards](./src/04-scratchcards.ts)       | [04-scratchcards.test.ts](./tests/04-scratchcards.test.ts)       | Match numbers to winning numbers on scratchcards |
 | 5   | [05-seed-fertilizer](./src/05-seed-fertilizer.ts) | [05-seed-fertilizer.test.ts](./tests/05-seed-fertilizer.test.ts) | Apply number mapping ranges subsequently         |
 | 6   | [06-wait-for-it](./src/06-wait-for-it.ts)         | [06-wait-for-it.test.ts](./tests/06-wait-for-it.test.ts)         | Find range of inputs to win a race               |
+| 7   | [07-camelCards](./src/07-camelCards.ts)           | [07-camelCards.test.ts](./tests/07-camelCards.test.ts)           |                                                  |
 
 My personal input data is saved in the folder [inputs](./inputs). The puzzle solution is implemented in the folder [src](./src) and the corresponding tests are kept in the folder [tests](./tests).
 
