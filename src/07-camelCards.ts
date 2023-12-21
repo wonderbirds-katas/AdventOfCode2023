@@ -33,20 +33,25 @@
 // Part 2 - Understanding the problem
 // ==================================
 //
-// ... list some simple tests showing how I understand the puzzle ...
-//
-// Tests from the problem description
-//
-// ... copy tests from problem description ...
+// Jokers can substitute any card
+// Jokers themselves have the lowest value, but they contribute to any set of cards
 //
 // Solution approach
 // -----------------
 //
-// ... describe solution and algorithm idea roughly ...
+// Set value of the "J" by 1
+// In the histogram, add +1 to every bin for each Joker
 //
 
-export function camelCards(input: string): number {
-  const hands = input.split("\n").map(parseRow);
+export function camelCardsPart2(input: string): number {
+  return camelCards(input);
+}
+
+export function camelCards(
+  input: string,
+  cardFactory: CardFactory = new CardFactoryPart1(),
+): number {
+  const hands = input.split("\n").map(parseRow(cardFactory));
   const sortedHands = hands.sort(compareHands);
   const sortedBids = sortedHands.map((hand) => hand.bid);
   return sortedBids.reduce(
@@ -55,23 +60,42 @@ export function camelCards(input: string): number {
   );
 }
 
-function parseRow(row: string): Hand {
-  const cardCharacters = row.substring(0, 5);
-  const cards = cardCharacters
-    .split("")
-    .map((character) => new Card(character));
+type ParseRowFn = (row: string) => Hand;
 
-  const bidStr = row.substring(5);
-  const bid = Number(bidStr);
+function parseRow(cardFactory: CardFactory): ParseRowFn {
+  return function (row: string): Hand {
+    const cardCharacters = row.substring(0, 5);
+    const cards = cardCharacters
+      .split("")
+      .map((character) => cardFactory.create(character));
 
-  return new Hand(cards, bid);
+    const bidStr = row.substring(5);
+    const bid = Number(bidStr);
+
+    return new Hand(cards, bid);
+  };
 }
 
 function compareHands(a: Hand, b: Hand): number {
   return a.value - b.value;
 }
 
-export class Card {
+interface CardFactory {
+  create(character: string): Card;
+}
+
+class CardFactoryPart1 implements CardFactory {
+  create(character: string): Card {
+    return new CardPart1(character);
+  }
+}
+
+interface Card {
+  readonly character: string;
+  readonly value: number;
+}
+
+export class CardPart1 implements Card {
   private _cardValues: Map<string, number> = new Map<string, number>([
     ["2", 2],
     ["3", 3],
@@ -110,7 +134,7 @@ export class Hand {
   }
 
   private histogram() {
-    const highestCardValue = new Card("A").value;
+    const highestCardValue = new CardPart1("A").value;
     const result: number[] = new Array(highestCardValue + 1).fill(0);
 
     for (const card of this.cards) {

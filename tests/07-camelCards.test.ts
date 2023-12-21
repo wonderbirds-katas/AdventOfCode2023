@@ -1,6 +1,11 @@
 import "chai/register-should";
 import { config } from "chai";
-import { camelCards, Card, Hand } from "../src/07-camelCards";
+import {
+  camelCards,
+  camelCardsPart2,
+  CardPart1,
+  Hand,
+} from "../src/07-camelCards";
 import { readFileSync } from "fs";
 import { describe, it } from "@jest/globals";
 
@@ -114,8 +119,20 @@ describe("calculateValueOfHandType", () => {
     ["four of a kind", 5, "22223"],
     ["five of a kind", 6, "22222"],
   ])("%s => %p when input %p", (_description, expected, cardString) => {
-    const cards = cardString.split("").map((c) => new Card(c));
+    const cards = cardString.split("").map((c) => new CardPart1(c));
     const hand = new Hand(cards, 0);
     hand.calculateValueOfHandType().should.be.equal(expected);
+  });
+});
+
+describe("camelCardsPart2", () => {
+  describe("given puzzle description input", () => {
+    it.each([[6440]])("returns %p", (expected) => {
+      const input = readFileSync(
+        "./inputs/07-camelCards-from-puzzle-description.txt",
+        "utf-8",
+      );
+      camelCardsPart2(input).should.equal(expected);
+    });
   });
 });
