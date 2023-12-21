@@ -39,8 +39,33 @@
 // Solution approach
 // -----------------
 //
-// Set value of the "J" by 1
-// In the histogram, add +1 to every bin for each Joker
+// Set value of the "J" to 1
+//
+// WRONG: In the histogram, add +1 to every bin for each Joker
+//
+// Remove the Jokers from the Hand before calculating the HandType
+// Apply the following map:
+// 1 Joker:
+// - High Card 0 -> One Pair 1
+// - One Pair 1 -> Three of a kind 3
+// - Two pair 2 -> Full House 4
+// - Three of a kind 3 -> Four of a kind 5
+// - Four of a kind 5 -> Five of a kind 6
+//
+// 2 Jokers:
+// - High Card 0 -> Three of a kind 3
+// - One Pair 1 -> Four of a kind 5
+// - Three of a kind 3 -> Five of a kind 6
+//
+// 3 Jokers:
+// - High Card 0 -> Four of a kind 5
+// - One Pair 1 -> Five of a kind 6
+//
+// 4 Jokers:
+// - High Card 0 -> Five of a kind 6
+//
+// 5 Jokers:
+// = Five of a kind 6
 //
 
 export function camelCardsPart2(input: string): number {
@@ -221,6 +246,146 @@ export class Hand {
     }
 
     if (this.isFiveOfAKind()) {
+      result = 6;
+    }
+
+    return result;
+  }
+
+  private isOnePair() {
+    return 1 == this._histogram.filter((frequency) => frequency == 2).length;
+  }
+
+  private isTwoPair() {
+    return 2 == this._histogram.filter((frequency) => frequency == 2).length;
+  }
+
+  private isThreeOfAKind() {
+    return 1 === this._histogram.filter((frequency) => frequency === 3).length;
+  }
+
+  private isFullHouse() {
+    return this.isThreeOfAKind() && this.isOnePair();
+  }
+
+  private isFourOfAKind() {
+    return 1 === this._histogram.filter((frequency) => frequency === 4).length;
+  }
+
+  private isFiveOfAKind() {
+    return 1 === this._histogram.filter((frequency) => frequency === 5).length;
+  }
+}
+
+export class HandPart2 {
+  private _histogram: number[];
+
+  constructor(
+    readonly cards: Card[] = [],
+    readonly bid: number,
+  ) {
+    this._histogram = this.histogram();
+  }
+
+  private histogram() {
+    const highestCardValue = new CardPart2("A").value;
+    const result: number[] = new Array(highestCardValue + 1).fill(0);
+
+    for (const card of this.cards) {
+      result[card.value]++;
+    }
+
+    return result;
+  }
+
+  toString(): string {
+    const cardString = this.cards.map((c) => c.character).join("");
+
+    return `${cardString} ${this.bid} ${this.calculateValueOfHandType()}`;
+  }
+
+  get value(): number {
+    let valueOfHandType = this.calculateValueOfHandType();
+    let valueOfCardSequence = this.calculateValueOfCardSequence();
+
+    return valueOfHandType * 16 ** 5 + valueOfCardSequence;
+  }
+
+  private calculateValueOfCardSequence() {
+    return this.cards
+      .map((card) => card.value)
+      .reduce((accumulator, currentValue) => 16 * accumulator + currentValue);
+  }
+
+  private _joker = new CardPart2("J");
+
+  public calculateValueOfHandType() {
+    let result = 0;
+
+    // ignore Jokers when calculating the
+    const numberOfJokers = this._histogram[this._joker.value];
+    this._histogram[this._joker.value] = 0;
+
+    if (this.isOnePair()) {
+      result = 1;
+    }
+
+    if (this.isTwoPair()) {
+      result = 2;
+    }
+
+    if (this.isThreeOfAKind()) {
+      result = 3;
+    }
+
+    if (this.isFullHouse()) {
+      result = 4;
+    }
+
+    if (this.isFourOfAKind()) {
+      result = 5;
+    }
+
+    if (this.isFiveOfAKind()) {
+      result = 6;
+    }
+
+    if (numberOfJokers == 1) {
+      const mapResultTo = new Map<number, number>([
+        [0, 1], // high card -> one pair
+        [1, 3], // one pair -> three of a kind
+        [2, 4], // two pair -> full house
+        [3, 5], // three of a kind -> four of a kind
+        [5, 6], // four of a kind -> five of a kind
+      ]);
+      result = mapResultTo.get(result)!;
+    }
+
+    if (numberOfJokers == 2) {
+      const mapResultTo = new Map<number, number>([
+        [0, 3], // high card -> three of a kind
+        [1, 5], // one pair -> four of a kind
+        [3, 6], // three of a kind -> five of a kind
+      ]);
+      result = mapResultTo.get(result)!;
+    }
+
+    if (numberOfJokers == 3) {
+      const mapResultTo = new Map<number, number>([
+        [0, 5], // high card -> four of a kind
+        [1, 6], // one pair -> five of a kind
+      ]);
+      result = mapResultTo.get(result)!;
+    }
+
+    if (numberOfJokers == 4) {
+      const mapResultTo = new Map<number, number>([
+        [0, 6], // high card -> five of a kind
+      ]);
+      result = mapResultTo.get(result)!;
+    }
+
+    if (numberOfJokers == 5) {
       result = 6;
     }
 

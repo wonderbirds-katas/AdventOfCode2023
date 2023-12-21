@@ -4,7 +4,9 @@ import {
   camelCards,
   camelCardsPart2,
   CardPart1,
+  CardPart2,
   Hand,
+  HandPart2,
 } from "../src/07-camelCards";
 import { readFileSync } from "fs";
 import { describe, it } from "@jest/globals";
@@ -145,5 +147,27 @@ J8K24 10`,
       );
       camelCardsPart2(input).should.equal(expected);
     });
+  });
+});
+
+describe("calculateValueOfHandType with Jokers for part 2", () => {
+  it.each([
+    ["high card", 0, "2457K"],
+    ["one pair", 1, "2345J"],
+    ["three of a kind", 3, "223J5"],
+    ["three of a kind", 3, "2J3J5"],
+    ["full house", 4, "ATATJ"],
+    ["full house", 4, "223J3"],
+    ["four of a kind", 5, "22J23"],
+    ["four of a kind", 5, "J2J23"],
+    ["four of a kind", 5, "J2JJ3"],
+    ["five of a kind", 6, "22J2J"],
+    ["five of a kind", 6, "J2J2J"],
+    ["five of a kind", 6, "J2JJJ"],
+    ["five of a kind", 6, "JJJJJ"],
+  ])("%s => %p when input %p", (_description, expected, cardString) => {
+    const cards = cardString.split("").map((c) => new CardPart2(c));
+    const hand = new HandPart2(cards, 0);
+    hand.calculateValueOfHandType().should.be.equal(expected);
   });
 });
