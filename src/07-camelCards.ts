@@ -68,7 +68,7 @@ function parseRow(row: string): Hand {
 }
 
 function compareHands(a: Hand, b: Hand): number {
-  return a.calculateValue() - b.calculateValue();
+  return a.value - b.value;
 }
 
 export class Card {
@@ -109,13 +109,24 @@ export class Hand {
     this._histogram = this.histogram();
   }
 
+  private histogram() {
+    const highestCardValue = new Card("A").value;
+    const result: number[] = new Array(highestCardValue + 1).fill(0);
+
+    for (const card of this.cards) {
+      result[card.value]++;
+    }
+
+    return result;
+  }
+
   toString(): string {
     const cardString = this.cards.map((c) => c.character).join("");
 
     return `${cardString} ${this.bid} ${this.calculateValueOfHandType()}`;
   }
 
-  calculateValue(): number {
+  get value(): number {
     let valueOfHandType = this.calculateValueOfHandType();
     let valueOfCardSequence = this.calculateValueOfCardSequence();
 
@@ -180,16 +191,5 @@ export class Hand {
 
   private isFiveOfAKind() {
     return 1 === this._histogram.filter((frequency) => frequency === 5).length;
-  }
-
-  private histogram() {
-    const highestCardValue = new Card("A").value;
-    const result: number[] = new Array(highestCardValue + 1).fill(0);
-
-    for (const card of this.cards) {
-      result[card.value]++;
-    }
-
-    return result;
   }
 }
