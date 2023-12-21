@@ -140,24 +140,15 @@ class CardFactoryPart1 implements CardFactory {
   }
 }
 
-export class CardPart1 implements Card {
-  private _cardValues: Map<string, number> = new Map<string, number>([
-    ["2", 2],
-    ["3", 3],
-    ["4", 4],
-    ["5", 5],
-    ["6", 6],
-    ["7", 7],
-    ["8", 8],
-    ["9", 9],
-    ["T", 10],
-    ["J", 11],
-    ["Q", 12],
-    ["K", 13],
-    ["A", 14],
-  ]);
+class CardBase implements Card {
+  protected _cardValues: Map<string, number>;
 
-  constructor(readonly character: string) {
+  constructor(
+    readonly character: string,
+    cardValues: Map<string, number>,
+  ) {
+    this._cardValues = cardValues;
+
     if (!this._cardValues.has(character)) {
       throw new Error(`Invalid card "${character}"`);
     }
@@ -165,6 +156,28 @@ export class CardPart1 implements Card {
 
   get value(): number {
     return this._cardValues.get(this.character)!;
+  }
+}
+
+export class CardPart1 extends CardBase {
+  constructor(readonly character: string) {
+    const _cardValues: Map<string, number> = new Map<string, number>([
+      ["2", 2],
+      ["3", 3],
+      ["4", 4],
+      ["5", 5],
+      ["6", 6],
+      ["7", 7],
+      ["8", 8],
+      ["9", 9],
+      ["T", 10],
+      ["J", 11],
+      ["Q", 12],
+      ["K", 13],
+      ["A", 14],
+    ]);
+
+    super(character, _cardValues);
   }
 }
 
@@ -277,33 +290,28 @@ export function camelCardsPart2(input: string): number {
   return camelCards(input, new CardFactoryPart2(), new HandFactoryPart2());
 }
 
-export class CardPart2 implements Card {
-  private _cardValues: Map<string, number> = new Map<string, number>([
-    ["J", 1],
-    ["2", 2],
-    ["3", 3],
-    ["4", 4],
-    ["5", 5],
-    ["6", 6],
-    ["7", 7],
-    ["8", 8],
-    ["9", 9],
-    ["T", 10],
-    ["Q", 12],
-    ["K", 13],
-    ["A", 14],
-  ]);
-
+export class CardPart2 extends CardBase {
   constructor(readonly character: string) {
-    if (!this._cardValues.has(character)) {
-      throw new Error(`Invalid card "${character}"`);
-    }
-  }
+    const _cardValues: Map<string, number> = new Map<string, number>([
+      ["J", 1],
+      ["2", 2],
+      ["3", 3],
+      ["4", 4],
+      ["5", 5],
+      ["6", 6],
+      ["7", 7],
+      ["8", 8],
+      ["9", 9],
+      ["T", 10],
+      ["Q", 12],
+      ["K", 13],
+      ["A", 14],
+    ]);
 
-  get value(): number {
-    return this._cardValues.get(this.character)!;
+    super(character, _cardValues);
   }
 }
+
 class CardFactoryPart2 implements CardFactory {
   create(character: string): Card {
     return new CardPart2(character);
