@@ -21,7 +21,7 @@
 // -----------------
 //
 // For each Hand = [cards, bid]
-//   Find HandType
+//   rankHand()
 //
 // rankHand() is a function to calculate the hexadecimal Rank, e.g. 0x3AA37B
 //     The first hex digit (3) corresponds to HandType.
@@ -44,6 +44,28 @@
 //
 // ... describe solution and algorithm idea roughly ...
 //
+
 export function camelCards(input: string): number {
-  return 0;
+  return input
+    .split("\n")
+    .map(parseRow)
+    .map((hand) => hand.bid)
+    .reduce(sum);
 }
+function parseRow(row: string): Hand {
+  const cards = row.substring(0, 5);
+
+  const bidStr = row.substring(5);
+  const bid = Number(bidStr);
+
+  return new Hand(cards, bid);
+}
+
+class Hand {
+  constructor(
+    readonly cards: string,
+    readonly bid: number,
+  ) {}
+}
+
+const sum = (a: number, b: number) => a + b;

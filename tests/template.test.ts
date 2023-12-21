@@ -8,7 +8,6 @@ import { verify } from "approvals/lib/Providers/Jest/JestApprovals";
 
 // @ts-ignore: unfortunately, approvals/lib/Approvals.js implicitly has an any type
 import { configure } from "approvals";
-import { camelCards } from "../src/07-camelCards";
 
 config.truncateThreshold = 0;
 
@@ -22,10 +21,10 @@ describe("template", () => {
   describe("given puzzle description input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync(
-        "./inputs/07-camelCards-from-puzzle-description.txt",
+        "./inputs/template-from-puzzle-description.txt",
         "utf-8",
       );
-      camelCards(input).should.equal(expected);
+      template(input).should.equal(expected);
     });
   });
 
