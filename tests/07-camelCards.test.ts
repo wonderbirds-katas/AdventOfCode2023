@@ -5,7 +5,7 @@ import {
   camelCardsPart2,
   CardPart1,
   CardPart2,
-  Hand,
+  HandPart1,
   HandPart2,
 } from "../src/07-camelCards";
 import { readFileSync } from "fs";
@@ -122,7 +122,7 @@ describe("calculateValueOfHandType", () => {
     ["five of a kind", 6, "22222"],
   ])("%s => %p when input %p", (_description, expected, cardString) => {
     const cards = cardString.split("").map((c) => new CardPart1(c));
-    const hand = new Hand(cards, 0);
+    const hand = new HandPart1(cards, 0);
     hand.calculateValueOfHandType().should.be.equal(expected);
   });
 });
@@ -132,19 +132,27 @@ describe("camelCardsPart2", () => {
     it.each([
       [
         1 * 10 + 2 * 1,
-        `78K24 1
-J8K24 10`,
+        `J8K24 1
+78K24 10`,
       ],
     ])("returns %p when %p", (expected, input) => {
       camelCardsPart2(input).should.equal(expected);
     });
   });
+
   describe("given puzzle description input", () => {
-    it.each([[6440]])("returns %p", (expected) => {
+    it.each([[5905]])("returns %p", (expected) => {
       const input = readFileSync(
         "./inputs/07-camelCards-from-puzzle-description.txt",
         "utf-8",
       );
+      camelCardsPart2(input).should.equal(expected);
+    });
+  });
+
+  describe("given my personal puzzle input", () => {
+    it.each([[243101568]])("returns %p", (expected) => {
+      const input = readFileSync("./inputs/07-camelCards.txt", "utf-8");
       camelCardsPart2(input).should.equal(expected);
     });
   });
@@ -161,6 +169,7 @@ describe("calculateValueOfHandType with Jokers for part 2", () => {
     ["four of a kind", 5, "22J23"],
     ["four of a kind", 5, "J2J23"],
     ["four of a kind", 5, "J2JJ3"],
+    ["four of a kind", 5, "KTJJT"],
     ["five of a kind", 6, "22J2J"],
     ["five of a kind", 6, "J2J2J"],
     ["five of a kind", 6, "J2JJJ"],

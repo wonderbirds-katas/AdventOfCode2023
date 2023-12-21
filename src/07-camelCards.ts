@@ -69,7 +69,7 @@
 //
 
 export function camelCardsPart2(input: string): number {
-  return camelCards(input, new CardFactoryPart2());
+  return camelCards(input, new CardFactoryPart2(), new HandFactoryPart2());
 }
 
 export class CardPart2 implements Card {
@@ -109,8 +109,9 @@ class CardFactoryPart2 implements CardFactory {
 export function camelCards(
   input: string,
   cardFactory: CardFactory = new CardFactoryPart1(),
+  handFactory: HandFactory = new HandFactoryPart1(),
 ): number {
-  const hands = input.split("\n").map(parseRow(cardFactory));
+  const hands = input.split("\n").map(parseRow(cardFactory, handFactory));
   const sortedHands = hands.sort(compareHands);
   const sortedBids = sortedHands.map((hand) => hand.bid);
   return sortedBids.reduce(
@@ -121,7 +122,10 @@ export function camelCards(
 
 type ParseRowFn = (row: string) => Hand;
 
-function parseRow(cardFactory: CardFactory): ParseRowFn {
+function parseRow(
+  cardFactory: CardFactory,
+  handFactory: HandFactory,
+): ParseRowFn {
   return function (row: string): Hand {
     const cardCharacters = row.substring(0, 5);
     const cards = cardCharacters
@@ -131,7 +135,7 @@ function parseRow(cardFactory: CardFactory): ParseRowFn {
     const bidStr = row.substring(5);
     const bid = Number(bidStr);
 
-    return new Hand(cards, bid);
+    return handFactory.create(cards, bid);
   };
 }
 
@@ -182,7 +186,31 @@ export class CardPart1 implements Card {
   }
 }
 
-export class Hand {
+interface Hand {
+  readonly value: number;
+  readonly cards: Card[];
+  readonly bid: number;
+
+  calculateValueOfHandType(): number;
+}
+
+interface HandFactory {
+  create(cards: Card[], bid: number): Hand;
+}
+
+class HandFactoryPart1 implements HandFactory {
+  create(cards: Card[], bid: number): Hand {
+    return new HandPart1(cards, bid);
+  }
+}
+
+class HandFactoryPart2 implements HandFactory {
+  create(cards: Card[], bid: number): Hand {
+    return new HandPart2(cards, bid);
+  }
+}
+
+export class HandPart1 implements Hand {
   private _histogram: number[];
 
   constructor(
@@ -277,8 +305,8 @@ export class Hand {
   }
 }
 
-export class HandPart2 {
-  private _histogram: number[];
+export class HandPart2 implements Hand {
+  private readonly _histogram: number[] = [];
 
   constructor(
     readonly cards: Card[] = [],
@@ -292,7 +320,9 @@ export class HandPart2 {
     const result: number[] = new Array(highestCardValue + 1).fill(0);
 
     for (const card of this.cards) {
-      result[card.value]++;
+      if (card.value !== 1) {
+        result[card.value]++;
+      }
     }
 
     return result;
@@ -301,7 +331,9 @@ export class HandPart2 {
   toString(): string {
     const cardString = this.cards.map((c) => c.character).join("");
 
-    return `${cardString} ${this.bid} ${this.calculateValueOfHandType()}`;
+    return `Hand Part 2: ${cardString} ${
+      this.bid
+    } ${this.calculateValueOfHandType()}`;
   }
 
   get value(): number {
@@ -321,10 +353,6 @@ export class HandPart2 {
 
   public calculateValueOfHandType() {
     let result = 0;
-
-    // ignore Jokers when calculating the
-    const numberOfJokers = this._histogram[this._joker.value];
-    this._histogram[this._joker.value] = 0;
 
     if (this.isOnePair()) {
       result = 1;
@@ -350,6 +378,7 @@ export class HandPart2 {
       result = 6;
     }
 
+    const numberOfJokers = this.cards.filter((c) => c.value === 1).length;
     if (numberOfJokers == 1) {
       const mapResultTo = new Map<number, number>([
         [0, 1], // high card -> one pair
