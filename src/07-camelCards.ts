@@ -187,8 +187,8 @@ class HandFactoryPart1 implements HandFactory {
   }
 }
 
-export class HandPart1 implements Hand {
-  private _histogram: number[];
+class HandBase implements Hand {
+  protected _histogram: number[];
 
   constructor(
     readonly cards: Card[] = [],
@@ -197,15 +197,8 @@ export class HandPart1 implements Hand {
     this._histogram = this.histogram();
   }
 
-  private histogram() {
-    const highestCardValue = new CardPart1("A").value;
-    const result: number[] = new Array(highestCardValue + 1).fill(0);
-
-    for (const card of this.cards) {
-      result[card.value]++;
-    }
-
-    return result;
+  protected histogram(): number[] {
+    throw new Error("not implemented");
   }
 
   toString(): string {
@@ -221,10 +214,58 @@ export class HandPart1 implements Hand {
     return valueOfHandType * 16 ** 5 + valueOfCardSequence;
   }
 
-  private calculateValueOfCardSequence() {
+  private calculateValueOfCardSequence(): number {
     return this.cards
       .map((card) => card.value)
       .reduce((accumulator, currentValue) => 16 * accumulator + currentValue);
+  }
+
+  public calculateValueOfHandType(): number {
+    throw new Error("not implemented");
+  }
+
+  protected isOnePair() {
+    return 1 == this._histogram.filter((frequency) => frequency == 2).length;
+  }
+
+  protected isTwoPair() {
+    return 2 == this._histogram.filter((frequency) => frequency == 2).length;
+  }
+
+  protected isThreeOfAKind() {
+    return 1 === this._histogram.filter((frequency) => frequency === 3).length;
+  }
+
+  protected isFullHouse() {
+    return this.isThreeOfAKind() && this.isOnePair();
+  }
+
+  protected isFourOfAKind() {
+    return 1 === this._histogram.filter((frequency) => frequency === 4).length;
+  }
+
+  protected isFiveOfAKind() {
+    return 1 === this._histogram.filter((frequency) => frequency === 5).length;
+  }
+}
+
+export class HandPart1 extends HandBase {
+  constructor(
+    readonly cards: Card[] = [],
+    readonly bid: number,
+  ) {
+    super(cards, bid);
+  }
+
+  protected histogram() {
+    const highestCardValue = new CardPart1("A").value;
+    const result: number[] = new Array(highestCardValue + 1).fill(0);
+
+    for (const card of this.cards) {
+      result[card.value]++;
+    }
+
+    return result;
   }
 
   public calculateValueOfHandType() {
@@ -255,30 +296,6 @@ export class HandPart1 implements Hand {
     }
 
     return result;
-  }
-
-  private isOnePair() {
-    return 1 == this._histogram.filter((frequency) => frequency == 2).length;
-  }
-
-  private isTwoPair() {
-    return 2 == this._histogram.filter((frequency) => frequency == 2).length;
-  }
-
-  private isThreeOfAKind() {
-    return 1 === this._histogram.filter((frequency) => frequency === 3).length;
-  }
-
-  private isFullHouse() {
-    return this.isThreeOfAKind() && this.isOnePair();
-  }
-
-  private isFourOfAKind() {
-    return 1 === this._histogram.filter((frequency) => frequency === 4).length;
-  }
-
-  private isFiveOfAKind() {
-    return 1 === this._histogram.filter((frequency) => frequency === 5).length;
   }
 }
 
@@ -324,17 +341,15 @@ class HandFactoryPart2 implements HandFactory {
   }
 }
 
-export class HandPart2 implements Hand {
-  private readonly _histogram: number[] = [];
-
+export class HandPart2 extends HandBase {
   constructor(
     readonly cards: Card[] = [],
     readonly bid: number,
   ) {
-    this._histogram = this.histogram();
+    super(cards, bid);
   }
 
-  private histogram() {
+  protected histogram() {
     const highestCardValue = new CardPart2("A").value;
     const result: number[] = new Array(highestCardValue + 1).fill(0);
 
@@ -346,29 +361,6 @@ export class HandPart2 implements Hand {
 
     return result;
   }
-
-  toString(): string {
-    const cardString = this.cards.map((c) => c.character).join("");
-
-    return `Hand Part 2: ${cardString} ${
-      this.bid
-    } ${this.calculateValueOfHandType()}`;
-  }
-
-  get value(): number {
-    let valueOfHandType = this.calculateValueOfHandType();
-    let valueOfCardSequence = this.calculateValueOfCardSequence();
-
-    return valueOfHandType * 16 ** 5 + valueOfCardSequence;
-  }
-
-  private calculateValueOfCardSequence() {
-    return this.cards
-      .map((card) => card.value)
-      .reduce((accumulator, currentValue) => 16 * accumulator + currentValue);
-  }
-
-  private _joker = new CardPart2("J");
 
   public calculateValueOfHandType() {
     let result = 0;
@@ -438,29 +430,5 @@ export class HandPart2 implements Hand {
     }
 
     return result;
-  }
-
-  private isOnePair() {
-    return 1 == this._histogram.filter((frequency) => frequency == 2).length;
-  }
-
-  private isTwoPair() {
-    return 2 == this._histogram.filter((frequency) => frequency == 2).length;
-  }
-
-  private isThreeOfAKind() {
-    return 1 === this._histogram.filter((frequency) => frequency === 3).length;
-  }
-
-  private isFullHouse() {
-    return this.isThreeOfAKind() && this.isOnePair();
-  }
-
-  private isFourOfAKind() {
-    return 1 === this._histogram.filter((frequency) => frequency === 4).length;
-  }
-
-  private isFiveOfAKind() {
-    return 1 === this._histogram.filter((frequency) => frequency === 5).length;
   }
 }
