@@ -46,18 +46,13 @@
 //
 
 export function camelCards(input: string): number {
-  return input
-    .split("\n")
-    .map(parseRow)
-    .sort(compareHands)
-    .map((hand) => {
-      //      console.log(hand);
-      return hand.bid;
-    })
-    .reduce(
-      (accumulated, currentBid, currentIndex) =>
-        accumulated + (currentIndex + 1) * currentBid,
-    );
+  const hands = input.split("\n").map(parseRow);
+  const sortedHands = hands.sort(compareHands);
+  const sortedBids = sortedHands.map((hand) => hand.bid);
+  return sortedBids.reduce(
+    (accumulated, currentBid, currentIndex) =>
+      accumulated + (currentIndex + 1) * currentBid,
+  );
 }
 
 function parseRow(row: string): Hand {
@@ -76,7 +71,7 @@ function compareHands(a: Hand, b: Hand): number {
   return a.calculateValue() - b.calculateValue();
 }
 
-class Card {
+export class Card {
   private _cardValues: Map<string, number> = new Map<string, number>([
     ["2", 2],
     ["3", 3],
@@ -104,11 +99,21 @@ class Card {
   }
 }
 
-class Hand {
+export class Hand {
+  private _histogram: number[];
+
   constructor(
     readonly cards: Card[] = [],
     readonly bid: number,
-  ) {}
+  ) {
+    this._histogram = this.histogram();
+  }
+
+  toString(): string {
+    const cardString = this.cards.map((c) => c.character).join("");
+
+    return `${cardString} ${this.bid} ${this.calculateValueOfHandType()}`;
+  }
 
   calculateValue(): number {
     let valueOfHandType = this.calculateValueOfHandType();
@@ -123,18 +128,66 @@ class Hand {
       .reduce((accumulator, currentValue) => 16 * accumulator + currentValue);
   }
 
-  private calculateValueOfHandType() {
-    const bins: number[] = new Array(14).fill(0);
+  public calculateValueOfHandType() {
+    let result = 0;
 
-    for (const card of this.cards) {
-      bins[card.value]++;
+    if (this.isOnePair()) {
+      result = 1;
     }
 
-    const numberOfPairs = bins.filter((frequency) => frequency == 2).length;
+    if (this.isTwoPair()) {
+      result = 2;
+    }
 
-    let result = 0;
-    if (numberOfPairs == 1) {
-      result = 1;
+    if (this.isThreeOfAKind()) {
+      result = 3;
+    }
+
+    if (this.isFullHouse()) {
+      result = 4;
+    }
+
+    if (this.isFourOfAKind()) {
+      result = 5;
+    }
+
+    if (this.isFiveOfAKind()) {
+      result = 6;
+    }
+
+    return result;
+  }
+
+  private isOnePair() {
+    return 1 == this._histogram.filter((frequency) => frequency == 2).length;
+  }
+
+  private isTwoPair() {
+    return 2 == this._histogram.filter((frequency) => frequency == 2).length;
+  }
+
+  private isThreeOfAKind() {
+    return 1 === this._histogram.filter((frequency) => frequency === 3).length;
+  }
+
+  private isFullHouse() {
+    return this.isThreeOfAKind() && this.isOnePair();
+  }
+
+  private isFourOfAKind() {
+    return 1 === this._histogram.filter((frequency) => frequency === 4).length;
+  }
+
+  private isFiveOfAKind() {
+    return 1 === this._histogram.filter((frequency) => frequency === 5).length;
+  }
+
+  private histogram() {
+    const highestCardValue = new Card("A").value;
+    const result: number[] = new Array(highestCardValue + 1).fill(0);
+
+    for (const card of this.cards) {
+      result[card.value]++;
     }
 
     return result;

@@ -1,6 +1,6 @@
 import "chai/register-should";
 import { config } from "chai";
-import { camelCards } from "../src/07-camelCards";
+import { camelCards, Card, Hand } from "../src/07-camelCards";
 import { readFileSync } from "fs";
 import { describe, it } from "@jest/globals";
 
@@ -85,8 +85,8 @@ K8K24 999`,
     });
   });
 
-  xdescribe("given puzzle description input", () => {
-    it.each([[0]])("returns %p", (expected) => {
+  describe("given puzzle description input", () => {
+    it.each([[6440]])("returns %p", (expected) => {
       const input = readFileSync(
         "./inputs/07-camelCards-from-puzzle-description.txt",
         "utf-8",
@@ -95,10 +95,27 @@ K8K24 999`,
     });
   });
 
-  xdescribe("given my personal puzzle input", () => {
-    it.each([[0]])("returns %p", (expected) => {
+  describe("given my personal puzzle input", () => {
+    it.each([[241344943]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/07-camelCards.txt", "utf-8");
       camelCards(input).should.equal(expected);
     });
+  });
+});
+
+describe("calculateValueOfHandType", () => {
+  it.each([
+    ["high card", 0, "2457K"],
+    ["one pair", 1, "22345"],
+    ["two pair", 2, "22335"],
+    ["three of a kind", 3, "22235"],
+    ["full house", 4, "ATAAT"],
+    ["full house", 4, "22233"],
+    ["four of a kind", 5, "22223"],
+    ["five of a kind", 6, "22222"],
+  ])("%s => %p when input %p", (_description, expected, cardString) => {
+    const cards = cardString.split("").map((c) => new Card(c));
+    const hand = new Hand(cards, 0);
+    hand.calculateValueOfHandType().should.be.equal(expected);
   });
 });
