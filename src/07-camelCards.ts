@@ -61,7 +61,10 @@ export function camelCards(input: string): number {
 }
 
 function parseRow(row: string): Hand {
-  const cards = row.substring(0, 5);
+  const cardCharacters = row.substring(0, 5);
+  const cards = cardCharacters
+    .split("")
+    .map((character) => new Card(character));
 
   const bidStr = row.substring(5);
   const bid = Number(bidStr);
@@ -70,35 +73,70 @@ function parseRow(row: string): Hand {
 }
 
 function compareHands(a: Hand, b: Hand): number {
-  return a.value() - b.value();
+  return a.calculateValue() - b.calculateValue();
+}
+
+class Card {
+  private _cardValues: Map<string, number> = new Map<string, number>([
+    ["2", 2],
+    ["3", 3],
+    ["4", 4],
+    ["5", 5],
+    ["6", 6],
+    ["7", 7],
+    ["8", 8],
+    ["9", 9],
+    ["T", 10],
+    ["J", 11],
+    ["Q", 12],
+    ["K", 13],
+    ["A", 14],
+  ]);
+
+  constructor(readonly character: string) {
+    if (!this._cardValues.has(character)) {
+      throw new Error(`Invalid card "${character}"`);
+    }
+  }
+
+  get value(): number {
+    return this._cardValues.get(this.character)!;
+  }
 }
 
 class Hand {
   constructor(
-    readonly cards: string,
+    readonly cards: Card[] = [],
     readonly bid: number,
   ) {}
 
-  value(): number {
-    const cardValue: Map<string, number> = new Map<string, number>([
-      ["2", 2],
-      ["3", 3],
-      ["4", 4],
-      ["5", 5],
-      ["6", 6],
-      ["7", 7],
-      ["8", 8],
-      ["9", 9],
-      ["T", 10],
-      ["J", 11],
-      ["Q", 12],
-      ["K", 13],
-      ["A", 14],
-    ]);
+  calculateValue(): number {
+    let valueOfHandType = this.calculateValueOfHandType();
+    let valueOfCardSequence = this.calculateValueOfCardSequence();
 
+    return valueOfHandType * 16 ** 5 + valueOfCardSequence;
+  }
+
+  private calculateValueOfCardSequence() {
     return this.cards
-      .split("")
-      .map((card) => cardValue.get(card)!)
-      .reduce((accumulator, currentValue) => accumulator + 16 * currentValue);
+      .map((card) => card.value)
+      .reduce((accumulator, currentValue) => 16 * accumulator + currentValue);
+  }
+
+  private calculateValueOfHandType() {
+    const bins: number[] = new Array(14).fill(0);
+
+    for (const card of this.cards) {
+      bins[card.value]++;
+    }
+
+    const numberOfPairs = bins.filter((frequency) => frequency == 2).length;
+
+    let result = 0;
+    if (numberOfPairs == 1) {
+      result = 1;
+    }
+
+    return result;
   }
 }

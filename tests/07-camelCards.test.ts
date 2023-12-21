@@ -7,7 +7,7 @@ import { describe, it } from "@jest/globals";
 config.truncateThreshold = 0;
 
 describe("camelCards", () => {
-  describe("given single random hand (high card)", () => {
+  describe("given single 'high card' hand", () => {
     it.each([
       [0, "98K24 0"],
       [1, "98K24 1"],
@@ -17,7 +17,7 @@ describe("camelCards", () => {
     });
   });
 
-  describe("given a sequence of random hands in ascending order (high card)", () => {
+  describe("given a sequence of 'high card' hands in ascending order", () => {
     it.each([
       [
         1 * 1 + 2 * 2,
@@ -27,7 +27,7 @@ J8K24 2`,
       [
         1 * 1 + 2 * 2 + 3 * 42 + 4 * 999,
         `78K24 1
-88K24 2
+89K24 2
 J8K24 42
 K8K24 999`,
       ],
@@ -36,7 +36,7 @@ K8K24 999`,
     });
   });
 
-  describe("given a sequence of random hands in random order (high card)", () => {
+  describe("given a sequence of 'high card' hands in random order", () => {
     describe("and first card is different", () => {
       it.each([
         [
@@ -69,6 +69,19 @@ K8K24 999`,
       ])("returns %p when %p", (expected, input) => {
         camelCards(input).should.equal(expected);
       });
+    });
+  });
+
+  describe("given hands of different types", () => {
+    it.each([
+      [
+        "high card, one pair",
+        1 * 1 + 2 * 10,
+        `78K24 1
+33K24 10`,
+      ],
+    ])("when %p", (_description, expected, input) => {
+      camelCards(input).should.equal(expected);
     });
   });
 
