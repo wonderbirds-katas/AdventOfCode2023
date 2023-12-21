@@ -49,6 +49,7 @@ export function camelCards(input: string): number {
   return input
     .split("\n")
     .map(parseRow)
+    .sort(compareHands)
     .map((hand) => {
       //      console.log(hand);
       return hand.bid;
@@ -58,6 +59,7 @@ export function camelCards(input: string): number {
         accumulated + (currentIndex + 1) * currentBid,
     );
 }
+
 function parseRow(row: string): Hand {
   const cards = row.substring(0, 5);
 
@@ -67,9 +69,36 @@ function parseRow(row: string): Hand {
   return new Hand(cards, bid);
 }
 
+function compareHands(a: Hand, b: Hand): number {
+  return a.value() - b.value();
+}
+
 class Hand {
   constructor(
     readonly cards: string,
     readonly bid: number,
   ) {}
+
+  value(): number {
+    const cardValue: Map<string, number> = new Map<string, number>([
+      ["2", 2],
+      ["3", 3],
+      ["4", 4],
+      ["5", 5],
+      ["6", 6],
+      ["7", 7],
+      ["8", 8],
+      ["9", 9],
+      ["T", 10],
+      ["J", 11],
+      ["Q", 12],
+      ["K", 13],
+      ["A", 14],
+    ]);
+
+    return this.cards
+      .split("")
+      .map((card) => cardValue.get(card)!)
+      .reduce((accumulator, currentValue) => accumulator + 16 * currentValue);
+  }
 }

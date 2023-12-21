@@ -36,6 +36,42 @@ K8K24 999`,
     });
   });
 
+  describe("given a sequence of random hands in random order (high card)", () => {
+    describe("and first card is different", () => {
+      it.each([
+        [
+          1 * 10 + 2 * 1,
+          `78K24 1
+58K24 10`,
+        ],
+      ])("returns %p when %p", (expected, input) => {
+        camelCards(input).should.equal(expected);
+      });
+    });
+    describe("and second card is different", () => {
+      it.each([
+        [
+          1 * 10 + 2 * 1,
+          `58K24 1
+57K24 10`,
+        ],
+      ])("returns %p when %p", (expected, input) => {
+        camelCards(input).should.equal(expected);
+      });
+    });
+    describe("and last card is different", () => {
+      it.each([
+        [
+          1 * 10 + 2 * 1,
+          `58K27 1
+58K24 10`,
+        ],
+      ])("returns %p when %p", (expected, input) => {
+        camelCards(input).should.equal(expected);
+      });
+    });
+  });
+
   xdescribe("given puzzle description input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync(
