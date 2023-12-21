@@ -49,8 +49,14 @@ export function camelCards(input: string): number {
   return input
     .split("\n")
     .map(parseRow)
-    .map((hand) => hand.bid)
-    .reduce(sum);
+    .map((hand) => {
+      //      console.log(hand);
+      return hand.bid;
+    })
+    .reduce(
+      (accumulated, currentBid, currentIndex) =>
+        accumulated + (currentIndex + 1) * currentBid,
+    );
 }
 function parseRow(row: string): Hand {
   const cards = row.substring(0, 5);
@@ -67,5 +73,3 @@ class Hand {
     readonly bid: number,
   ) {}
 }
-
-const sum = (a: number, b: number) => a + b;
