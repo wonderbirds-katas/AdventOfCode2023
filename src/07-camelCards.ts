@@ -44,7 +44,41 @@
 //
 
 export function camelCardsPart2(input: string): number {
-  return camelCards(input);
+  return camelCards(input, new CardFactoryPart2());
+}
+
+export class CardPart2 implements Card {
+  private _cardValues: Map<string, number> = new Map<string, number>([
+    ["J", 1],
+    ["2", 2],
+    ["3", 3],
+    ["4", 4],
+    ["5", 5],
+    ["6", 6],
+    ["7", 7],
+    ["8", 8],
+    ["9", 9],
+    ["T", 10],
+    ["Q", 12],
+    ["K", 13],
+    ["A", 14],
+  ]);
+
+  constructor(readonly character: string) {
+    if (!this._cardValues.has(character)) {
+      throw new Error(`Invalid card "${character}"`);
+    }
+  }
+
+  get value(): number {
+    return this._cardValues.get(this.character)!;
+  }
+}
+
+class CardFactoryPart2 implements CardFactory {
+  create(character: string): Card {
+    return new CardPart2(character);
+  }
 }
 
 export function camelCards(

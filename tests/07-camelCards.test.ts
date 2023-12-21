@@ -126,6 +126,17 @@ describe("calculateValueOfHandType", () => {
 });
 
 describe("camelCardsPart2", () => {
+  describe("given a sequence of 'high card' hands including a Joker", () => {
+    it.each([
+      [
+        1 * 10 + 2 * 1,
+        `78K24 1
+J8K24 10`,
+      ],
+    ])("returns %p when %p", (expected, input) => {
+      camelCardsPart2(input).should.equal(expected);
+    });
+  });
   describe("given puzzle description input", () => {
     it.each([[6440]])("returns %p", (expected) => {
       const input = readFileSync(
