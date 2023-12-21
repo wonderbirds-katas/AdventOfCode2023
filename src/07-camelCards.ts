@@ -68,43 +68,34 @@
 // = Five of a kind 6
 //
 
-export function camelCardsPart2(input: string): number {
-  return camelCards(input, new CardFactoryPart2(), new HandFactoryPart2());
+// ********************************************************************
+// Types required for part 1 and part 2
+// ********************************************************************
+
+interface Card {
+  readonly character: string;
+  readonly value: number;
 }
 
-export class CardPart2 implements Card {
-  private _cardValues: Map<string, number> = new Map<string, number>([
-    ["J", 1],
-    ["2", 2],
-    ["3", 3],
-    ["4", 4],
-    ["5", 5],
-    ["6", 6],
-    ["7", 7],
-    ["8", 8],
-    ["9", 9],
-    ["T", 10],
-    ["Q", 12],
-    ["K", 13],
-    ["A", 14],
-  ]);
-
-  constructor(readonly character: string) {
-    if (!this._cardValues.has(character)) {
-      throw new Error(`Invalid card "${character}"`);
-    }
-  }
-
-  get value(): number {
-    return this._cardValues.get(this.character)!;
-  }
+interface CardFactory {
+  create(character: string): Card;
 }
 
-class CardFactoryPart2 implements CardFactory {
-  create(character: string): Card {
-    return new CardPart2(character);
-  }
+interface Hand {
+  readonly value: number;
+  readonly cards: Card[];
+  readonly bid: number;
+
+  calculateValueOfHandType(): number;
 }
+
+interface HandFactory {
+  create(cards: Card[], bid: number): Hand;
+}
+
+// ********************************************************************
+// Part 1
+// ********************************************************************
 
 export function camelCards(
   input: string,
@@ -143,19 +134,10 @@ function compareHands(a: Hand, b: Hand): number {
   return a.value - b.value;
 }
 
-interface CardFactory {
-  create(character: string): Card;
-}
-
 class CardFactoryPart1 implements CardFactory {
   create(character: string): Card {
     return new CardPart1(character);
   }
-}
-
-interface Card {
-  readonly character: string;
-  readonly value: number;
 }
 
 export class CardPart1 implements Card {
@@ -186,27 +168,9 @@ export class CardPart1 implements Card {
   }
 }
 
-interface Hand {
-  readonly value: number;
-  readonly cards: Card[];
-  readonly bid: number;
-
-  calculateValueOfHandType(): number;
-}
-
-interface HandFactory {
-  create(cards: Card[], bid: number): Hand;
-}
-
 class HandFactoryPart1 implements HandFactory {
   create(cards: Card[], bid: number): Hand {
     return new HandPart1(cards, bid);
-  }
-}
-
-class HandFactoryPart2 implements HandFactory {
-  create(cards: Card[], bid: number): Hand {
-    return new HandPart2(cards, bid);
   }
 }
 
@@ -302,6 +266,53 @@ export class HandPart1 implements Hand {
 
   private isFiveOfAKind() {
     return 1 === this._histogram.filter((frequency) => frequency === 5).length;
+  }
+}
+
+// ********************************************************************
+// Part 2
+// ********************************************************************
+
+export function camelCardsPart2(input: string): number {
+  return camelCards(input, new CardFactoryPart2(), new HandFactoryPart2());
+}
+
+export class CardPart2 implements Card {
+  private _cardValues: Map<string, number> = new Map<string, number>([
+    ["J", 1],
+    ["2", 2],
+    ["3", 3],
+    ["4", 4],
+    ["5", 5],
+    ["6", 6],
+    ["7", 7],
+    ["8", 8],
+    ["9", 9],
+    ["T", 10],
+    ["Q", 12],
+    ["K", 13],
+    ["A", 14],
+  ]);
+
+  constructor(readonly character: string) {
+    if (!this._cardValues.has(character)) {
+      throw new Error(`Invalid card "${character}"`);
+    }
+  }
+
+  get value(): number {
+    return this._cardValues.get(this.character)!;
+  }
+}
+class CardFactoryPart2 implements CardFactory {
+  create(character: string): Card {
+    return new CardPart2(character);
+  }
+}
+
+class HandFactoryPart2 implements HandFactory {
+  create(cards: Card[], bid: number): Hand {
+    return new HandPart2(cards, bid);
   }
 }
 
