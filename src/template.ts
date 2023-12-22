@@ -26,6 +26,6 @@
 //
 // ... describe solution and algorithm idea roughly ...
 //
-export function template(input: string): number {
+export function templateFunction(input: string): number {
   return 0;
 }

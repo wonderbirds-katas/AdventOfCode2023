@@ -1,5 +1,6 @@
 import * as path from "node:path";
-import { copyFileSync } from "node:fs";
+import { copyFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "fs";
 
 const argv = require("minimist")(process.argv.slice(2));
 
@@ -18,6 +19,8 @@ export function setupNextDay(
   puzzleName: string | undefined,
   targetParentDir: string,
   copyCommand: CopyCommand,
+  reader: Reader = new FileReader(),
+  writer: Writer = new FileWriter(),
 ) {
   if (day === undefined || puzzleName === undefined) {
     console.log(UsageInstructions);
@@ -34,6 +37,17 @@ export function setupNextDay(
 
   for (const templateFile of templateFiles) {
     copyCommand.copy(templateFile.sourcePath, templateFile.destinationPath);
+  }
+
+  for (const templateFile of templateFiles) {
+    const originalContents = reader.read(templateFile.destinationPath);
+    const moduleName = `${padWithLeadingZero(templateFile.day)}-${
+      templateFile.puzzleName
+    }`;
+    const replacedContents = originalContents
+      .replaceAll(/templateFunction/g, templateFile.puzzleName)
+      .replaceAll(/template/g, moduleName);
+    writer.write(templateFile.destinationPath, replacedContents);
   }
 }
 
@@ -56,7 +70,7 @@ class TemplateFile {
     readonly targetParentDir: string = "",
     readonly suffix: string = "",
   ) {
-    const zeroPaddedDay = `${day}`.padStart(2, "0");
+    const zeroPaddedDay = padWithLeadingZero(day);
 
     const extensionStart = sourceFile.lastIndexOf(".");
     const extension =
@@ -74,13 +88,43 @@ class TemplateFile {
   }
 }
 
-interface CopyCommand {
+function padWithLeadingZero(day: number): string {
+  return `${day}`.padStart(2, "0");
+}
+
+export interface CopyCommand {
   copy(sourcePath: string, destinationPath: string): void;
 }
 
 export class UseFsCopyFile {
   copy(sourcePath: string, destinationPath: string): void {
     copyFileSync(sourcePath, destinationPath);
+  }
+}
+
+export interface Reader {
+  read(filePath: string): string;
+}
+
+export class FileReader implements Reader {
+  read(filePath: string): string {
+    return readFileSync(filePath, {
+      encoding: "utf-8",
+    });
+  }
+}
+
+export interface Writer {
+  write(filePath: string, text: string): void;
+}
+
+export class FileWriter implements Writer {
+  write(filePath: string, text: string): void {
+    const data = new Uint8Array(Buffer.from(text));
+    writeFileSync(filePath, data, {
+      encoding: "utf-8",
+      flush: true,
+    });
   }
 }
 
