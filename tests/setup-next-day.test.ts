@@ -59,6 +59,17 @@ describe("setup-next-day should", () => {
     );
   });
 
+  it.each([["inputs/08-puzzle-name.txt", 8, "puzzle-name"]])(
+    "copy inputs/template.txt to %s",
+    (expected, day, puzzleName) => {
+      setupNextDay(day, puzzleName, "", new CopyCommandPrinter());
+
+      expect(logSpy).toHaveBeenCalledWith(
+        `Copy inputs/template.txt to ${expected}`,
+      );
+    },
+  );
+
   describe("not copy but report parameter errors", () => {
     it("when day is undefined", () => {
       setupNextDay(
@@ -93,6 +104,7 @@ describe("setup-next-day integration test", () => {
 
       mkdirSync(path.join(tempDir, "src"));
       mkdirSync(path.join(tempDir, "tests"));
+      mkdirSync(path.join(tempDir, "inputs"));
 
       // Act: Copy templates to temporary directory
       setupNextDay(10, "puzzle-name", tempDir, new UseFsCopyFile());
@@ -101,8 +113,14 @@ describe("setup-next-day integration test", () => {
       //
       // If the file does not exist, then statSync will throw a corresponding error.
       // In that case, the assertion in the catch block will make the test fail.
-      statSync(path.join(tempDir, "src", "10-puzzle-name.ts"));
-      statSync(path.join(tempDir, "tests", "10-puzzle-name.test.ts"));
+
+      // prettier-ignore
+      {
+        statSync(path.join(tempDir, "src", "10-puzzle-name.ts"));
+        statSync(path.join(tempDir, "tests", "10-puzzle-name.test.ts"));
+        statSync(path.join(tempDir, "inputs", "10-puzzle-name.txt"));
+        statSync(path.join(tempDir, "inputs", "10-puzzle-name-from-puzzle-description.txt"));
+      }
     } catch (err) {
       // @ts-ignore: TypeScript does not support types for catch variables
       expect(err.message).toBe(undefined);

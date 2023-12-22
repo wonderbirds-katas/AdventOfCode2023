@@ -40,10 +40,12 @@ My personal input data is saved in the folder [inputs](./inputs). The puzzle sol
 
 ## Using the template for a puzzle
 
-1. Extend the table above with the chosen module name
-2. In each folder of [inputs](./inputs), [src](./src), [tests](./tests)
+1. Execute the [setup-next-day.ts](./src/setup-next-day.ts) script to copy the template files (leave parameters out to see usage instructions)
 
-   1. copy the template in that folder and give it the name of the chosen module
-   2. in the copied file, replace the word `template` by the name of the function implementing the solution
+   ```
+   ts-node ./src/setup-next-day.ts DAY PUZZLENAME
+   ```
 
-3. Fill the file in the [inputs](./inputs) directory with the puzzle input
+2. Extend the table above with the chosen module name
+3. In the copied files, replace the word `template` by the name of the function implementing the solution
+4. Fill the files in the [inputs](./inputs) directory with the puzzle input
