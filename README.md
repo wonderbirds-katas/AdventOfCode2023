@@ -47,5 +47,4 @@ My personal input data is saved in the folder [inputs](./inputs). The puzzle sol
    ```
 
 2. Extend the table above with the chosen module name
-3. In the copied files, replace the word `template` by the name of the function implementing the solution
-4. Fill the files in the [inputs](./inputs) directory with the puzzle input
+3. Fill the files in the [inputs](./inputs) directory with the puzzle input
