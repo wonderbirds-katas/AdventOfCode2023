@@ -1,4 +1,4 @@
-import * as path from "path";
+import * as path from "node:path";
 
 const argv = require("minimist")(process.argv.slice(2));
 
@@ -39,6 +39,7 @@ Copy the template files to the next puzzle.
 export function setupNextDay(
   day: number | undefined,
   puzzleName: string | undefined,
+  targetParentDir: string = "",
   copyCommand: CopyCommand = new CopyCommandPrinter(),
 ) {
   if (day === undefined || puzzleName === undefined) {
@@ -47,8 +48,15 @@ export function setupNextDay(
   }
 
   const templateFiles = [
-    new TemplateFile("src", "template.ts", day, puzzleName),
-    new TemplateFile("test", "template.test.ts", day, puzzleName, ".test"),
+    new TemplateFile("src", "template.ts", day, puzzleName, targetParentDir),
+    new TemplateFile(
+      "test",
+      "template.test.ts",
+      day,
+      puzzleName,
+      targetParentDir,
+      ".test",
+    ),
   ];
 
   for (const templateFile of templateFiles) {
@@ -70,6 +78,7 @@ class TemplateFile {
     readonly sourceFile: string,
     readonly day: number,
     readonly puzzleName: string,
+    readonly targetParentDir: string = "",
     readonly suffix: string = "",
   ) {
     const zeroPaddedDay = `${day}`.padStart(2, "0");
@@ -81,7 +90,7 @@ class TemplateFile {
   }
 
   get destinationPath() {
-    return path.join(this.folder, this._destinationFile);
+    return path.join(this.targetParentDir, this.folder, this._destinationFile);
   }
 }
 
@@ -95,4 +104,4 @@ export class CopyCommandPrinter {
   }
 }
 
-setupNextDay(argv._[0], argv._[1]);
+setupNextDay(argv._[0], argv._[1], "", new CopyCommandPrinter());
