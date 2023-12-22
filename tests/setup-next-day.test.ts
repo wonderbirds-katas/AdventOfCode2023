@@ -93,43 +93,39 @@ describe("setup-next-day should", () => {
 });
 
 describe("setup-next-day integration test", () => {
+  const prefix = "setup-next-day-tests-";
+  let tempDir = "";
+
+  beforeEach(() => {
+    // Arrange: Prepare temporary directory to receive copied files
+    tempDir = mkdtempSync(path.join(tmpdir(), prefix));
+
+    mkdirSync(path.join(tempDir, "src"));
+    mkdirSync(path.join(tempDir, "tests"));
+    mkdirSync(path.join(tempDir, "inputs"));
+
+    // Prerequisite: tempDir must exist
+    statSync(tempDir);
+  });
+
+  afterEach(() => {
+    rmSync(tempDir, { recursive: true });
+  });
+
+  function assertExists(
+    parentDir: string = "src",
+    fileName: string = "10-puzzle-nameX.ts",
+  ) {
+    statSync(path.join(tempDir, parentDir, fileName));
+  }
+
   it("should copy files to destination folder", () => {
-    const prefix = "setup-next-day-tests-";
+    setupNextDay(10, "puzzle-name", tempDir, new UseFsCopyFile());
 
-    let tempDir = "";
-    try {
-      // Arrange: Prepare temporary directory to receive copied files
-      tempDir = mkdtempSync(path.join(tmpdir(), prefix));
-      console.log(`Created temporary directory "${tempDir}"`);
-
-      mkdirSync(path.join(tempDir, "src"));
-      mkdirSync(path.join(tempDir, "tests"));
-      mkdirSync(path.join(tempDir, "inputs"));
-
-      // Act: Copy templates to temporary directory
-      setupNextDay(10, "puzzle-name", tempDir, new UseFsCopyFile());
-
-      // Assert: Call statSync on the expected files.
-      //
-      // If the file does not exist, then statSync will throw a corresponding error.
-      // In that case, the assertion in the catch block will make the test fail.
-
-      // prettier-ignore
-      {
-        statSync(path.join(tempDir, "src", "10-puzzle-name.ts"));
-        statSync(path.join(tempDir, "tests", "10-puzzle-name.test.ts"));
-        statSync(path.join(tempDir, "inputs", "10-puzzle-name.txt"));
-        statSync(path.join(tempDir, "inputs", "10-puzzle-name-from-puzzle-description.txt"));
-      }
-    } catch (err) {
-      // @ts-ignore: TypeScript does not support types for catch variables
-      expect(err.message).toBe(undefined);
-    } finally {
-      if (tempDir) {
-        rmSync(tempDir, { recursive: true });
-        console.log(`Deleted temporary directory "${tempDir}"`);
-      }
-    }
+    assertExists("src", "10-puzzle-name.ts");
+    assertExists("tests", "10-puzzle-name.test.ts");
+    assertExists("inputs", "10-puzzle-name.txt");
+    assertExists("inputs", "10-puzzle-name-from-puzzle-description.txt");
   });
 });
 
