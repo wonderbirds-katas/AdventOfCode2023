@@ -1,3 +1,5 @@
+import * as path from "path";
+
 const argv = require("minimist")(process.argv.slice(2));
 
 // Idea
@@ -13,11 +15,6 @@ const argv = require("minimist")(process.argv.slice(2));
 // Solution
 // --------
 //
-// CopyData is a structure of
-// - folder: path
-// - template: filename
-// - destination: filename
-//
 // Destination file is derived from day and puzzleName arguments using the constructor
 //
 // For each entry in CopyData:
@@ -31,7 +28,7 @@ const argv = require("minimist")(process.argv.slice(2));
 // Create temporary directory in the test for an integration test
 //
 
-export const UsageInstructions = `USAGE: ts-node setup-next-day.ts DAY PUZZLENAME
+export const UsageInstructions = `USAGE: ts-node ./setup-next-day.ts DAY PUZZLENAME
 
 Copy the template files to the next puzzle.
 
@@ -42,13 +39,53 @@ Copy the template files to the next puzzle.
 export function setupNextDay(
   day: number | undefined,
   puzzleName: string | undefined,
+  copyCommand: CopyCommand = new CopyCommandPrinter(),
 ) {
   if (day === undefined || puzzleName === undefined) {
     console.log(UsageInstructions);
     return;
   }
 
-  console.log(`Copy ./src/template.ts to ./src/${day}-${puzzleName}.ts`);
+  const templateFiles = [
+    new TemplateFile("src", "template.ts", day, puzzleName),
+  ];
+
+  for (const templateFile of templateFiles) {
+    copyCommand.copy(templateFile.sourcePath, templateFile.destinationPath);
+  }
+}
+
+// Construct the source and destination paths for a template file
+class TemplateFile {
+  get sourcePath() {
+    return path.join(this.folder, this.sourceFile);
+  }
+
+  get destinationPath() {
+    const fileName = `${this.day}-${this.puzzleName}.ts`;
+    return path.join(this.folder, fileName);
+  }
+
+  // folder: path to the folder containing the template and receiving the copy
+  // sourceFile: filename of the template
+  // day: number of advent of code day
+  // puzzleName: short name to distinguish the name of the puzzle
+  constructor(
+    readonly folder: string,
+    readonly sourceFile: string,
+    readonly day: number,
+    readonly puzzleName: string,
+  ) {}
+}
+
+interface CopyCommand {
+  copy(sourcePath: string, destinationPath: string): void;
+}
+
+export class CopyCommandPrinter {
+  copy(sourcePath: string, destinationPath: string): void {
+    console.log(`Copy ${sourcePath} to ${destinationPath}`);
+  }
 }
 
 setupNextDay(argv._[0], argv._[1]);
