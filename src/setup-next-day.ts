@@ -48,6 +48,7 @@ export function setupNextDay(
 
   const templateFiles = [
     new TemplateFile("src", "template.ts", day, puzzleName),
+    new TemplateFile("test", "template.test.ts", day, puzzleName, ".test"),
   ];
 
   for (const templateFile of templateFiles) {
@@ -63,14 +64,16 @@ class TemplateFile {
   // sourceFile: filename of the template
   // day: number of advent of code day
   // puzzleName: short name to distinguish the name of the puzzle
+  // suffix: file name suffix to insert between puzzleName and extension
   constructor(
     readonly folder: string,
     readonly sourceFile: string,
     readonly day: number,
     readonly puzzleName: string,
+    readonly suffix: string = "",
   ) {
     const zeroPaddedDay = `${day}`.padStart(2, "0");
-    this._destinationFile = `${zeroPaddedDay}-${this.puzzleName}.ts`;
+    this._destinationFile = `${zeroPaddedDay}-${this.puzzleName}${suffix}.ts`;
   }
 
   get sourcePath() {
