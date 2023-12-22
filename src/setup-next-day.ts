@@ -57,14 +57,7 @@ export function setupNextDay(
 
 // Construct the source and destination paths for a template file
 class TemplateFile {
-  get sourcePath() {
-    return path.join(this.folder, this.sourceFile);
-  }
-
-  get destinationPath() {
-    const fileName = `${this.day}-${this.puzzleName}.ts`;
-    return path.join(this.folder, fileName);
-  }
+  private readonly _destinationFile: string;
 
   // folder: path to the folder containing the template and receiving the copy
   // sourceFile: filename of the template
@@ -75,7 +68,18 @@ class TemplateFile {
     readonly sourceFile: string,
     readonly day: number,
     readonly puzzleName: string,
-  ) {}
+  ) {
+    const zeroPaddedDay = `${day}`.padStart(2, "0");
+    this._destinationFile = `${zeroPaddedDay}-${this.puzzleName}.ts`;
+  }
+
+  get sourcePath() {
+    return path.join(this.folder, this.sourceFile);
+  }
+
+  get destinationPath() {
+    return path.join(this.folder, this._destinationFile);
+  }
 }
 
 interface CopyCommand {

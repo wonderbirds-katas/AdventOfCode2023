@@ -17,6 +17,7 @@ describe("setup-next-day should", () => {
   });
 
   it.each([
+    ["src/08-puzzle-name.ts", 8, "puzzle-name"],
     ["src/12-puzzle-name.ts", 12, "puzzle-name"],
     ["src/42-puzzle-name.ts", 42, "puzzle-name"],
     ["src/10-other-name.ts", 10, "other-name"],
