@@ -27,6 +27,17 @@ describe("setup-next-day should", () => {
     expect(logSpy).toHaveBeenCalledWith(`Copy src/template.ts to ${expected}`);
   });
 
+  it.each([
+    ["test/08-puzzle-name.test.ts", 8, "puzzle-name"],
+    ["test/10-other-name.test.ts", 10, "other-name"],
+  ])("copy test/template.test.ts to %s", (expected, day, puzzleName) => {
+    setupNextDay(day, puzzleName, new CopyCommandPrinter());
+
+    expect(logSpy).toHaveBeenCalledWith(
+      `Copy test/template.test.ts to ${expected}`,
+    );
+  });
+
   describe("not copy but report parameter errors", () => {
     it("when day is undefined", () => {
       setupNextDay(undefined, "this text is ignored", new CopyCommandPrinter());
