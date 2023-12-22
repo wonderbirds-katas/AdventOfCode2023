@@ -1,4 +1,5 @@
 import * as path from "node:path";
+import { copyFileSync } from "node:fs";
 
 const argv = require("minimist")(process.argv.slice(2));
 
@@ -39,8 +40,8 @@ Copy the template files to the next puzzle.
 export function setupNextDay(
   day: number | undefined,
   puzzleName: string | undefined,
-  targetParentDir: string = "",
-  copyCommand: CopyCommand = new CopyCommandPrinter(),
+  targetParentDir: string,
+  copyCommand: CopyCommand,
 ) {
   if (day === undefined || puzzleName === undefined) {
     console.log(UsageInstructions);
@@ -50,7 +51,7 @@ export function setupNextDay(
   const templateFiles = [
     new TemplateFile("src", "template.ts", day, puzzleName, targetParentDir),
     new TemplateFile(
-      "test",
+      "tests",
       "template.test.ts",
       day,
       puzzleName,
@@ -98,10 +99,10 @@ interface CopyCommand {
   copy(sourcePath: string, destinationPath: string): void;
 }
 
-export class CopyCommandPrinter {
+export class UseFsCopyFile {
   copy(sourcePath: string, destinationPath: string): void {
-    console.log(`Copy ${sourcePath} to ${destinationPath}`);
+    copyFileSync(sourcePath, destinationPath);
   }
 }
 
-setupNextDay(argv._[0], argv._[1], "", new CopyCommandPrinter());
+setupNextDay(argv._[0], argv._[1], "", new UseFsCopyFile());
