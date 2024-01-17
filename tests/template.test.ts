@@ -34,7 +34,7 @@ describe("templateFunction", () => {
         "./inputs/template-from-puzzle-description.txt",
         "utf-8",
       );
-      template(input).should.equal(expected);
+      templateFunction(input).should.equal(expected);
     });
   });
 
