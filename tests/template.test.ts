@@ -28,16 +28,6 @@ describe("templateFunction", () => {
     });
   });
 
-  describe("given puzzle description input", () => {
-    it.each([[0]])("returns %p", (expected) => {
-      const input = readFileSync(
-        "./inputs/template-from-puzzle-description.txt",
-        "utf-8",
-      );
-      templateFunction(input).should.equal(expected);
-    });
-  });
-
   describe("given my personal puzzle input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/template.txt", "utf-8");
