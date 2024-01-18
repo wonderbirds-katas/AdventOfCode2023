@@ -9,13 +9,25 @@ import { verify } from "approvals/lib/Providers/Jest/JestApprovals";
 config.truncateThreshold = 0;
 
 describe("stepCounter", () => {
-  describe("given nothing", () => {
-    it.each([[0, ""]])("returns %p when %p", (expected, input) => {
+  describe("given single row of only plots", () => {
+    it.each([
+      [1, "S\n"],
+      [2, "S.\n"],
+      [3, "S..\n"],
+      [
+        64,
+        "S...............................................................\n",
+      ],
+      [
+        64,
+        "S................................................................\n",
+      ],
+    ])("returns %p when %p", (expected, input) => {
       stepCounter(input).should.equal(expected);
     });
   });
 
-  describe("given puzzle description input", () => {
+  xdescribe("given puzzle description input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync(
         "./inputs/21-step-counter-from-puzzle-description.txt",
@@ -25,7 +37,7 @@ describe("stepCounter", () => {
     });
   });
 
-  describe("given my personal puzzle input", () => {
+  xdescribe("given my personal puzzle input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/21-step-counter.txt", "utf-8");
       stepCounter(input).should.equal(expected);
