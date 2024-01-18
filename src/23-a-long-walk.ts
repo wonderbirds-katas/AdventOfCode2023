@@ -56,5 +56,5 @@
 // ... describe solution and algorithm idea roughly ...
 //
 export function aLongWalk(input: string): number {
-  return 0;
+  return input.split("\n").length;
 }
