@@ -57,6 +57,20 @@ describe("aLongWalk", () => {
     });
   });
 
+  describe("given vertical forcing to walk up", () => {
+    it.each([
+      [
+        10,
+        `.####
+.#...
+...#.
+####.`,
+      ],
+    ])("returns %p when %p", (expected, input) => {
+      aLongWalk(input).should.equal(expected);
+    });
+  });
+
   xdescribe("given puzzle description input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync(

@@ -107,6 +107,10 @@ class Location {
   stepRight(): Location {
     return new Location(this.x + 1, this.y);
   }
+
+  stepUp(): Location {
+    return new Location(this.x, this.y - 1);
+  }
 }
 
 class Hike {
@@ -179,6 +183,7 @@ class Map {
       current.stepDown(),
       current.stepLeft(),
       current.stepRight(),
+      current.stepUp(),
     ];
     const allowed = options.filter(
       (option) =>
