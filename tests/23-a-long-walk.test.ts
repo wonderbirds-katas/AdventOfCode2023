@@ -71,6 +71,22 @@ describe("aLongWalk", () => {
     });
   });
 
+  describe("given two paths of different length", () => {
+    it.each([
+      [
+        16,
+        `.####
+.....
+.#.#.
+.#.#.
+...#.
+####.`,
+      ],
+    ])("returns %p when %p", (expected, input) => {
+      aLongWalk(input).should.equal(expected);
+    });
+  });
+
   xdescribe("given puzzle description input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync(
