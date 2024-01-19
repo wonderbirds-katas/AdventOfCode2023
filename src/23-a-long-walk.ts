@@ -81,6 +81,11 @@
 //
 // ... describe solution and algorithm idea roughly ...
 
+enum Tiles {
+  Path = ".",
+  Forest = "#",
+}
+
 class Location {
   constructor(
     readonly x: number,
@@ -93,6 +98,10 @@ class Location {
 
   stepDown(): Location {
     return new Location(this.x, this.y + 1);
+  }
+
+  stepLeft(): Location {
+    return new Location(this.x - 1, this.y);
   }
 }
 
@@ -126,12 +135,24 @@ class Map {
     this._map = input.split("\n").map((rowString) => rowString.split(""));
   }
 
+  at(location: Location): Tiles {
+    const tileString = this._map[location.y][location.x];
+
+    if (tileString === ".") {
+      return Tiles.Path;
+    }
+
+    return Tiles.Forest;
+  }
+
   findEntrance() {
-    return new Location(0, 0);
+    const x = this._map[0].indexOf(Tiles.Path.toString());
+    return new Location(x, 0);
   }
 
   findExit() {
-    return new Location(0, this._map.length - 1);
+    const x = this._map[this.height() - 1].indexOf(Tiles.Path.toString());
+    return new Location(x, this._map.length - 1);
   }
 
   findHikes(): Hike[] {
@@ -146,8 +167,10 @@ class Map {
   private findHikesHelper(current: Location, hike: Hike, result: Hike[]) {
     hike.add(current);
 
-    const options = [current.stepDown()];
-    const allowed = options.filter((option) => this.contains(option));
+    const options = [current.stepDown(), current.stepLeft()];
+    const allowed = options.filter(
+      (option) => this.contains(option) && this.at(option) === Tiles.Path,
+    );
 
     if (allowed.length === 0) {
       result.push(hike);

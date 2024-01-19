@@ -17,6 +17,31 @@ describe("aLongWalk", () => {
     });
   });
 
+  describe("given vertical paths in second column", () => {
+    it.each([
+      [1, "#."],
+      [2, "#.\n#."],
+      [3, "#.\n#.\n#."],
+    ])("returns %p when %p", (expected, input) => {
+      aLongWalk(input).should.equal(expected);
+    });
+  });
+
+  describe("given vertical forcing to walk down or left", () => {
+    it.each([
+      [4, "#.\n..\n.#"],
+      [
+        6,
+        `##.
+#..
+..#
+.##`,
+      ],
+    ])("returns %p when %p", (expected, input) => {
+      aLongWalk(input).should.equal(expected);
+    });
+  });
+
   xdescribe("given puzzle description input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync(
