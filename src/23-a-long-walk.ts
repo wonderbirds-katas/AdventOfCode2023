@@ -103,6 +103,10 @@ class Location {
   stepLeft(): Location {
     return new Location(this.x - 1, this.y);
   }
+
+  stepRight(): Location {
+    return new Location(this.x + 1, this.y);
+  }
 }
 
 class Hike {
@@ -125,6 +129,10 @@ class Hike {
     result._tiles = [...this._tiles];
 
     return result;
+  }
+
+  contains(location: Location) {
+    return this._tiles.filter((tile) => tile.equals(location)).length > 0;
   }
 }
 
@@ -167,9 +175,16 @@ class Map {
   private findHikesHelper(current: Location, hike: Hike, result: Hike[]) {
     hike.add(current);
 
-    const options = [current.stepDown(), current.stepLeft()];
+    const options = [
+      current.stepDown(),
+      current.stepLeft(),
+      current.stepRight(),
+    ];
     const allowed = options.filter(
-      (option) => this.contains(option) && this.at(option) === Tiles.Path,
+      (option) =>
+        this.contains(option) &&
+        this.at(option) === Tiles.Path &&
+        !hike.contains(option),
     );
 
     if (allowed.length === 0) {
