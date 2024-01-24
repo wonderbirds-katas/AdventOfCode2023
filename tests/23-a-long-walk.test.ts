@@ -9,9 +9,9 @@ config.truncateThreshold = 0;
 describe("aLongWalk", () => {
   describe("given 1D vertical paths", () => {
     it.each([
-      [1, "."],
-      [2, ".\n."],
-      [3, ".\n.\n."],
+      [0, "."],
+      [1, ".\n."],
+      [2, ".\n.\n."],
     ])("returns %p when %p", (expected, input) => {
       aLongWalk(input).should.equal(expected);
     });
@@ -19,9 +19,9 @@ describe("aLongWalk", () => {
 
   describe("given vertical paths in second column", () => {
     it.each([
-      [1, "#."],
-      [2, "#.\n#."],
-      [3, "#.\n#.\n#."],
+      [0, "#."],
+      [1, "#.\n#."],
+      [2, "#.\n#.\n#."],
     ])("returns %p when %p", (expected, input) => {
       aLongWalk(input).should.equal(expected);
     });
@@ -29,9 +29,9 @@ describe("aLongWalk", () => {
 
   describe("given vertical forcing to walk down or left", () => {
     it.each([
-      [4, "#.\n..\n.#"],
+      [3, "#.\n..\n.#"],
       [
-        6,
+        5,
         `##.
 #..
 ..#
@@ -44,9 +44,9 @@ describe("aLongWalk", () => {
 
   describe("given vertical forcing to walk down or right", () => {
     it.each([
-      [4, ".#\n..\n#."],
+      [3, ".#\n..\n#."],
       [
-        6,
+        5,
         `.##
 ..#
 #..
@@ -60,7 +60,7 @@ describe("aLongWalk", () => {
   describe("given vertical forcing to walk up", () => {
     it.each([
       [
-        10,
+        9,
         `.####
 .#...
 ...#.
@@ -74,7 +74,7 @@ describe("aLongWalk", () => {
   describe("given two paths of different length", () => {
     it.each([
       [
-        16,
+        15,
         `.####
 .....
 .#.#.
@@ -88,7 +88,7 @@ describe("aLongWalk", () => {
   });
 
   describe("given slope down to the east", () => {
-    it.each([[5, "when walking to the east", ".##\n.>.\n##."]])(
+    it.each([[4, "when walking to the east", ".##\n.>.\n##."]])(
       "returns %p when %s",
       (expected, description, input) => {
         aLongWalk(input).should.equal(expected);
@@ -113,7 +113,7 @@ describe("aLongWalk", () => {
   });
 
   describe("given slope down to the south", () => {
-    it.each([[3, "when walking to the south", "#.#\n#v#\n#.#"]])(
+    it.each([[2, "when walking to the south", "#.#\n#v#\n#.#"]])(
       "returns %p when %s",
       (expected, description, input) => {
         aLongWalk(input).should.equal(expected);
@@ -138,7 +138,7 @@ describe("aLongWalk", () => {
   });
 
   describe("given slope down to the west", () => {
-    it.each([[4, "when walking to the west", "#.#\n.<#\n.##"]])(
+    it.each([[3, "when walking to the west", "#.#\n.<#\n.##"]])(
       "returns %p when %s",
       (expected, description, input) => {
         aLongWalk(input).should.equal(expected);
@@ -165,7 +165,7 @@ describe("aLongWalk", () => {
   describe("given slope down to the north", () => {
     it.each([
       [
-        13,
+        12,
         "when walking to the north",
         `.####
 .#...
@@ -186,8 +186,8 @@ describe("aLongWalk", () => {
     });
   });
 
-  xdescribe("given puzzle description input", () => {
-    it.each([[0]])("returns %p", (expected) => {
+  describe("given puzzle description input", () => {
+    it.each([[94]])("returns %p", (expected) => {
       const input = readFileSync(
         "./inputs/23-a-long-walk-from-puzzle-description.txt",
         "utf-8",

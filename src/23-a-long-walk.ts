@@ -142,7 +142,8 @@ class Hike {
   }
 
   length(): number {
-    return this._tiles.length;
+    // The start tile does not count as a step
+    return this._tiles.length - 1;
   }
 
   clone() {
