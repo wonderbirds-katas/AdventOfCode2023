@@ -203,8 +203,10 @@ class Map {
       (option) =>
         this.contains(option) &&
         (this.at(option) !== Tile.Tree) &&
-        (this.at(current) === Tile.Path ||
-          (this.at(current) === Tile.DownEast && option.minus(current).equals(new Location(1, 0)))
+        (
+            this.at(current) === Tile.Path ||
+            (this.at(current) === Tile.DownEast && option.minus(current).equals(new Location(1, 0))) ||
+            (this.at(current) === Tile.DownSouth && option.minus(current).equals(new Location(0, 1)))
         ) &&
         !hike.contains(option),
     );

@@ -96,7 +96,7 @@ describe("aLongWalk", () => {
     );
 
     it.each([
-      [0, "when walking to the south", ".##\n.>#\n#.#"],
+      [0, "when walking to the south", "#.#\n#>#\n#.#"],
       [0, "when walking to the west", "#.#\n.>#\n.##"],
       [
         0,
@@ -104,6 +104,31 @@ describe("aLongWalk", () => {
         `.####
 .#...
 .#>#.
+...#.
+####.`,
+      ],
+    ])("returns %p when %s", (expected, description, input) => {
+      aLongWalk(input).should.equal(expected);
+    });
+  });
+
+  describe("given slope down to the south", () => {
+    it.each([[3, "when walking to the south", "#.#\n#v#\n#.#"]])(
+      "returns %p when %s",
+      (expected, description, input) => {
+        aLongWalk(input).should.equal(expected);
+      },
+    );
+
+    it.each([
+      [0, "when walking to the east", ".##\n.v.\n##."],
+      [0, "when walking to the west", "#.#\n.v#\n.##"],
+      [
+        0,
+        "when walking to the north",
+        `.####
+.#...
+.#v#.
 ...#.
 ####.`,
       ],
