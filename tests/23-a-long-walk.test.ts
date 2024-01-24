@@ -196,8 +196,8 @@ describe("aLongWalk", () => {
     });
   });
 
-  xdescribe("given my personal puzzle input", () => {
-    it.each([[0]])("returns %p", (expected) => {
+  describe("given my personal puzzle input", () => {
+    it.each([[2214]])("returns %p", (expected) => {
       const input = readFileSync("./inputs/23-a-long-walk.txt", "utf-8");
       aLongWalk(input).should.equal(expected);
     });
