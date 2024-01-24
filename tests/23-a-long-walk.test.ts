@@ -162,6 +162,30 @@ describe("aLongWalk", () => {
     });
   });
 
+  describe("given slope down to the north", () => {
+    it.each([
+      [
+        13,
+        "when walking to the north",
+        `.####
+.#...
+.#^#.
+...#.
+####.`,
+      ],
+    ])("returns %p when %s", (expected, description, input) => {
+      aLongWalk(input).should.equal(expected);
+    });
+
+    it.each([
+      [0, "when walking to the east", ".##\n.^.\n##."],
+      [0, "when walking to the south", "#.#\n#^#\n#.#"],
+      [0, "when walking to the west", "#.#\n.^#\n.##"],
+    ])("returns %p when %s", (expected, description, input) => {
+      aLongWalk(input).should.equal(expected);
+    });
+  });
+
   xdescribe("given puzzle description input", () => {
     it.each([[0]])("returns %p", (expected) => {
       const input = readFileSync(

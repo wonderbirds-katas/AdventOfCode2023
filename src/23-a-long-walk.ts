@@ -207,7 +207,8 @@ class Map {
             this.at(current) === Tile.Path ||
             (this.at(current) === Tile.DownEast && option.minus(current).equals(new Location(1, 0))) ||
             (this.at(current) === Tile.DownSouth && option.minus(current).equals(new Location(0, 1))) ||
-            (this.at(current) === Tile.DownWest && option.minus(current).equals(new Location(-1, 0)))
+            (this.at(current) === Tile.DownWest && option.minus(current).equals(new Location(-1, 0))) ||
+            (this.at(current) === Tile.DownNorth && option.minus(current).equals(new Location(0, -1)))
         ) &&
         !hike.contains(option),
     );
