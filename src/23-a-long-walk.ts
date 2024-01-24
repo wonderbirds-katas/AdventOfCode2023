@@ -81,9 +81,22 @@
 //
 // ... describe solution and algorithm idea roughly ...
 
-enum Tiles {
+enum Tile {
   Path = ".",
-  Forest = "#",
+  Tree = "#",
+  DownWest = "<",
+  DownNorth = "^",
+  DownSouth = "v",
+  DownEast = ">",
+}
+
+enum SymbolForTile {
+  "." = Tile.Path,
+  "#" = Tile.Tree,
+  "<" = Tile.DownWest,
+  "^" = Tile.DownNorth,
+  "v" = Tile.DownSouth,
+  ">" = Tile.DownEast,
 }
 
 class Location {
@@ -110,6 +123,10 @@ class Location {
 
   stepUp(): Location {
     return new Location(this.x, this.y - 1);
+  }
+
+  minus(other: Location): Location {
+    return new Location(this.x - other.x, this.y - other.y);
   }
 }
 
@@ -147,23 +164,19 @@ class Map {
     this._map = input.split("\n").map((rowString) => rowString.split(""));
   }
 
-  at(location: Location): Tiles {
-    const tileString = this._map[location.y][location.x];
+  at(location: Location): Tile {
+    const tileSymbol = this._map[location.y][location.x];
 
-    if (tileString === ".") {
-      return Tiles.Path;
-    }
-
-    return Tiles.Forest;
+    return SymbolForTile[tileSymbol as keyof typeof Tile];
   }
 
   findEntrance() {
-    const x = this._map[0].indexOf(Tiles.Path.toString());
+    const x = this._map[0].indexOf(Tile.Path);
     return new Location(x, 0);
   }
 
   findExit() {
-    const x = this._map[this.height() - 1].indexOf(Tiles.Path.toString());
+    const x = this._map[this.height() - 1].indexOf(Tile.Path);
     return new Location(x, this._map.length - 1);
   }
 
@@ -185,10 +198,14 @@ class Map {
       current.stepRight(),
       current.stepUp(),
     ];
+    // prettier-ignore
     const allowed = options.filter(
       (option) =>
         this.contains(option) &&
-        this.at(option) === Tiles.Path &&
+        (this.at(option) !== Tile.Tree) &&
+        (this.at(current) === Tile.Path ||
+          (this.at(current) === Tile.DownEast && option.minus(current).equals(new Location(1, 0)))
+        ) &&
         !hike.contains(option),
     );
 
@@ -229,5 +246,8 @@ export function aLongWalk(input: string): number {
   const validHikes = hikes.filter((hike) => hike.end().equals(exit));
   const hikeLengths = validHikes.map((hike) => hike.length());
 
+  if (hikeLengths.length === 0) {
+    return 0;
+  }
   return Math.max(...hikeLengths);
 }
