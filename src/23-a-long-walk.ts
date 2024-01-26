@@ -159,9 +159,9 @@ class Map {
   private _map: string[][];
   private _stepValidator: StepValidator;
 
-  constructor(input: string) {
+  constructor(input: string, stepValidator: StepValidator) {
     this._map = input.split("\n").map((rowString) => rowString.split(""));
-    this._stepValidator = new SlideDownIcySlopes();
+    this._stepValidator = stepValidator;
   }
 
   at(location: Location): Tile {
@@ -263,9 +263,29 @@ class SlideDownIcySlopes implements StepValidator {
   }
 }
 
+class TreatSlopesLikePaths implements StepValidator {
+  public isStepAllowed(
+    source: Location,
+    target: Location,
+    hike: Hike,
+    map: Map,
+  ): boolean {
+    return (
+      map.contains(target) &&
+      map.at(target) !== Tile.Tree &&
+      (map.at(source) === Tile.Path ||
+        map.at(source) === Tile.DownEast ||
+        map.at(source) === Tile.DownSouth ||
+        map.at(source) === Tile.DownWest ||
+        map.at(source) === Tile.DownNorth) &&
+      !hike.contains(target)
+    );
+  }
+}
+
 //
 export function aLongWalk(input: string): number {
-  const map = new Map(input);
+  const map = new Map(input, new TreatSlopesLikePaths());
 
   let hikes = map.findHikes();
 
