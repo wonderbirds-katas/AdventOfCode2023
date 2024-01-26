@@ -161,7 +161,7 @@ class Map {
 
   constructor(input: string) {
     this._map = input.split("\n").map((rowString) => rowString.split(""));
-    this._stepValidator = new StepValidator();
+    this._stepValidator = new SlideDownIcySlopes();
   }
 
   at(location: Location): Tile {
@@ -230,13 +230,22 @@ class Map {
   }
 }
 
-class StepValidator {
+interface StepValidator {
+  isStepAllowed(
+    source: Location,
+    target: Location,
+    hike: Hike,
+    map: Map,
+  ): boolean;
+}
+
+class SlideDownIcySlopes implements StepValidator {
   public isStepAllowed(
     source: Location,
     target: Location,
     hike: Hike,
     map: Map,
-  ) {
+  ): boolean {
     return (
       map.contains(target) &&
       map.at(target) !== Tile.Tree &&
