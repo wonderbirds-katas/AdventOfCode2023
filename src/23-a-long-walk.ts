@@ -77,7 +77,34 @@
 //
 // extract the validation in the filter for next steps into a concrete strategy implementation
 // add another strategy implementation treating slopes like paths
-
+//
+// Problem: Too many Hikes
+// -------
+//
+// The algorithm reaches the maximum allowed recursion depth, i.e. the number of Hikes (leaves) exceeds the
+// memory limit
+//
+// What causes the problem? More Hike-parts are evaluated again and again
+// ------------------------
+//
+// Locations can be reached from multiple Hikes.
+// The shortest Hike reaches a Location first, then the longer Hike, then another even longer Hike and so on.
+// The current implementation evaluates all Hikes reaching that Location every time a longer Hike to that Location
+// is found.
+//
+// Solution approach: Process Hike parts only once
+// -----------------
+//
+// For each Location of the Map visited, store the Hike
+// If a longer Hike reaches a Location with an attached Hike:
+//    Replace the beginning of the attached Hike by the current, longer Hike
+//
+// Consequences
+// ------------
+//
+// The findHikes method can just return the length of the path attached to the exit of the Map
+// instead of iterating over all possible hikes.
+//
 enum Tile {
   Path = ".",
   Tree = "#",
