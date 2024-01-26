@@ -70,16 +70,13 @@
 // Part 2 - Understanding the problem
 // ==================================
 //
-// ... list some simple tests showing how I understand the puzzle ...
-//
-// Tests from the problem description
-//
-// ... copy tests from problem description ...
+// all slopes shall be treated like normal paths
 //
 // Solution approach
 // -----------------
 //
-// ... describe solution and algorithm idea roughly ...
+// extract the validation in the filter for next steps into a concrete strategy implementation
+// add another strategy implementation treating slopes like paths
 
 enum Tile {
   Path = ".",
@@ -160,9 +157,11 @@ class Hike {
 
 class Map {
   private _map: string[][];
+  private _stepValidator: StepValidator;
 
   constructor(input: string) {
     this._map = input.split("\n").map((rowString) => rowString.split(""));
+    this._stepValidator = new StepValidator();
   }
 
   at(location: Location): Tile {
@@ -200,18 +199,8 @@ class Map {
       current.stepUp(),
     ];
     // prettier-ignore
-    const allowed = options.filter(
-      (option) =>
-        this.contains(option) &&
-        (this.at(option) !== Tile.Tree) &&
-        (
-            this.at(current) === Tile.Path ||
-            (this.at(current) === Tile.DownEast && option.minus(current).equals(new Location(1, 0))) ||
-            (this.at(current) === Tile.DownSouth && option.minus(current).equals(new Location(0, 1))) ||
-            (this.at(current) === Tile.DownWest && option.minus(current).equals(new Location(-1, 0))) ||
-            (this.at(current) === Tile.DownNorth && option.minus(current).equals(new Location(0, -1)))
-        ) &&
-        !hike.contains(option),
+    const allowed = options.filter((option) =>
+      this._stepValidator.isStepAllowed(current, option, hike, this),
     );
 
     if (allowed.length === 0) {
@@ -223,7 +212,7 @@ class Map {
     }
   }
 
-  private contains(coordinate: Location) {
+  public contains(coordinate: Location) {
     return (
       coordinate.x >= 0 &&
       coordinate.x < this.width() &&
@@ -238,6 +227,30 @@ class Map {
 
   private height(): number {
     return this._map.length;
+  }
+}
+
+class StepValidator {
+  public isStepAllowed(
+    source: Location,
+    target: Location,
+    hike: Hike,
+    map: Map,
+  ) {
+    return (
+      map.contains(target) &&
+      map.at(target) !== Tile.Tree &&
+      (map.at(source) === Tile.Path ||
+        (map.at(source) === Tile.DownEast &&
+          target.minus(source).equals(new Location(1, 0))) ||
+        (map.at(source) === Tile.DownSouth &&
+          target.minus(source).equals(new Location(0, 1))) ||
+        (map.at(source) === Tile.DownWest &&
+          target.minus(source).equals(new Location(-1, 0))) ||
+        (map.at(source) === Tile.DownNorth &&
+          target.minus(source).equals(new Location(0, -1)))) &&
+      !hike.contains(target)
+    );
   }
 }
 
